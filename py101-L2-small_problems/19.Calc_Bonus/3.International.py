@@ -15,9 +15,7 @@ def invalid_number(number_str):
     return False
 
 def get_msg(key):
-    # get global locale
-    # get value based on key
-    pass
+    prompt( MSG[key][lang] )
 
 '''
 TODO
@@ -27,31 +25,24 @@ DEVLOG
 '''
 
 
-with open('2.json', 'r') as file:
+with open('3.json', 'r') as file:
     MSG = json.load(file)   # MSG = short for MESSAGES
 
 prompt('Welcome to Calculator!')
 
 prompt("""\
 Select your language:
-1) English  
-2) Espanol
+en = English  
+es = badly translated Español
 """)
 lang = input()
-while lang != ["1", "2"]:
-    pdb.set_trace()
-    prompt(MSG.get('invalid_no'))
+while lang not in ['en', 'es']:
+    prompt(MSG.get('invalid_language'))
     lang = input()
-
-    #LOA HERE
-    '''
-    [ ] Why is the language selection failing?  Use pdb to examine variable values
-    [ ] Implement language selection
-    '''
 
 while True:
 
-    prompt(MSG.get('first'))
+    get_msg('first')
     number1 = input()
 
     while invalid_number(number1):

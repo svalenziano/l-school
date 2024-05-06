@@ -1,6 +1,12 @@
 {
-    "first" : "What's the first number?",
-    "second" : "What's the second number?",
+    "first" : {
+        "en" : "What's the first number?",
+        "es" : "Cual es el nombre principa?" 
+    },
+    "second" : {
+        "en" : "What's the second number?"
+    },
+    "invalid_language" : "Sorry, I don't know that language, please pick from one of the aforementioned languages",
     "invalid_no" : "Hmmm... that doesn't look like a valid number",
     "operation" : "What operation would you like to perform?\n 1) Add 2) Subtract 3) Multiply 4) Divide",
     "div_by_zero" : "Dividing by zero!?!? How dare you! Try again."
