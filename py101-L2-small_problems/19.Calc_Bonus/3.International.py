@@ -14,7 +14,7 @@ def invalid_number(number_str):
 
     return False
 
-def get_msg(key):
+def lang_prompt(key):
     prompt( MSG[key][lang] )
 
 '''
@@ -33,34 +33,34 @@ prompt('Welcome to Calculator!')
 prompt("""\
 Select your language:
 en = English  
-es = badly translated Español
+es = Español
 """)
 lang = input()
 while lang not in ['en', 'es']:
-    prompt(MSG.get('invalid_language'))
+    lang_prompt('invalid_language')
     lang = input()
 
 while True:
 
-    get_msg('first')
+    lang_prompt('first')
     number1 = input()
 
     while invalid_number(number1):
-        prompt(MSG.get('invalid_no'))
+        lang_prompt('invalid_no')
         number1 = input()
 
-    prompt(MSG.get('second'))
+    lang_prompt('second')
     number2 = input()
 
     while invalid_number(number2):
-        prompt(MSG.get('invalid_no'))
+        lang_prompt('invalid_no')
         number2 = input()
 
-    prompt(MSG.get('operation'))
+    lang_prompt('operation')
     operation = input()
 
     while operation not in ["1", "2", "3", "4"]:
-        prompt("You must choose 1, 2, 3, or 4")
+        lang_prompt('invalid_operation')
         operation = input()
 
     match operation:
@@ -74,17 +74,17 @@ while True:
             try:
                 output = int(number1) / int(number2)
             except ZeroDivisionError:
-                prompt(MSG.get('div_by_zero'))
+                lang_prompt('div_by_zero')
                 continue
 
-    prompt(f"The result is {output}")
+    prompt(MSG['result'][lang] + str(output))
 
-    prompt("Would you like to keep going? Y/N ")
+    lang_prompt('keepgoing')
     keep = input().lower()
     while keep not in ['y' , 'n', '']:
-        prompt("Invalid input, can you say again?")
+        lang_prompt('invalid_generic')
         keep = input().lower()
     
     if keep == 'n':
-        print("Okay, quitting, later!")
+        lang_prompt('quitting')
         break

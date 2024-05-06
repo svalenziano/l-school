@@ -1,15 +1,46 @@
 {
     "first" : {
         "en" : "What's the first number?",
-        "es" : "Cual es el nombre principa?" 
+        "es" : "¿Cuál es el primer número?"
     },
     "second" : {
-        "en" : "What's the second number?"
+        "en" : "What's the second number?",
+        "es" : "¿Cuál es el segundo número?"
     },
-    "invalid_language" : "Sorry, I don't know that language, please pick from one of the aforementioned languages",
-    "invalid_no" : "Hmmm... that doesn't look like a valid number",
-    "operation" : "What operation would you like to perform?\n 1) Add 2) Subtract 3) Multiply 4) Divide",
-    "div_by_zero" : "Dividing by zero!?!? How dare you! Try again."
-    
+    "invalid_generic" : {
+        "en" : "Invalid input, can you say again?",
+        "es" : "Entrada inválida, ¿puedes repetirlo?"
+    },
+    "invalid_language" : {
+        "en" : "Sorry, I don't know that language, please pick from one of the aforementioned languages",
+        "es" : "Lo siento, no conozco ese idioma, por favor elige uno de los idiomas mencionados anteriormente."
+    },
+    "invalid_no" : {
+        "en" : "Hmmm... that doesn't look like a valid number",
+        "es" : "Hmmm... eso no parece ser un número válido"
+    },
+    "operation" : {
+        "en" : "What operation would you like to perform?\n 1) Add 2) Subtract 3) Multiply 4) Divide",
+        "es" : "¿Qué operación te gustaría realizar?\n 1) Sumar 2) Restar 3) Multiplicar 4) Dividir"
+    },
+    "div_by_zero" : {
+        "en" : "Dividing by zero!?!? How dare you! Try again.",
+        "es" : "¡Dividir entre cero!? ¡¿Cómo te atreves?! Inténtalo de nuevo."
+    },
+    "invalid_operation" : {
+        "en" : "You must choose 1, 2, 3, or 4.  Or else.",
+        "es" : "Debes elegir 1, 2, 3 o 4. O si no..."
+    },
+    "quitting": {
+        "en" : "Okay, quitting, later!",
+        "es" : "Vale, me retiro. ¡Hasta luego!"
+    },
+    "result" : {
+        "en" : "The result is ",
+        "es" : "El resultado es "
+    },
+    "keepgoing" : {
+        "en" : "Would you like to keep going? Y/N",
+        "es" : "¿Te gustaría seguir adelante? Y/N"
+        }
 }
-
