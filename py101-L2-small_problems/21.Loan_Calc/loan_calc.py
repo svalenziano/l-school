@@ -12,13 +12,18 @@ monthly_payment = loan_amt * (monthly_interest_rate / (1 -
 
 
 # Get loan amt from user
-# validate
+# validate: Positive $ amount
 
-# Get APR from user
-# validate
+# Get APR from user as %
+#
+# validate: 
+    # positive number under 50
+    # 
 
+monthly_interest_rate = APR/12
 # Get loan duration from user
 # validate
+# print in days/years
 
 
 # calculate
