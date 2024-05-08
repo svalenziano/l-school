@@ -15,7 +15,9 @@ def print_winner(human_choice, computer_choice):
 def print_prompt(message):
     print(f'==> {message}')
 
-while True:
+keep_going = True
+
+while keep_going:
     print_prompt(f"Choose one: {', '.join(VALID_CHOICES)}")
     choice = input()
 
@@ -53,7 +55,7 @@ while True:
         play_again = input()
     
     if play_again == 'n':
-        break
+        keep_going = False
 
 print(random.choice(["Goodbye!", 'Good riddance!', 'Fare thee well!']))
 # output results
