@@ -50,7 +50,7 @@ while True:
                      6.3''')
         apr = clean_number(apr)
     
-    apr = float(apr) * 0.01   # Convert to percentage (5.5% ==> 0.055)
+    apr = float(apr) / 100   # Convert to percentage (5.5% ==> 0.055)
 
     # Convert APR to monthly interest rate
     monthly_interest_rate = float(apr)/12
@@ -97,8 +97,6 @@ RESULTS:
 Monthly Payment: ${rounded_monthly_payment:,.2f}
 Total Payments: ${total_payment:,.2f}
 ''' )
-
-    # Output
 
     # print ("loop finished, starting over \n" , '*'*20)
     break
