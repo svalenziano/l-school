@@ -1,3 +1,8 @@
+"""
+See also: 
+    PY101.2.28 Lizard Spock Flowchart.excalidraw
+"""
+
 import random
 
 VALID_CHOICES = ['rock', 'paper', 'scissors','lizard','spock', 
@@ -16,20 +21,40 @@ WINNING_HANDS = [
     ('spock', 'scissors'), ('spock', 'rock'),
     ]
 
-def determine_winner(player1_choice, player2_choice):
+def expand_abbreviation(abbreviation):
+    match abbreviation:
+        case 'r':
+            return 'rock'
+        case 'p':
+            return 'paper'
+        case 'sc':
+            return 'scissors'
+        case 'l':
+            return 'lizard'
+        case 'sp':
+            return 'spock'
+
+def return_winner(player1_choice, player2_choice):
     if player1_choice == player2_choice:
         return 0
     elif (player1_choice, player2_choice) in WINNING_HANDS:
         return 1
     else:
         return 2
+    
+def print_winner(result_code):
+    match result_code:
+        case 0:
+            print_prompt("It's a tie!")
+        case 1:
+            print_prompt("You win this round!")
+        case 2:
+            print_prompt("You lose this round :(")
 
 def print_prompt(message):
     print(f'==> {message}')
 
-keep_going = True
-
-while keep_going:
+while True:
     print_prompt(f"Choose one: {', '.join(VALID_CHOICES)}")
     user_choice = input()
 
@@ -37,33 +62,21 @@ while keep_going:
         print_prompt('That is not a valid choice, please try again')
         user_choice = input()
 
-    match user_choice:
-        case 'r':
-            user_choice = 'rock'
-        case 'p':
-            user_choice = 'paper'
-        case 'sc':
-            user_choice = 'scissors'
-        case 'l':
-            user_choice = 'lizard'
-        case 'sp':
-            user_choice = 'spock'
+    if len(user_choice) < 3:
+        user_choice = expand_abbreviation(user_choice)
 
     # Generate computer choice using 'random'
-    # Don't use abbreviations
+    # Only use first 5 choices (Rock ==> Spock), 
+    # don't use abbreviations (r ==> sp)
     computer_choice = random.choice(VALID_CHOICES[0:4])   
 
-    print_prompt(f'You chose {user_choice}, the computer chose {computer_choice}.')
+    print_prompt(
+        f'You chose {user_choice}, the computer chose {computer_choice}.')
 
     # Decide who wins/ loses
-
-    match determine_winner(user_choice, computer_choice):
-        case 0:
-            print_prompt("It's a tie!")
-        case 1:
-            print_prompt("You win!")
-        case 2:
-            print_prompt("You lose :(")
+    result = return_winner(user_choice, computer_choice)
+    print_winner(result)
+    
     
 
     # Continue or no?
@@ -75,7 +88,7 @@ while keep_going:
         play_again = input()
     
     if play_again == 'n':
-        keep_going = False
+        break
 
 print(random.choice(["Goodbye!", 'Good riddance!', 'Fare thee well!']))
 # output results
