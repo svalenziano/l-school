@@ -5,7 +5,7 @@ See also:
 
 import random
 
-VALID_CHOICES = ['rock', 'paper', 'scissors','lizard','spock', 
+VALID_CHOICES = ['rock', 'paper', 'scissors','lizard','spock',
                  'r', 'p', 'sc','l', 'sp']
 
 WINNING_HANDS = [
@@ -40,11 +40,10 @@ def print_prompt(message):
 def return_winner(player1_choice, player2_choice):
     if player1_choice == player2_choice:
         return 0    # TIE
-    elif (player1_choice, player2_choice) in WINNING_HANDS:
+    if (player1_choice, player2_choice) in WINNING_HANDS:
         return 1    # PLAYER 1 WINS
-    else:
-        return 2    # PLAYER 2 WINS
-    
+    return 2    # PLAYER 2 WINS
+
 def print_winner(result_code):
     match result_code:
         case 0:
@@ -55,7 +54,7 @@ def print_winner(result_code):
             print_prompt("You lose this round :(")
 
 def return_score(user_score, computer_score):
-    return(f"You-{user_score} vs. Computer-{computer_score}")
+    return f"You-{user_score} vs. Computer-{computer_score}"
 
 def print_divider():
     print_prompt('*' * 79)
@@ -68,7 +67,7 @@ def play_best_of_5():
     user_score = 0
     computer_score = 0
 
-    while True:  
+    while True:
         print_divider()
         print_prompt(f"Choose one: {', '.join(VALID_CHOICES)}")
         user_choice = input()
@@ -81,9 +80,9 @@ def play_best_of_5():
             user_choice = expand_abbreviation(user_choice)
 
         # Generate computer choice using 'random'
-        # Only use first 5 choices (Rock ==> Spock), 
+        # Only use first 5 choices (Rock ==> Spock),
         # don't use abbreviations (r ==> sp)
-        computer_choice = random.choice(VALID_CHOICES[0:4])   
+        computer_choice = random.choice(VALID_CHOICES[0:4])
 
         print_prompt(
             f'You chose {user_choice}, the computer chose {computer_choice}.')
@@ -108,28 +107,29 @@ def play_best_of_5():
             print("CONGRATULATIONS!  Your skills are impressive! 🥲")
             print(f"Final score: {return_score(user_score, computer_score)}")
             break
-        elif computer_score >= 3:
+        if computer_score >= 3:
             print_divider()
             print("WHAT A SAD DAY.  You were beaten by a computer. ☹️")
             print(f"Final score: {return_score(user_score, computer_score)}")
             break
-            
+
 
 # MAIN LOOP
 while True:
 
     play_best_of_5()
-    
+
     # Continue or no?
     print_prompt("Again? (y/n)")
     play_again = input()
-    
+
     while play_again.casefold() not in ['y','n', '']:
         print_prompt("Invalid value, say again? Please enter 'y' or 'n'")
         play_again = input()
-    
+
     if play_again == 'n':
         break
 
 # EXIT MESSAGE
-print(random.choice(["Goodbye!", 'Good riddance!', 'Fare thee well!']))
+print(random.choice(["Goodbye! 🙂",
+                     'Good riddance! 🙂', 'Fare thee well! 🙂']))
