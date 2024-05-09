@@ -34,13 +34,16 @@ def expand_abbreviation(abbreviation):
         case 'sp':
             return 'spock'
 
+def print_prompt(message):
+    print(f'==> {message}')
+
 def return_winner(player1_choice, player2_choice):
     if player1_choice == player2_choice:
-        return 0
+        return 0    # TIE
     elif (player1_choice, player2_choice) in WINNING_HANDS:
-        return 1
+        return 1    # PLAYER 1 WINS
     else:
-        return 2
+        return 2    # PLAYER 2 WINS
     
 def print_winner(result_code):
     match result_code:
@@ -51,34 +54,72 @@ def print_winner(result_code):
         case 2:
             print_prompt("You lose this round :(")
 
-def print_prompt(message):
-    print(f'==> {message}')
+def return_score(user_score, computer_score):
+    return(f"You-{user_score} vs. Computer-{computer_score}")
 
-while True:
-    print_prompt(f"Choose one: {', '.join(VALID_CHOICES)}")
-    user_choice = input()
+def print_divider():
+    print_prompt('*' * 79)
 
-    while user_choice.casefold() not in VALID_CHOICES:
-        print_prompt('That is not a valid choice, please try again')
+def play_best_of_5():
+    '''
+    CODE REVIEW: Was it a good decision to break out this function?
+    I thought it would be easier to read than nested 'while True' loops
+    '''
+    user_score = 0
+    computer_score = 0
+
+    while True:  
+        print_divider()
+        print_prompt(f"Choose one: {', '.join(VALID_CHOICES)}")
         user_choice = input()
 
-    if len(user_choice) < 3:
-        user_choice = expand_abbreviation(user_choice)
+        while user_choice.casefold() not in VALID_CHOICES:
+            print_prompt('That is not a valid choice, please try again')
+            user_choice = input()
 
-    # Generate computer choice using 'random'
-    # Only use first 5 choices (Rock ==> Spock), 
-    # don't use abbreviations (r ==> sp)
-    computer_choice = random.choice(VALID_CHOICES[0:4])   
+        if len(user_choice) < 3:
+            user_choice = expand_abbreviation(user_choice)
 
-    print_prompt(
-        f'You chose {user_choice}, the computer chose {computer_choice}.')
+        # Generate computer choice using 'random'
+        # Only use first 5 choices (Rock ==> Spock), 
+        # don't use abbreviations (r ==> sp)
+        computer_choice = random.choice(VALID_CHOICES[0:4])   
 
-    # Decide who wins/ loses
-    result = return_winner(user_choice, computer_choice)
-    print_winner(result)
+        print_prompt(
+            f'You chose {user_choice}, the computer chose {computer_choice}.')
+
+        # Decide who wins/ loses
+        result = return_winner(user_choice, computer_choice)
+        print_winner(result)
+
+        # Update scores
+        match result:
+            case 1:
+                user_score += 1
+            case 2:
+                computer_score += 1
+
+        # Print updated scores
+        print(f"Current Score: {return_score(user_score, computer_score)}")
+
+        # If someone's scored 3, print final score, then exit loop
+        if user_score >= 3:
+            print_divider()
+            print("CONGRATULATIONS!  Your skills are impressive! 🥲")
+            print(f"Final score: {return_score(user_score, computer_score)}")
+            break
+        elif computer_score >= 3:
+            print_divider()
+            print("WHAT A SAD DAY.  You were beaten by a computer. ☹️")
+            print(f"Final score: {return_score(user_score, computer_score)}")
+            break
+            
+
+# MAIN LOOP
+while True:
+
+    play_best_of_5()
     
-    
-
     # Continue or no?
     print_prompt("Again? (y/n)")
     play_again = input()
@@ -90,7 +131,5 @@ while True:
     if play_again == 'n':
         break
 
+# EXIT MESSAGE
 print(random.choice(["Goodbye!", 'Good riddance!', 'Fare thee well!']))
-# output results
-
-# ask to play again
