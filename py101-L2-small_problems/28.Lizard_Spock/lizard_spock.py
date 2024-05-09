@@ -9,6 +9,9 @@ VALID_CHOICES = ['rock', 'paper', 'scissors','lizard','spock',
                  'r', 'p', 'sc','l', 'sp']
 
 WINNING_HANDS = [
+    # CODE REVIEW: This data structure isn't quite as efficient as the solution
+    # provided by Launch School, but is it still a good solution?
+
     # scissors cuts paper, decapitates lizard
     ('scissors', 'paper'), ('scissors', 'lizard'),
     # paper covers rock, disproves spock
@@ -47,11 +50,11 @@ def return_winner(player1_choice, player2_choice):
 def print_winner(result_code):
     match result_code:
         case 0:
-            print_prompt("It's a tie!")
+            print_prompt("It's a tie! 😑")
         case 1:
-            print_prompt("You win this round!")
+            print_prompt("You win this round! 🙂")
         case 2:
-            print_prompt("You lose this round :(")
+            print_prompt("You lose this round! ☹️")
 
 def return_score(user_score, computer_score):
     return f"You-{user_score} vs. Computer-{computer_score}"
@@ -66,7 +69,9 @@ def play_best_of_5():
     '''
     user_score = 0
     computer_score = 0
-
+    
+    print_prompt("Let's play best of 5... first to 3 wins!")
+    
     while True:
         print_divider()
         print_prompt(f"Choose one: {', '.join(VALID_CHOICES)}")
@@ -99,24 +104,24 @@ def play_best_of_5():
                 computer_score += 1
 
         # Print updated scores
-        print(f"Current Score: {return_score(user_score, computer_score)}")
+        print_prompt(f"Current Score: {return_score(user_score, computer_score)}")
 
-        # If someone's scored 3, print final score, then exit loop
+        # If someone's scored 3 (best of 5), print final score, then exit loop
         if user_score >= 3:
             print_divider()
-            print("CONGRATULATIONS!  Your skills are impressive! 🥲")
-            print(f"Final score: {return_score(user_score, computer_score)}")
+            print_prompt("CONGRATULATIONS!  Your skills are impressive! 🥲")
+            print_prompt(f"Final score: {return_score(user_score, computer_score)}")
             break
         if computer_score >= 3:
             print_divider()
-            print("WHAT A SAD DAY.  You were beaten by a computer. ☹️")
-            print(f"Final score: {return_score(user_score, computer_score)}")
+            print_prompt("WHAT A SAD DAY.  You were beaten by the computer. ☹️")
+            print_prompt(f"Final score: {return_score(user_score, computer_score)}")
             break
 
 
 # MAIN LOOP
 while True:
-
+    print_prompt("Welcome, contestants! 🤖 vs 🖥️")
     play_best_of_5()
 
     # Continue or no?
@@ -131,5 +136,5 @@ while True:
         break
 
 # EXIT MESSAGE
-print(random.choice(["Goodbye! 🙂",
+print_prompt(random.choice(["Goodbye! 🙂",
                      'Good riddance! 🙂', 'Fare thee well! 🙂']))
