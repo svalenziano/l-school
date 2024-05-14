@@ -1,17 +1,13 @@
-"""
-See also: 
-    PY101.2.28 Lizard Spock Flowchart.excalidraw
-"""
-
 import random
 
 VALID_CHOICES = ['rock', 'paper', 'scissors','lizard','spock',
                  'r', 'p', 'sc','l', 'sp']
 
+'''
+CODE REVIEW: This data structure isn't quite as efficient as the solution
+provided by Launch School, but is it still a good solution?
+'''
 WINNING_HANDS = [
-    # CODE REVIEW: This data structure isn't quite as efficient as the solution
-    # provided by Launch School, but is it still a good solution?
-
     # scissors cuts paper, decapitates lizard
     ('scissors', 'paper'), ('scissors', 'lizard'),
     # paper covers rock, disproves spock
@@ -69,9 +65,9 @@ def play_best_of_5():
     '''
     user_score = 0
     computer_score = 0
-    
+
     print_prompt("Let's play best of 5... first to 3 wins!")
-    
+
     while True:
         print_divider()
         print_prompt(f"Choose one: {', '.join(VALID_CHOICES)}")
@@ -104,18 +100,22 @@ def play_best_of_5():
                 computer_score += 1
 
         # Print updated scores
-        print_prompt(f"Current Score: {return_score(user_score, computer_score)}")
+        print_prompt(
+            f"Current Score: {return_score(user_score, computer_score)}")
 
         # If someone's scored 3 (best of 5), print final score, then exit loop
         if user_score >= 3:
             print_divider()
             print_prompt("CONGRATULATIONS!  Your skills are impressive! 🥲")
-            print_prompt(f"Final score: {return_score(user_score, computer_score)}")
+            print_prompt(
+                f"Final score: {return_score(user_score, computer_score)}")
             break
         if computer_score >= 3:
             print_divider()
-            print_prompt("WHAT A SAD DAY.  You were beaten by the computer. ☹️")
-            print_prompt(f"Final score: {return_score(user_score, computer_score)}")
+            print_prompt(
+                "WHAT A SAD DAY.  You were beaten by the computer. ☹️")
+            print_prompt(
+                f"Final score: {return_score(user_score, computer_score)}")
             break
 
 
