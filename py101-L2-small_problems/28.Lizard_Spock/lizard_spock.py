@@ -55,6 +55,35 @@ def return_score(user_score, computer_score):
 def print_divider():
     print_prompt('*' * 79)
 
+def prompt_user_choice():
+    # helper function: returns user choice
+    print_prompt(f"Choose one: {', '.join(VALID_CHOICES)}")
+    user_choice = input()
+
+    while user_choice.casefold() not in VALID_CHOICES:
+        print_prompt('That is not a valid choice, please try again')
+        user_choice = input()
+
+    if len(user_choice) < 3:
+        user_choice = expand_abbreviation(user_choice)
+
+    return user_choice
+
+def get_computer_choice():
+        # Generate computer choice using 'random'
+        # Only use first 5 choices (Rock ==> Spock),
+        # don't use abbreviations (r ==> sp)
+        return random.choice(VALID_CHOICES[0:4])
+
+def print_choices(user_choice, computer_choice):
+        print_prompt(
+            f'You chose {user_choice}, the computer chose {computer_choice}.')
+
+def print_score(user_score, computer_score):
+    print_prompt(
+        f"Current Score: {return_score(user_score, computer_score)}")
+
+
 def play_best_of_5():
 
     user_score = 0
@@ -65,25 +94,10 @@ def play_best_of_5():
     while True:
         print_divider()
         
-
-        # helper function: returns user choice
-        print_prompt(f"Choose one: {', '.join(VALID_CHOICES)}")
-        user_choice = input()
-
-        while user_choice.casefold() not in VALID_CHOICES:
-            print_prompt('That is not a valid choice, please try again')
-            user_choice = input()
-
-        if len(user_choice) < 3:
-            user_choice = expand_abbreviation(user_choice)
-
-        # Generate computer choice using 'random'
-        # Only use first 5 choices (Rock ==> Spock),
-        # don't use abbreviations (r ==> sp)
-        computer_choice = random.choice(VALID_CHOICES[0:4])
-
-        print_prompt(
-            f'You chose {user_choice}, the computer chose {computer_choice}.')
+        # Get choices from user & computer
+        user_choice = prompt_user_choice()
+        computer_choice = get_computer_choice()
+        print_choices(user_choice, computer_choice)
 
         # Decide who wins/ loses
         result = return_winner(user_choice, computer_choice)
@@ -96,9 +110,7 @@ def play_best_of_5():
             case 2:
                 computer_score += 1
 
-        # Print updated scores
-        print_prompt(
-            f"Current Score: {return_score(user_score, computer_score)}")
+        print_score(user_score, computer_score)
 
         # If someone's scored 3 (best of 5), print final score, then exit loop
         if user_score >= 3:
@@ -118,7 +130,7 @@ def play_best_of_5():
 
 # MAIN LOOP
 while True:
-    print_prompt("Welcome, contestants! 🤖 vs 🖥️")
+    print_prompt("Welcome, contestants! 🕴️ vs 🖥️")
     play_best_of_5()
 
     # Continue or no?
