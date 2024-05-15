@@ -3,10 +3,7 @@ import random
 VALID_CHOICES = ['rock', 'paper', 'scissors','lizard','spock',
                  'r', 'p', 'sc','l', 'sp']
 
-'''
-CODE REVIEW: This data structure isn't quite as efficient as the solution
-provided by Launch School, but is it still a good solution?
-'''
+
 WINNING_HANDS = [
     # scissors cuts paper, decapitates lizard
     ('scissors', 'paper'), ('scissors', 'lizard'),
@@ -59,10 +56,7 @@ def print_divider():
     print_prompt('*' * 79)
 
 def play_best_of_5():
-    '''
-    CODE REVIEW: Was it a good decision to break out this function?
-    I thought it would be easier to read than nested 'while True' loops
-    '''
+
     user_score = 0
     computer_score = 0
 
@@ -70,6 +64,9 @@ def play_best_of_5():
 
     while True:
         print_divider()
+        
+
+        # helper function: returns user choice
         print_prompt(f"Choose one: {', '.join(VALID_CHOICES)}")
         user_choice = input()
 
