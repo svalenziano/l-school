@@ -49,8 +49,8 @@ def print_winner(result_code):
         case 2:
             print_prompt("You lose this round! ☹️")
 
-def return_score(user_score, computer_score):
-    return f"You-{user_score} vs. Computer-{computer_score}"
+def return_score():
+    return f"You-{scores['human']} vs. Computer-{scores['computer']}"
 
 def print_divider():
     print_prompt('*' * 79)
@@ -79,15 +79,16 @@ def print_choices(user_choice, computer_choice):
         print_prompt(
             f'You chose {user_choice}, the computer chose {computer_choice}.')
 
-def print_score(user_score, computer_score):
-    print_prompt(
-        f"Current Score: {return_score(user_score, computer_score)}")
+def print_score():
+    print_prompt(f"Current Score: {return_score()}")
 
 
-def play_best_of_5():
 
-    user_score = 0
-    computer_score = 0
+# MAIN LOOP
+while True:
+    print_prompt("Welcome, contestants! 🕴️ vs 🖥️")
+
+    scores = {'human' : 0, 'computer' : 0}
 
     print_prompt("Let's play best of 5... first to 3 wins!")
 
@@ -106,32 +107,26 @@ def play_best_of_5():
         # Update scores
         match result:
             case 1:
-                user_score += 1
+                scores['human'] += 1
             case 2:
-                computer_score += 1
+                scores['computer'] += 1
 
-        print_score(user_score, computer_score)
+        print_score()  #🔴
 
         # If someone's scored 3 (best of 5), print final score, then exit loop
-        if user_score >= 3:
+        if scores['human'] >= 3:
             print_divider()
             print_prompt("CONGRATULATIONS!  Your skills are impressive! 🥲")
             print_prompt(
-                f"Final score: {return_score(user_score, computer_score)}")
+                f"Final score: {return_score()}")
             break
-        if computer_score >= 3:
+        if scores['computer'] >= 3:
             print_divider()
             print_prompt(
                 "WHAT A SAD DAY.  You were beaten by the computer. ☹️")
             print_prompt(
-                f"Final score: {return_score(user_score, computer_score)}")
+                f"Final score: {return_score()}")
             break
-
-
-# MAIN LOOP
-while True:
-    print_prompt("Welcome, contestants! 🕴️ vs 🖥️")
-    play_best_of_5()
 
     # Continue or no?
     print_prompt("Again? (y/n)")
