@@ -69,12 +69,9 @@ def clear_terminal():
 def return_winner(player1_choice, player2_choice):
     if player1_choice == player2_choice:
         return 0    # TIE
-
     losing_hands = WHO_BEATS_WHO[player1_choice]
-
     if player2_choice in losing_hands:
         return 1    # PLAYER 1 WINS
-
     return 2        # else, PLAYER 2 WINS
 
 def print_winner(result_code):
@@ -87,14 +84,11 @@ def print_winner(result_code):
             print("RESULT: ☹️ You lose this round! ")
 
 def return_overall_winner():
-    '''
-    Only run this function if you KNOW that someone has already won.
-    '''
     if scores['human'] >= WIN_SCORE:
         return 1    # Human wins
-
-    return 2    # Computer wins
-
+    if scores['computer'] >= WIN_SCORE:
+        return 2    # Computer wins
+    return None
 
 def return_score():
     return f"You-{scores['human']} vs. Computer-{scores['computer']}"
@@ -103,25 +97,17 @@ def print_divider():
     print('*' * 79)
 
 def print_blank_line():
-    '''
-    CODE REVIEW:
-    Is this print_blank() function best practice?  My intent is to make the
-    code easier to read, though I realize maybe I'm going too far?
-    '''
     print()
 
 def prompt_user_choice():
     # helper function: gets keyboard input, returns user choice
     print_prompt(f"Choose one: {VALID_CHOICES_STR}")
     choice = input()
-
     while choice.casefold() not in VALID_CHOICES_LIST:
         print_prompt('That is not a valid choice, please try again')
         choice = input()
-
     if len(choice) < 3:  # if it's one or two characters, it's an abbrev
         choice = expand_abbreviation(choice)
-
     return choice
 
 def get_computer_choice():
@@ -150,11 +136,6 @@ def print_scoreboard_standard():
     print_divider()
 
 def print_scoreboard_final():
-    '''
-    CODE REVIEW:
-    This function is over 10 lines but I don't think it makes sense to
-    break it up?
-    '''
     clear_terminal()
     print_divider()
     print_choices()
@@ -185,13 +166,10 @@ while True:
     print_divider()
 
     scores = {'human' : 0, 'computer' : 0}
-    overall_winner = None
 
     print_prompt("Let's play best of 5... first to 3 wins!")
 
     while True:
-        round_winner = None
-
         # Get choices from user & computer
         user_choice = prompt_user_choice()
         computer_choice = get_computer_choice()
@@ -199,6 +177,7 @@ while True:
         # print_choices()
 
         # Decide who wins/ loses
+
         round_winner = return_winner(user_choice, computer_choice)
         update_score(round_winner)
 
