@@ -2,43 +2,8 @@ import random
 import os
 import time
 
-# Best of 5 = 3
-WIN_SCORE = 3
-
-# Valid choices are stored as keys, Abbreviations are stored as values
-VALID_CHOICES = {
-    'rock' : 'r',
-    'paper' : 'p',
-    'scissors' : 'sc',
-    'lizard' : 'l',
-    'spock' : 'sp',
-}
-
-# Convert valid choices & abbrevs into flattened list
-VALID_CHOICES_LIST = list(VALID_CHOICES.keys()) + list(VALID_CHOICES.values())
-
-# Convert to string for printing
-VALID_CHOICES_STR = (', '.join(VALID_CHOICES_LIST))
-
-X_BEATS_Y = {
-    # winner : losers
-    'scissors' : ['paper', 'lizard'],
-    'paper' : ['rock', 'spock'],
-    'rock' : ['lizard', 'scissors'],
-    'lizard' : ['spock', 'paper'],
-    'spock' : ['scissors', 'rock'],
-}
-
-# Display helpers
-SCORE_JUSTIFY = 11
-
-
-# Delay durations, in seconds
-DELAY_SHORT = 0.25
-DELAY_SUSPENSEFUL = 1
-
 MSG_WELCOME = '''\
-THIS IS ROCK, PAPER, SCISSORS, LIZARD, SPOCK! 
+THIS IS ROCK, PAPER, SCISSORS, LIZARD, SPOCK!
 
 Welcome, contestants! IT'S 🕴️ vs 🖥️ !!!
 [dramatic and slightly ominous music]
@@ -56,6 +21,40 @@ http://www.samkass.com/theories/RPSSL.html
 In-depth video tutorial: https://www.youtube.com/watch?v=x5Q6-wMx-K8
 '''
 
+# Best of 5 = 3
+WIN_SCORE = 3
+
+# Valid choices are stored as keys, Abbreviations are stored as values
+VALID_CHOICES = {
+    'rock' : 'r',
+    'paper' : 'p',
+    'scissors' : 'sc',
+    'lizard' : 'l',
+    'spock' : 'sp',
+}
+
+# Convert valid choices & abbrevs into flattened list
+VALID_CHOICES_LIST = list(VALID_CHOICES.keys()) + list(VALID_CHOICES.values())
+
+# Convert to string for printing
+VALID_CHOICES_STR = ', '.join(VALID_CHOICES_LIST)
+
+WHO_BEATS_WHO = {
+    # winner : losers
+    'scissors' : ['paper', 'lizard'],
+    'paper' : ['rock', 'spock'],
+    'rock' : ['lizard', 'scissors'],
+    'lizard' : ['spock', 'paper'],
+    'spock' : ['scissors', 'rock'],
+}
+
+# Display helpers
+SCORE_JUSTIFY = 11
+
+# Delay durations, in seconds
+DELAY_SHORT = 0.25
+DELAY_SUSPENSEFUL = 1
+
 def expand_abbreviation(abbreviation):
     index = list(VALID_CHOICES.values()).index(abbreviation)
     full_name = list(VALID_CHOICES.keys())[index]
@@ -70,12 +69,12 @@ def clear_terminal():
 def return_winner(player1_choice, player2_choice):
     if player1_choice == player2_choice:
         return 0    # TIE
-    
-    losing_hands = X_BEATS_Y[player1_choice]
-    
+
+    losing_hands = WHO_BEATS_WHO[player1_choice]
+
     if player2_choice in losing_hands:
         return 1    # PLAYER 1 WINS
-    
+
     return 2        # else, PLAYER 2 WINS
 
 def print_winner(result_code):
@@ -88,10 +87,13 @@ def print_winner(result_code):
             print("RESULT: ☹️ You lose this round! ")
 
 def return_overall_winner():
+    '''
+    Only run this function if you KNOW that someone has already won.
+    '''
     if scores['human'] >= WIN_SCORE:
         return 1    # Human wins
-    elif scores['computer'] >= WIN_SCORE:
-        return 2    # Computer wins
+
+    return 2    # Computer wins
 
 
 def return_score():
@@ -100,38 +102,38 @@ def return_score():
 def print_divider():
     print('*' * 79)
 
-'''
-CODE REVIEW:
-Is this print_blank() function best practice?  My intent is to make the
-code easier to read, though I realize maybe I'm going too far?
-'''
 def print_blank_line():
+    '''
+    CODE REVIEW:
+    Is this print_blank() function best practice?  My intent is to make the
+    code easier to read, though I realize maybe I'm going too far?
+    '''
     print()
 
 def prompt_user_choice():
     # helper function: gets keyboard input, returns user choice
     print_prompt(f"Choose one: {VALID_CHOICES_STR}")
-    user_choice = input()
+    choice = input()
 
-    while user_choice.casefold() not in VALID_CHOICES_LIST:
+    while choice.casefold() not in VALID_CHOICES_LIST:
         print_prompt('That is not a valid choice, please try again')
-        user_choice = input()
+        choice = input()
 
-    if len(user_choice) < 3:
-        user_choice = expand_abbreviation(user_choice)
+    if len(choice) < 3:  # if it's one or two characters, it's an abbrev
+        choice = expand_abbreviation(choice)
 
-    return user_choice
+    return choice
 
 def get_computer_choice():
-        return random.choice(list(VALID_CHOICES.keys()))
+    return random.choice(list(VALID_CHOICES.keys()))
 
 def print_choices():
-        time.sleep(DELAY_SHORT)
-        clear_terminal()
-        print_divider()
-        print_prompt(
-            f'You chose {user_choice}, the computer chose {computer_choice}.')
-        time.sleep(DELAY_SUSPENSEFUL)
+    time.sleep(DELAY_SHORT)
+    clear_terminal()
+    print_divider()
+    print_prompt(
+        f'You chose {user_choice}, the computer chose {computer_choice}.')
+    time.sleep(DELAY_SUSPENSEFUL)
 
 def print_score(header_string):
     print(header_string)
@@ -147,11 +149,12 @@ def print_scoreboard_standard():
     print_score('SCORE:')
     print_divider()
 
-'''
-CODE REVIEW:
-This function is over 10 lines, but I don't think it makes sense to break it up?
-'''
 def print_scoreboard_final():
+    '''
+    CODE REVIEW:
+    This function is over 10 lines but I don't think it makes sense to
+    break it up?
+    '''
     clear_terminal()
     print_divider()
     print_choices()
@@ -188,25 +191,25 @@ while True:
 
     while True:
         round_winner = None
-        
+
         # Get choices from user & computer
         user_choice = prompt_user_choice()
         computer_choice = get_computer_choice()
-        
+
         # print_choices()
-        
+
         # Decide who wins/ loses
         round_winner = return_winner(user_choice, computer_choice)
         update_score(round_winner)
 
         # Check to see if anyone has won best of 5 and update scoreboard
         overall_winner = return_overall_winner()
-        
+
         if overall_winner:
             print_scoreboard_final()
             break
-        else:
-            print_scoreboard_standard()
+
+        print_scoreboard_standard()
 
     # Continue or no?
     print_prompt("Again? (y/n)")
