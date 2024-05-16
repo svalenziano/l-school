@@ -1,8 +1,12 @@
 import random
+import os
+import time
+
+# Best of 5 = 3
+WIN_SCORE = 3
 
 VALID_CHOICES = ['rock', 'paper', 'scissors','lizard','spock',
                  'r', 'p', 'sc','l', 'sp']
-
 
 WINNING_HANDS = [
     # scissors cuts paper, decapitates lizard
@@ -16,6 +20,13 @@ WINNING_HANDS = [
     # spock smashes scissors, vaporizes rock
     ('spock', 'scissors'), ('spock', 'rock'),
     ]
+
+# Display helpers
+SCORE_JUSTIFY = 15
+
+# Delay durations, in seconds
+DELAY_SHORT = 0.25
+DELAY_SUSPENSEFUL = 1
 
 def expand_abbreviation(abbreviation):
     match abbreviation:
@@ -33,27 +44,45 @@ def expand_abbreviation(abbreviation):
 def print_prompt(message):
     print(f'==> {message}')
 
+def clear_terminal():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
 def return_winner(player1_choice, player2_choice):
     if player1_choice == player2_choice:
         return 0    # TIE
     if (player1_choice, player2_choice) in WINNING_HANDS:
         return 1    # PLAYER 1 WINS
-    return 2    # PLAYER 2 WINS
+    return 2        # PLAYER 2 WINS
 
 def print_winner(result_code):
     match result_code:
         case 0:
-            print_prompt("It's a tie! 😑")
+            print("RESULT: 😬 It's a tie! ")
         case 1:
-            print_prompt("You win this round! 🙂")
+            print("RESULT: 🙂 You win this round! ")
         case 2:
-            print_prompt("You lose this round! ☹️")
+            print("RESULT: ☹️ You lose this round! ")
+
+def return_overall_winner():
+    if scores['human'] >= WIN_SCORE:
+        return 1    # Human wins
+    elif scores['computer'] >= WIN_SCORE:
+        return 2    # Computer wins
+
 
 def return_score():
     return f"You-{scores['human']} vs. Computer-{scores['computer']}"
 
 def print_divider():
-    print_prompt('*' * 79)
+    print('*' * 79)
+
+'''
+CODE REVIEW:
+Is this print_blank() function best practice?  My intent is to make the
+code easier to read, though I realize maybe I'm going too far?
+'''
+def print_blank():
+    print()
 
 def prompt_user_choice():
     # helper function: returns user choice
@@ -75,58 +104,82 @@ def get_computer_choice():
         # don't use abbreviations (r ==> sp)
         return random.choice(VALID_CHOICES[0:4])
 
-def print_choices(user_choice, computer_choice):
+def print_choices():
+        time.sleep(DELAY_SHORT)
+        clear_terminal()
+        print_divider()
         print_prompt(
             f'You chose {user_choice}, the computer chose {computer_choice}.')
+        time.sleep(DELAY_SUSPENSEFUL)
 
-def print_score():
-    print_prompt(f"Current Score: {return_score()}")
+def print_score(header_string):
+    print(header_string)
+    print('You'.ljust(SCORE_JUSTIFY),      scores['human'])
+    print('Computer'.ljust(SCORE_JUSTIFY), scores['computer'])
 
+def print_scoreboard_standard():
+    clear_terminal()
+    print_divider()
+    print_choices()
+    print_winner(round_winner)
+    print_blank()
+    print_score('SCORE')
+    print_divider()
 
+def print_scoreboard_final():
+    clear_terminal()
+    print_divider()
+    print_choices()
+    if overall_winner == 1:
+        print("RESULT: 🥳 YOU WIN BEST OF 5!")
+    else:
+        print("RESULT: 😟 You lose best of 5.")
+    print_blank()
+    print_score('FINAL SCORE')
+    print_divider()
+    if overall_winner == 1:
+        print_prompt("CONGRATULATIONS!  Your skills are impressive! 🥲")
+    else:
+        print_prompt("WHAT A SAD DAY.  You were beaten by a computer. ☹️")
+
+def update_score(winner):
+    match winner:
+        case 1:
+            scores['human'] += 1
+        case 2:
+            scores['computer'] += 1
 
 # MAIN LOOP
 while True:
+    clear_terminal()
     print_prompt("Welcome, contestants! 🕴️ vs 🖥️")
 
     scores = {'human' : 0, 'computer' : 0}
+    overall_winner = None
 
     print_prompt("Let's play best of 5... first to 3 wins!")
 
     while True:
-        print_divider()
+        round_winner = None
         
         # Get choices from user & computer
         user_choice = prompt_user_choice()
         computer_choice = get_computer_choice()
-        print_choices(user_choice, computer_choice)
-
+        
+        # print_choices()
+        
         # Decide who wins/ loses
-        result = return_winner(user_choice, computer_choice)
-        print_winner(result)
+        round_winner = return_winner(user_choice, computer_choice)
+        update_score(round_winner)
 
-        # Update scores
-        match result:
-            case 1:
-                scores['human'] += 1
-            case 2:
-                scores['computer'] += 1
-
-        print_score()  #🔴
-
-        # If someone's scored 3 (best of 5), print final score, then exit loop
-        if scores['human'] >= 3:
-            print_divider()
-            print_prompt("CONGRATULATIONS!  Your skills are impressive! 🥲")
-            print_prompt(
-                f"Final score: {return_score()}")
+        # Check to see if anyone has won best of 5
+        overall_winner = return_overall_winner()
+        
+        if overall_winner:
+            print_scoreboard_final()
             break
-        if scores['computer'] >= 3:
-            print_divider()
-            print_prompt(
-                "WHAT A SAD DAY.  You were beaten by the computer. ☹️")
-            print_prompt(
-                f"Final score: {return_score()}")
-            break
+        else:
+            print_scoreboard_standard()
 
     # Continue or no?
     print_prompt("Again? (y/n)")
