@@ -9,7 +9,7 @@ Welcome, contestants! IT'S 🕴️ vs 🖥️ !!!
 [dramatic and slightly ominous music]
 
 RULES:
-Scissors cuts paper, decapitates lizard.
+Scissors cuts paper, deyycapitates lizard.
 Paper covers rock, disproves spock.
 Rock crushes lizard, crushes scissors.
 Lizard poisons spock, eats Paper.
@@ -56,7 +56,9 @@ DELAY_SHORT = 0.25
 DELAY_SUSPENSEFUL = 1
 
 def expand_abbreviation(abbreviation):
+    # Return index of abbreviation
     index = list(VALID_CHOICES.values()).index(abbreviation)
+    # Use that index to lookup the associated key
     full_name = list(VALID_CHOICES.keys())[index]
     return full_name
 
@@ -65,6 +67,13 @@ def print_prompt(message):
 
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
+
+def print_welcome():
+    clear_terminal()
+    print_divider()
+    print(MSG_WELCOME)
+    print_divider()
+    print_prompt("Let's play best of 5... first to 3 wins!")
 
 def return_winner(player1_choice, player2_choice):
     if player1_choice == player2_choice:
@@ -110,6 +119,14 @@ def prompt_user_choice():
         choice = expand_abbreviation(choice)
     return choice
 
+def prompt_play_again():
+    print_prompt("Again? (y/n)")
+    again = input()
+    while again.casefold() not in ['y','n']:
+        print_prompt("Invalid value, say again? Please enter 'y' or 'n'")
+        again = input()
+    return again
+
 def get_computer_choice():
     return random.choice(list(VALID_CHOICES.keys()))
 
@@ -117,8 +134,7 @@ def print_choices():
     time.sleep(DELAY_SHORT)
     clear_terminal()
     print_divider()
-    print_prompt(
-        f'You chose {user_choice}, the computer chose {computer_choice}.')
+    print(f'You chose {user_choice}, the computer chose {computer_choice}.')
     time.sleep(DELAY_SUSPENSEFUL)
 
 def print_score(header_string):
@@ -132,6 +148,7 @@ def print_scoreboard_standard():
     print_choices()
     print_winner(round_winner)
     print_blank_line()
+    time.sleep(DELAY_SHORT)
     print_score('SCORE:')
     print_divider()
 
@@ -158,26 +175,23 @@ def update_score(winner):
         case 2:
             scores['computer'] += 1
 
+def print_exit_message():
+    print_prompt(random.choice(["Goodbye! 🙂",
+                     'Good riddance! 🙂', 'Fare thee well! 🙂']))
+    print('\n' * 3)  # blank lines
+
 # MAIN LOOP
 while True:
-    clear_terminal()
-    print_divider()
-    print(MSG_WELCOME)
-    print_divider()
+    print_welcome()
 
     scores = {'human' : 0, 'computer' : 0}
-
-    print_prompt("Let's play best of 5... first to 3 wins!")
 
     while True:
         # Get choices from user & computer
         user_choice = prompt_user_choice()
         computer_choice = get_computer_choice()
 
-        # print_choices()
-
         # Decide who wins/ loses
-
         round_winner = return_winner(user_choice, computer_choice)
         update_score(round_winner)
 
@@ -191,16 +205,9 @@ while True:
         print_scoreboard_standard()
 
     # Continue or no?
-    print_prompt("Again? (y/n)")
-    play_again = input()
-
-    while play_again.casefold() not in ['y','n', '']:
-        print_prompt("Invalid value, say again? Please enter 'y' or 'n'")
-        play_again = input()
-
+    play_again = prompt_play_again()
     if play_again == 'n':
         break
 
 # EXIT MESSAGE
-print_prompt(random.choice(["Goodbye! 🙂",
-                     'Good riddance! 🙂', 'Fare thee well! 🙂']))
+print_exit_message()
