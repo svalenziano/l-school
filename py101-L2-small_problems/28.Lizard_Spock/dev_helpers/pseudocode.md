@@ -52,14 +52,22 @@ Print score
         Return `human` or `computer`
 Print message using match case statement
 
+RESULT = WORKS 🥳
+
 # Options for keeping track of score
     1) global variable list (mutable from within function)
         score = {'human' : 0, 'computer' : 1}
     2) pass score to 
 
+# updating 'choosing winner' data and logic
 
+## data structure 
+{ 'item' : ['loser1', 'loser2'] }
 
-
+## logic v1
+given the `user_choice` and `computer_choice` variables,
+losing_hands = WINNING_HANDS[`user_choice`]
+    if `computer_choice` in losing_hands
 
 
 
