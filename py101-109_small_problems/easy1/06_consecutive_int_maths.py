@@ -56,14 +56,16 @@ def get_valid_input(message, message_invalid, valid_options):
             print(message_invalid)
             valid_return = None
 
-def convert_str_to_int(list_of_ints_as_strings):
+def convert_str_to_int(list_to_modify):
     '''
-    Convert list of integers (as strings) to list of integers
+    Input: list of ints (strings)
+    Operation: Convert each element from str to integer
     '''
     list_of_ints = []
-    for element in list_of_ints_as_strings:
+    for element in list_to_modify:
         list_of_ints.append(int(element))
-    return list_of_ints
+    list_to_modify.clear()
+    list_to_modify.extend(list_of_ints)
 
 def get_valid_numbers(message, message_invalid):
     '''
@@ -93,6 +95,11 @@ def operate_on_sequence(sequence, operation):
         return product
     
 def show_your_work(collection, operation, result):
+    '''
+    TODO:
+    - Avoid use of global variable OPERATIONS
+    - Use .join() method instead of the whack logic that I used
+    '''
     operator = OPERATIONS[operation]['operator']
     string = f'{collection[0]}'
     index = 1
@@ -102,18 +109,29 @@ def show_your_work(collection, operation, result):
     string += f' = {result:,}'
     return string
 
+def create_range(list_of_one):
+    '''
+    Input: list containing one integer
+    Operate: mutate the list so that it contains a range of integers
+        from 1 to the integer provided, inclusive
+    '''
+    my_range = list(range(1, list_of_one[0] + 1))
+    list_of_one.clear()
+    list_of_one.extend(my_range)
+
 def main():
     clear_terminal()
 
     # get input
     list_of_numbers = get_valid_numbers(DEELUXE_MSG, INVALID_MSG)
-    list_of_numbers = convert_str_to_int(list_of_numbers)
+    convert_str_to_int(list_of_numbers)
+    
     print(repr(list_of_numbers).strip('[]'))
 
     operation = get_valid_input(OPERATION_MSG, INVALID_MSG, OPERATIONS.keys())
 
     if len(list_of_numbers) == 1:
-        list_of_numbers = list(range(1, list_of_numbers[0] + 1))
+        create_range(list_of_numbers)
     elif len(list_of_numbers) < 1:
         print('Something has gone terribly wrong')
 
