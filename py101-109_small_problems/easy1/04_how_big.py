@@ -10,7 +10,6 @@ def input_positive_float(message, message_invalid):
         except:
             print(message_invalid)
     
-
 # get length
 room_length = input_positive_float(
     message = "What's the LENGTH of the room? ",
