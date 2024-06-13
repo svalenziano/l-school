@@ -2,14 +2,16 @@
 https://launchschool.com/exercises/fddf66ac
 '''
 
-def twice(integer):
+def is_double_number(integer):
     string = str(integer)
     midpoint = len(string) // 2
     first_half = string[:midpoint]
     second_half = string[midpoint:]
-    if first_half == second_half:
+    return first_half == second_half
+
+def twice(integer):
+    if is_double_number(integer):
         return integer
-    # else, return integer * 2
     else:
         return integer * 2
 
