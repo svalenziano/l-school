@@ -64,19 +64,32 @@ def crunch_v2(string):
             # continue
         # else: append and continue
 
-# EXECUTING V2
-def crunch(string):
+# EXECUTING V2.2, works pretty clean :)
+def crunch_v3(string):
     crunched = ''
     # for each character
     for index, char in enumerate(string):
-        # find the next instance of the character
-        found = string.find(char, index + 1)
-        # skip if found index - current index == 1:
-        if found - index == 1:
+        next_occurence = string.find(char, index + 1)
+        # skip if the next occurence occurs directly after the current char
+        if next_occurence - index == 1:
             continue
         else:
             crunched += char
     return crunched
+
+# v3, after glancing at the solution for a few seconds
+def crunch(string):
+# use a while loop
+    index = 0
+    crunched = ''
+    while index < len(string):
+        # if it's the last char OR if the next char isn't the same as the current char
+        if (index == len(string) - 1) or (string[index] != string[index + 1]):
+            crunched += string[index]
+        index += 1
+    return crunched
+
+
 
 # These examples should all print True
 print(crunch('ddaaiillyy ddoouubbllee') == 'daily double')
