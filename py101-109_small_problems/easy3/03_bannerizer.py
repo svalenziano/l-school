@@ -1,23 +1,12 @@
-# THIS IS THE 'STANDARD PROBLEM'
+'''
+TODO: 
+    - Cleanup def make_message_multiline().  Improve so the 
+      delete_trailing_line() function isn't necessary
 
-def horiz(width, _):
-    print('+' + '+'.rjust(width, '-'))
-
-def blank(width, _):
-    print('|' + '|'.rjust(width))
-
-def message_line(width, message):
-    print('|' + message.center(width - 1) + '|')
+'''
 
 
-
-
-def print_in_box(message):
-    width = len(message) + 8
-    for function in [horiz, blank, message_line, blank, horiz]:
-        function(width, message)
-
-messages = [
+MESSAGES = [
     'To boldly go where no one has gone before.',
     'Well hey!',
     '',
@@ -33,18 +22,18 @@ Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium dolor
 
 
     multiline thingy.
-'''
+''',
+    'Ok bye! 👋'
 ]
 
-def test1():
-    for msg in messages:
-        print_in_box(msg)
+def horiz(width, _):
+    print('+' + '+'.rjust(width, '-'))
 
-# test1()
+def blank(width, _):
+    print('|' + '|'.rjust(width))
 
-
-
-# FURTHER EXPLORATION
+def message_line(width, message):
+    print('|' + message.center(width - 1) + '|')
 
 def message_multiline(width, message):
     '''
@@ -57,46 +46,6 @@ def remove_newlines(list_of_strings):
     for i in list_of_strings:
         i = 'o'
         # i = '🔴'.join(i.splitlines())
-
-# V01
-# This kinda works but it doesn't deal with newlines for strings that are
-# shorter than the 60 char limit.
-def make_message_multiline_v01(line_length, message):
-    list_o_lines = []
-    while len(message) > line_length:
-        # use slice syntax to remove from string and add to list
-        left = message.strip()[:line_length]
-        left = left.splitlines(keepends = True)  # not sure if keepends is helpful
-        list_o_lines.extend(left)
-        message = message[line_length:]
-    list_o_lines.append(message)
-    return list_o_lines
-
-def append_non_empty_string(string, list_, ignore_empty):
-    '''
-    Strips and appends, ignoring empty strings
-    '''
-    if ignore_empty:
-        if string:
-            list_.append(string.strip())
-    else:
-        list_.append(string.strip())
-        
-
-# v02 - WORKS!
-def make_message_multiline_v02(line_length, message):
-    lines = message.strip().splitlines(keepends = False)
-    lines2 = []
-    for line in lines:
-        while len(line) > line_length:
-            append_non_empty_string(line[:line_length], lines2, False)
-            line = line[line_length:]
-        append_non_empty_string(line, lines2, False)
-    return lines2
-
-# v03
-# same as v02, except clean it up and don't create a new object, simply mutate the exst obj
-# also, split at space, not any random character
 
 def return_split_index(max_line_length, line):
     '''
@@ -117,13 +66,13 @@ def return_split_index(max_line_length, line):
     except:
         return len(line)
 
-def make_message_multiline(line_length, message):
+def make_message_multiline(max_line_length, message):
     single_line = message.strip().splitlines(keepends = False)
     list_of_strings = []
     for line in single_line:
         line_index = 0
         while line_index < len(line):
-            split_index = return_split_index(line_length, line)
+            split_index = return_split_index(max_line_length, line)
             list_of_strings.append(line[:split_index].strip())
             line = line[split_index:]
             line_index = split_index
@@ -143,23 +92,21 @@ def print_fancy_box(width, message):
     for function in [horiz, blank, message_multiline, blank, horiz]:
         function(width, message)
 
-# v04
-# Clean up the implementation
-    
-    pass
-
-def test2():
-    for msg in messages:
+def test_examine_lines():
+    for msg in MESSAGES:
         for line in make_message_multiline(60, msg):
             print(line)
-# test2()
+# test_examine_lines()
 
-def test4():
-    for msg in messages:
+def test_examine_lists():
+    for msg in MESSAGES:
         print(make_message_multiline(60, msg))
-test4()
+# test_examine_lists()
 
-def test3():
-    for msg in messages:
+def main():
+    for msg in MESSAGES:
         print_fancy_box(60, msg)
-test3()
+
+
+if '__main__' in __name__:
+    main()
