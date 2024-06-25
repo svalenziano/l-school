@@ -4,19 +4,20 @@ import os, random, time
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def init_valid_choices():
-    choices = []
-    for col in [0, 1, 2]:
-        for row in [0, 1, 2]:
-            choices.append(f"{col},{row}")
-    return choices
-
+def return_valid_choices(board):
+    valid_choices = []
+    for row_num, row in enumerate(board):
+        # for every column
+        for col_num, cell in enumerate(row):
+            if cell == ' ':
+                valid_choices.append(f'{col_num},{row_num}')
+    return valid_choices
 
 def display_board(board):
     clear_terminal()
     print('  0     1     2  ')
     print(' _________________ ')
-    print('|     |     |     |')
+    print('|     |     |     |') 
     print(f'|  {board[0][0]}  |  {board[0][1]}  |  {board[0][2]}  |  0')
     print('|     |     |     |')
     print('|-----+-----+-----|')
@@ -57,7 +58,8 @@ def get_valid_input(valid_choices, msg_txt, help_txt, board):
         if choice in valid_choices:
             return choice
         elif choice in ['h', 'help']:
-            display_board_and_msg(help_txt, board)
+            display_board_and_msg('HINT:', board)
+            prompt(help_txt)
         elif choice in ['q', 'quit']:
             print('Goodbye!')
             quit()
@@ -82,7 +84,7 @@ def add_computer_choice_to_board(board):
     - updated board
     '''
     # determine valid choices
-    
+
 
     # randomly choose among valid choices
 
@@ -91,8 +93,8 @@ def add_computer_choice_to_board(board):
     return board
 
 def main():
-    valid_choices = init_valid_choices()
     board = init_board()
+    valid_choices = return_valid_choices(board)
     display_board(board)
     
     while True:
