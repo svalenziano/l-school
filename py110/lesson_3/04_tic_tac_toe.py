@@ -1,10 +1,18 @@
 import os, random, time
 
+SYMBOLS = {
+    'human': 'X',
+    'computer': '0',
+}
 
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def return_valid_choices(board):
+    '''
+    Input = board (nested list)
+    Output = list of valid choices, as '<col>,<row>' strings
+    '''
     valid_choices = []
     for row_num, row in enumerate(board):
         # for every column
@@ -50,6 +58,8 @@ def help(choice, help_text):
 
 def get_valid_input(valid_choices, msg_txt, help_txt, board):
     '''
+    🔍 CODE REVIEW: Should this function be broken up?  It currently has both
+        a return value AND side effects (input AND output)
     Input: Valid choices as a list
     '''
     display_board_and_msg(msg_txt, board)
@@ -68,29 +78,27 @@ def get_valid_input(valid_choices, msg_txt, help_txt, board):
             display_board_and_msg(i, board)
             prompt(help_txt)
 
-def add_choice_to_board(choice, board):
+def add_choice_to_board(choice, board, symbol):
     column, row = choice.split(',')  # expects CSV string: '<row>,<column>'
     column = int(column)
     row = int(row)
-    board[row][column] = 'X'
+    board[row][column] = symbol
     display_board_and_msg('', board)
     return board
 
-def add_computer_choice_to_board(board):
+def return_computer_choice(valid_choices):
     '''
     Input:
     - board
     Output:
     - updated board
     '''
-    # determine valid choices
-
-
     # randomly choose among valid choices
+    choice = random.choice(valid_choices)
+    return choice
 
-    # update board
-
-    return board
+def delay_short():
+    time.sleep(0.25)
 
 def main():
     board = init_board()
@@ -102,6 +110,14 @@ def main():
                     "Format = <Column,Row>. " + \
                     "Example '2,2' for bottom-right."
         choice = get_valid_input(valid_choices, 'Your turn!', help_text, board)
-        board = add_choice_to_board(choice, board)
+        board = add_choice_to_board(choice, board, SYMBOLS['human'])
+        valid_choices = return_valid_choices(board)
+        delay_short()
+
+        choice = return_computer_choice(valid_choices)
+        board = add_choice_to_board(choice, board, SYMBOLS['computer'])
+        valid_choices = return_valid_choices(board)
+        delay_short()
+
 
 main()
