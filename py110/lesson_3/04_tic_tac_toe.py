@@ -62,7 +62,7 @@ def get_valid_input(valid_choices, msg_txt, help_txt):
     '''
     valid_choices.extend(['h', 'help', 'q', 'quit'])
     say(msg_txt)
-    x = input().casefold()
+    x = input().casefold().strip().replace(' ','')
     if x in valid_choices:
         return 'valid!'
     else:
@@ -71,7 +71,6 @@ def get_valid_input(valid_choices, msg_txt, help_txt):
 
 def main():
     VALID_CHOICES = initialize_valid_choices()
-    print(VALID_CHOICES)
     board = initialize_board()
     display_board(board)
     print(get_valid_input([1,2,3], 'Your turn!', 'You need help!'))
