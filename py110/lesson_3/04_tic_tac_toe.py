@@ -12,14 +12,14 @@ TODO:
 import os, random, time, pprint
 from copy import deepcopy
 
-SYMBOLS = {
+MARKS = {
     'human': 'X',
     'computer': '0',
     'placeholder': '?',
     'empty': ' ',
 }
 
-WINNING_BOARD_TEMPLATES = [
+WINNING_BOARDS = [
     [
         ['?', ' ', ' '],
         ['?', ' ', ' '],
@@ -168,12 +168,6 @@ def add_choice_to_board(choice, board, symbol):
     return board
 
 def return_computer_choice(valid_choices):
-    '''
-    Input:
-    - board
-    Output:
-    - updated board
-    '''
     # randomly choose among valid choices
     choice = random.choice(valid_choices)
     return choice
@@ -181,42 +175,37 @@ def return_computer_choice(valid_choices):
 def delay_short():
     time.sleep(0.25)
 
+def board_is_full(board):
+    '''
+    TODO:
+    - remove this function?  Not necessary since valid_choices() 
+        already determines if the board is full?
+    '''
+    marks_set = {mark for mark in board
+                      for row in board
+                      for mark in row}
+    return MARKS['empty'] not in marks_set
+
 def return_winner(board):
     '''
     Input = board
     Return = winner
     '''
-    # remove all 0's, and compare to human winning boards
-    
-    human_winning_boards = init_winning_board(WINNING_BOARD_TEMPLATES, 
-                                              SYMBOLS['human'])
-
-    temp_board = deepcopy(board)
-    board_find_replace(temp_board, SYMBOLS['computer'], SYMBOLS['empty'])
-    for win in human_winning_boards:
-        if temp_board == win:
+    # compare each winning board to the current board    
+    for win_board in WINNING_BOARDS:
+        marks_set = set()
+        for row_idx, row in enumerate(win_board):
+            for col_idx, cell in enumerate(row):
+                if cell == MARKS['placeholder']:
+                    marks_set = marks_set.union(set(board[row_idx][col_idx]))
+        if marks_set == set(MARKS['human']):
             return 'human'
-
-    # remove all X's and compare to computer winning boards
-    computer_winning_boards = init_winning_board(WINNING_BOARD_TEMPLATES,
-                                                SYMBOLS['computer'])
-    temp_board = deepcopy(board)
-    board_find_replace(temp_board, SYMBOLS['human'], SYMBOLS['empty'])
-    
-    # debug
-    display_board(temp_board)
-    breakpoint()
-
-    for win in computer_winning_boards:
-        if temp_board == win:
+        if marks_set == set(MARKS['computer']):
             return 'computer'
+    # breakpoint()
 
 def main():
-    # init human winning boards
-    # init compute rwinning boards
     board = init_board()
-
-
     
     valid_choices = return_valid_choices(board)
     display_board(board, clear=True)
@@ -226,25 +215,28 @@ def main():
                     "Format = <Column,Row>. " + \
                     "Example '2,2' for bottom-right."
         choice = get_valid_input(valid_choices, 'Your turn!', help_text, board)
-        board = add_choice_to_board(choice, board, SYMBOLS['human'])
+        board = add_choice_to_board(choice, board, MARKS['human'])
         if return_winner(board) == 'human':
             print('You win!')
-            breakpoint()
+            quit()
         
         valid_choices = return_valid_choices(board)
         
+        if not valid_choices:
+            print("It's a tie!")
+            quit()
+
         delay_short()
 
         choice = return_computer_choice(valid_choices)
-        board = add_choice_to_board(choice, board, SYMBOLS['computer'])
+        board = add_choice_to_board(choice, board, MARKS['computer'])
         if return_winner(board) == 'computer':
             print('Computer wins!')
-            breakpoint()
+            quit()            
 
         valid_choices = return_valid_choices(board)
         delay_short()
 
         #if winner_exists(board):
-
 
 main()
