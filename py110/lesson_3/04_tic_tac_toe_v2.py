@@ -93,7 +93,10 @@ def update_valid_choices():
                 valid_choices.append(f'{col_num},{row_num}')
 
 
-def display_board(clear = True):
+def display_board(msg:list = [], clear = True):
+    '''
+    msg = messages.  Each element in the list prints as a separate line.
+    '''
     if clear:
         clear_terminal()
     print('  0     1     2  ')
@@ -109,6 +112,10 @@ def display_board(clear = True):
     print('|     |     |     |')
     print(f'|  {board[2][0]}  |  {board[2][1]}  |  {board[2][2]}  |  2')
     print('|_____|_____|_____|')
+    if msg:
+        for i in msg:
+            delay_short()
+            prompt(i)
 
 def prompt(msg):
     print(f"==> {msg}")
@@ -117,11 +124,7 @@ def help(choice, help_text):
     if choice.casefold() in ['h', 'help']:
         prompt(help_text)
 
-def display_board_and_msg(msg):
-    display_board()
-    prompt(msg)
-
-def prompt_valid_input(valid_choices, msg_txt, help_txt):
+def prompt_valid_input(valid_choices, msg_txt, help_txt, delay:int = 0):
     '''
     🔍 CODE REVIEW: Should this function be broken up?  It currently has both
         a return value AND side effects (input AND output)
@@ -129,28 +132,42 @@ def prompt_valid_input(valid_choices, msg_txt, help_txt):
         - specific error message if the user picks a choice that's valid, but taken
     Input: Valid choices as a list
     '''
-    display_board_and_msg(msg_txt)
+    display_board(msg_txt)
+    time.sleep(delay)
     while True:
-        choice = input().casefold().strip().replace(' ','')
+        choice = input().casefold().strip(' ,').replace(' ','')
         if choice in valid_choices:
             return choice
-        elif choice in ['h', 'help']:
-            display_board_and_msg('HINT:')
-            prompt(help_txt)
+        elif choice in ['h', 'help', '?,']:
+            display_board(['HINT:', help_txt])
         elif choice in ['q', 'quit']:
             prompt_goodbye_and_quit()
-            quit()
         else:
             error_msg = f"Invalid input ☹️.  I heard: '{choice}'. \
 Enter 'h' for help."
-            display_board_and_msg(error_msg)
+            display_board([error_msg])
             prompt(help_txt)
 
+def celebrate():
+    def flash_on():
+        display_board(outcome)
+        time.sleep(0.4)
+    
+    def flash_off():
+        display_board()
+        time.sleep(0.2)
+    
+    for i in range(0,6):
+        if i % 2 == 1:
+            flash_on()
+        else:
+            flash_off()
+
 def prompt_play_again():
-    msg_txt = "Would you like to play again?"
-    help_txt = "Enter 'y' to play again, 'n' to quit"
     valid_choices = ['y', 'n']
-    choice = prompt_valid_input(valid_choices, msg_txt, help_txt)
+    msg_txt = [*outcome, "Would you like to play again?"]
+    help_txt = "Enter 'y' to play again, 'n' to quit"
+    choice = prompt_valid_input(valid_choices, msg_txt, help_txt, delay=0.5)
     if choice == 'n':
         prompt_goodbye_and_quit()
     else:
@@ -201,7 +218,7 @@ def player_chooses():
     help_text = "Where would you like your X? " + \
                     "Format = <Column,Row>. " + \
                     "Example '2,2' for bottom-right."
-    msg_text = 'Your turn!'
+    msg_text = ['Your turn!']
     choice = prompt_valid_input(valid_choices, msg_text, help_text)
     add_choice_to_board(choice, MARKS['human'])
     update_valid_choices()
@@ -221,31 +238,19 @@ def mutate_outcome(new_string):
 
 def update_outcome():
     if not valid_choices:
-        mutate_outcome('tie')
+        mutate_outcome("It's a tie! 😬")
         return
     if compare_against_winning_boards() == 'human':
-        mutate_outcome('human_wins')
+        mutate_outcome('Human wins! 💃')
         return
     if compare_against_winning_boards() == 'computer':
-        mutate_outcome('computer_wins')
+        mutate_outcome('You lose ☹️')
         return
+    # Else
     mutate_outcome('undecided')
 
-def display_result():
-    display_board()
-    if outcome == ['human_wins']:
-        prompt('You win! 💃')
-    if outcome == ['computer_wins']:
-        prompt('You lose ☹️')
-    if outcome == ['tie']:
-        prompt("It's a tie! 😬")
-    else:
-        prompt('Something has gone terribly wrong')
-
-
 def prompt_introduction():
-    print('INTRODUCTION PLACEHOLDER')
-    delay_short()
+    print('INTRODUCTION PLACEHOLDER 🔴🔴🔴🔴')
     delay_short()
     delay_short()
 
@@ -269,10 +274,12 @@ while True:
         update_outcome()
 
     if outcome != ['undecided']:
-        display_result()
+        celebrate()
         prompt_play_again()
 
     if outcome == ['play_again']:
-        reset_board()
+        board = reset_board()
         update_valid_choices()
+        display_board()
+        breakpoint()
 
