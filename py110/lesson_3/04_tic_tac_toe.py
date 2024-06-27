@@ -80,7 +80,7 @@ def board_find_replace(board, find, replace):
                 board[row_idx][cell_idx] = replace
 
 
-def init_board():
+def reset_board():
     board = [
     [' ', ' ', ' '],
     [' ', ' ', ' '],
@@ -135,7 +135,7 @@ def help(choice, help_text):
     if choice.casefold() in ['h', 'help']:
         print(help_text)
 
-def get_valid_input(valid_choices, msg_txt, help_txt, board):
+def prompt_valid_input(valid_choices, msg_txt, help_txt, board):
     '''
     🔍 CODE REVIEW: Should this function be broken up?  It currently has both
         a return value AND side effects (input AND output)
@@ -152,12 +152,31 @@ def get_valid_input(valid_choices, msg_txt, help_txt, board):
             display_board_and_msg('HINT:', board)
             prompt(help_txt)
         elif choice in ['q', 'quit']:
-            print('Goodbye!')
+            prompt_goodbye_and_quit()
             quit()
         else:
-            error_msg = f"Invalid input ☹️.  I heard: '{choice}'. Enter 'h' for help."
+            error_msg = f"Invalid input ☹️.  I heard: '{choice}'. \
+Enter 'h' for help."
             display_board_and_msg(error_msg, board)
             prompt(help_txt)
+
+def prompt_play_again(board):
+    display_board(board, clear=True)
+    msg_txt = "Would you like to play again?"
+    help_txt = "Enter 'y' to play again, 'n' to quit"
+    valid_choices = ['y', 'n']
+    choice = prompt_valid_input(valid_choices, msg_txt, help_txt, board)
+    if choice == 'n':
+        prompt_goodbye_and_quit()
+
+def prompt_goodbye_and_quit():
+    messages = [
+        'Goodbye! 😃',
+        'Good riddance! 😃',
+        'Have a nice day! 😃',
+    ]
+    print(random.choice(messages))
+    quit()
 
 def add_choice_to_board(choice, board, symbol):
     column, row = choice.split(',')  # expects CSV string: '<row>,<column>'
@@ -205,7 +224,7 @@ def return_winner(board):
     # breakpoint()
 
 def main():
-    board = init_board()
+    board = reset_board()
     
     valid_choices = return_valid_choices(board)
     display_board(board, clear=True)
@@ -214,17 +233,17 @@ def main():
         help_text = "Where would you like your X? " + \
                     "Format = <Column,Row>. " + \
                     "Example '2,2' for bottom-right."
-        choice = get_valid_input(valid_choices, 'Your turn!', help_text, board)
+        choice = prompt_valid_input(valid_choices, 'Your turn!', help_text, board)
         board = add_choice_to_board(choice, board, MARKS['human'])
         if return_winner(board) == 'human':
             print('You win!')
-            quit()
+            prompt_play_again(board)
         
         valid_choices = return_valid_choices(board)
         
         if not valid_choices:
             print("It's a tie!")
-            quit()
+            prompt_play_again(board)
 
         delay_short()
 
@@ -232,7 +251,16 @@ def main():
         board = add_choice_to_board(choice, board, MARKS['computer'])
         if return_winner(board) == 'computer':
             print('Computer wins!')
-            quit()            
+            prompt_play_again(board)
+        
+        '''
+        #LOA
+        - Ask if we should play again
+        - If no: quit
+        - If yes: Reset board and keep going
+        - remember to address the tie scenario (a few lines above)
+        '''
+                
 
         valid_choices = return_valid_choices(board)
         delay_short()
