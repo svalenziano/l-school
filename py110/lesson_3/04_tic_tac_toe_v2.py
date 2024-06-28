@@ -63,7 +63,9 @@ WINNING_BOARDS = [
 ]
 
 # ****************************************************************************
+# ****************************************************************************
 # FUNCTIONS
+# ****************************************************************************
 # ****************************************************************************
 
 
@@ -79,12 +81,6 @@ def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def update_valid_choices():
-    '''
-    Input = board (nested list)
-    Output = list of valid choices, as '<col>,<row>' strings
-    TODO:
-        - make comprehension, similar to: https://launchschool.com/lessons/62aa893f/assignments/1bc31bcf#:~:text=To%20fix%20this%20problem%2C%20we%20must%20use%20the
-    '''
     valid_choices.clear()
     for row_num, row in enumerate(board):
         # for every column
@@ -113,23 +109,21 @@ def display_board(msg:list = [], clear = True):
     print(f'|  {board[2][0]}  |  {board[2][1]}  |  {board[2][2]}  |  2')
     print('|_____|_____|_____|')
     if msg:
-        for i in msg:
+        if type(msg) == str:
             delay_short()
-            prompt(i)
+            prompt(msg)
+        elif type(msg) == list:
+            for i in msg:
+                delay_short()
+                prompt(i)
+        else:
+            prompt("🔴 Something has gone terribly wrong")
 
 def prompt(msg):
     print(f"==> {msg}")
 
-def help(choice, help_text):
-    if choice.casefold() in ['h', 'help']:
-        prompt(help_text)
-
-def prompt_valid_input(valid_choices, msg_txt, help_txt, delay:int = 0):
+def prompt_valid_input(valid_choices:list, msg_txt, help_txt, delay:int = 0):
     '''
-    🔍 CODE REVIEW: Should this function be broken up?  It currently has both
-        a return value AND side effects (input AND output)
-    TODO: 
-        - specific error message if the user picks a choice that's valid, but taken
     Input: Valid choices as a list
     '''
     display_board(msg_txt)
@@ -143,14 +137,14 @@ def prompt_valid_input(valid_choices, msg_txt, help_txt, delay:int = 0):
         elif choice in ['q', 'quit']:
             prompt_goodbye_and_quit()
         else:
-            error_msg = f"Invalid input ☹️.  I heard: '{choice}'. \
-Enter 'h' for help."
-            display_board([error_msg])
+            error_msg = \
+            f"Invalid input ☹️.  I heard: '{choice}'. \ Enter 'h' for help."
+            display_board(error_msg)
             prompt(help_txt)
 
-def celebrate():
+def celebrate(msg):
     def flash_on():
-        display_board(outcome)
+        display_board(msg)
         time.sleep(0.4)
     
     def flash_off():
@@ -184,8 +178,7 @@ def prompt_goodbye_and_quit():
 
 def add_choice_to_board(choice, symbol):
     column, row = choice.split(',')  # expects CSV string: '<row>,<column>'
-    column = int(column)
-    row = int(row)
+    column = int(column); row = int(row)
     board[row][column] = symbol
 
 def return_computer_choice(valid_choices):
@@ -198,26 +191,25 @@ def delay_short():
 
 def compare_against_winning_boards():
     '''
-    Input = board
     Return = winner
     '''
-    # compare each winning board to the current board    
-    for win_board in WINNING_BOARDS:
+    # compare each winning board to the current board
+    # and create a set of   
+    for winning_board in WINNING_BOARDS:
         set_of_marks = set()
-        for row_idx, row in enumerate(win_board):
+        for row_idx, row in enumerate(winning_board):
             for col_idx, cell in enumerate(row):
                 if cell == MARKS['placeholder']:
-                    set_of_marks = set_of_marks.union(set(board[row_idx][col_idx]))
+                    set_of_marks = set_of_marks.union(
+                                        set(board[row_idx][col_idx]))
         if set_of_marks == set(MARKS['human']):
             return 'human'
         if set_of_marks == set(MARKS['computer']):
             return 'computer'
-    # breakpoint()
 
 def player_chooses():
-    help_text = "Where would you like your X? " + \
-                    "Format = <Column,Row>. " + \
-                    "Example '2,2' for bottom-right."
+    help_text = f'''Where would you like your {MARKS["human"]}? \
+Format = <Column,Row>. Example '2,2' for bottom-right.'''
     msg_text = ['Your turn!']
     choice = prompt_valid_input(valid_choices, msg_text, help_text)
     add_choice_to_board(choice, MARKS['human'])
@@ -249,11 +241,6 @@ def update_outcome():
     # Else
     mutate_outcome('undecided')
 
-def prompt_introduction():
-    print('INTRODUCTION PLACEHOLDER 🔴🔴🔴🔴')
-    delay_short()
-    delay_short()
-
 # ****************************************************************************
 # MAIN LOOP
 # ****************************************************************************
@@ -263,7 +250,7 @@ board = reset_board()
 outcome = ['undecided']
 valid_choices = []
 update_valid_choices()
-prompt_introduction()
+celebrate("Are you ready to rumble???")
 
 while True:
     player_chooses()
@@ -272,14 +259,11 @@ while True:
     if outcome == ['undecided']:
         computer_chooses()
         update_outcome()
-
-    if outcome != ['undecided']:
-        celebrate()
+    else:
+        celebrate(outcome)
         prompt_play_again()
 
     if outcome == ['play_again']:
         board = reset_board()
         update_valid_choices()
         display_board()
-        breakpoint()
-

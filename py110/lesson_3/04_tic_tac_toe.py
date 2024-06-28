@@ -62,22 +62,11 @@ WINNING_BOARDS = [
     ],
 ]
 
-def init_winning_board(board_templates, symbol):
-    winning_boards = deepcopy(board_templates)
-    for board in winning_boards:
-        board_find_replace(board, '?', symbol)
-    return winning_boards
-
-def board_find_replace(board, find, replace):
-    '''
-    Side effect: Mutates the 'board' object
-    Returns: None
-    TODO: convert to comprehension
-    '''
-    for row_idx, row in enumerate(board):
-        for cell_idx, cell in enumerate(row):
-            if cell == find:
-                board[row_idx][cell_idx] = replace
+# ****************************************************************************
+# ****************************************************************************
+# FUNCTIONS
+# ****************************************************************************
+# ****************************************************************************
 
 
 def reset_board():
@@ -88,26 +77,22 @@ def reset_board():
     ]
     return board
 
-
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def return_valid_choices(board):
-    '''
-    Input = board (nested list)
-    Output = list of valid choices, as '<col>,<row>' strings
-    TODO:
-        - make comprehension, similar to: https://launchschool.com/lessons/62aa893f/assignments/1bc31bcf#:~:text=To%20fix%20this%20problem%2C%20we%20must%20use%20the
-    '''
-    valid_choices = []
+def update_valid_choices():
+    valid_choices.clear()
     for row_num, row in enumerate(board):
         # for every column
         for col_num, cell in enumerate(row):
             if cell == ' ':
                 valid_choices.append(f'{col_num},{row_num}')
-    return valid_choices
 
-def display_board(board, clear = False):
+
+def display_board(msg:list = [], clear = True):
+    '''
+    msg = messages.  Each element in the list prints as a separate line.
+    '''
     if clear:
         clear_terminal()
     print('  0     1     2  ')
@@ -123,53 +108,64 @@ def display_board(board, clear = False):
     print('|     |     |     |')
     print(f'|  {board[2][0]}  |  {board[2][1]}  |  {board[2][2]}  |  2')
     print('|_____|_____|_____|')
-
-
+    if msg:
+        if type(msg) == str:
+            delay_short()
+            prompt(msg)
+        elif type(msg) == list:
+            for i in msg:
+                delay_short()
+                prompt(i)
+        else:
+            prompt("🔴 Something has gone terribly wrong")
 
 def prompt(msg):
     print(f"==> {msg}")
 
-def display_board_and_msg(msg, board):
-    display_board(board, clear=True)
-    prompt(msg)
-
-def help(choice, help_text):
-    if choice.casefold() in ['h', 'help']:
-        print(help_text)
-
-def prompt_valid_input(valid_choices, msg_txt, help_txt, board):
+def prompt_valid_input(valid_choices:list, msg_txt, help_txt, delay:int = 0):
     '''
-    🔍 CODE REVIEW: Should this function be broken up?  It currently has both
-        a return value AND side effects (input AND output)
-    TODO: 
-        - specific error message if the user picks a choice that's valid, but taken
     Input: Valid choices as a list
     '''
-    display_board_and_msg(msg_txt, board)
+    display_board(msg_txt)
+    time.sleep(delay)
     while True:
-        choice = input().casefold().strip().replace(' ','')
+        choice = input().casefold().strip(' ,').replace(' ','')
         if choice in valid_choices:
             return choice
-        elif choice in ['h', 'help']:
-            display_board_and_msg('HINT:', board)
-            prompt(help_txt)
+        elif choice in ['h', 'help', '?,']:
+            display_board(['HINT:', help_txt])
         elif choice in ['q', 'quit']:
             prompt_goodbye_and_quit()
-            quit()
         else:
-            error_msg = f"Invalid input ☹️.  I heard: '{choice}'. \
-Enter 'h' for help."
-            display_board_and_msg(error_msg, board)
+            error_msg = \
+            f"Invalid input ☹️.  I heard: '{choice}'.  Enter 'h' for help."
+            display_board(error_msg)
             prompt(help_txt)
 
-def prompt_play_again(board):
-    display_board(board, clear=True)
-    msg_txt = "Would you like to play again?"
-    help_txt = "Enter 'y' to play again, 'n' to quit"
+def celebrate(msg):
+    def flash_on():
+        display_board(msg)
+        time.sleep(0.4)
+    
+    def flash_off():
+        display_board()
+        time.sleep(0.2)
+    
+    for i in range(0,6):
+        if i % 2 == 1:
+            flash_on()
+        else:
+            flash_off()
+
+def prompt_play_again():
     valid_choices = ['y', 'n']
-    choice = prompt_valid_input(valid_choices, msg_txt, help_txt, board)
+    msg_txt = [*outcome, "Would you like to play again?"]
+    help_txt = "Enter 'y' to play again, 'n' to quit"
+    choice = prompt_valid_input(valid_choices, msg_txt, help_txt, delay=0.5)
     if choice == 'n':
         prompt_goodbye_and_quit()
+    else:
+        mutate_outcome('play_again')
 
 def prompt_goodbye_and_quit():
     messages = [
@@ -180,13 +176,10 @@ def prompt_goodbye_and_quit():
     print(random.choice(messages))
     quit()
 
-def add_choice_to_board(choice, board, symbol):
+def add_choice_to_board(choice, symbol):
     column, row = choice.split(',')  # expects CSV string: '<row>,<column>'
-    column = int(column)
-    row = int(row)
+    column = int(column); row = int(row)
     board[row][column] = symbol
-    display_board_and_msg('', board)
-    return board
 
 def return_computer_choice(valid_choices):
     # randomly choose among valid choices
@@ -196,67 +189,81 @@ def return_computer_choice(valid_choices):
 def delay_short():
     time.sleep(0.25)
 
-def board_is_full(board):
+def compare_against_winning_boards():
     '''
-    TODO:
-    - remove this function?  Not necessary since valid_choices() 
-        already determines if the board is full?
-    '''
-    marks_set = {mark for mark in board
-                      for row in board
-                      for mark in row}
-    return MARKS['empty'] not in marks_set
-
-def return_winner(board):
-    '''
-    Input = board
     Return = winner
     '''
-    # compare each winning board to the current board    
-    for win_board in WINNING_BOARDS:
-        marks_set = set()
-        for row_idx, row in enumerate(win_board):
+    # compare each winning board to the current board
+    # and create a set of   
+    for winning_board in WINNING_BOARDS:
+        set_of_marks = set()
+        for row_idx, row in enumerate(winning_board):
             for col_idx, cell in enumerate(row):
                 if cell == MARKS['placeholder']:
-                    marks_set = marks_set.union(set(board[row_idx][col_idx]))
-        if marks_set == set(MARKS['human']):
+                    set_of_marks = set_of_marks.union(
+                                        set(board[row_idx][col_idx]))
+        if set_of_marks == set(MARKS['human']):
             return 'human'
-        if marks_set == set(MARKS['computer']):
+        if set_of_marks == set(MARKS['computer']):
             return 'computer'
-    # breakpoint()
 
-def main():
-    board = reset_board()
+def player_chooses():
+    help_text = f'''Where would you like your {MARKS["human"]}? \
+Format = <Column,Row>. Example '2,2' for bottom-right.'''
+    msg_text = ['Your turn!']
+    choice = prompt_valid_input(valid_choices, msg_text, help_text)
+    add_choice_to_board(choice, MARKS['human'])
+    update_valid_choices()
+    display_board()
+
+def computer_chooses():
+    choice = random.choice(valid_choices)
+    add_choice_to_board(choice, MARKS['computer'])
+    update_valid_choices()
+    delay_short()
+    display_board()
+
+
+def mutate_outcome(new_string):
+    outcome.clear()
+    outcome.append(new_string)
+
+def update_outcome():
+    if not valid_choices:
+        mutate_outcome("It's a tie! 😬")
+        return
+    if compare_against_winning_boards() == 'human':
+        mutate_outcome('Human wins! 💃')
+        return
+    if compare_against_winning_boards() == 'computer':
+        mutate_outcome('You lose ☹️')
+        return
+    # Else
+    mutate_outcome('undecided')
+
+# ****************************************************************************
+# MAIN LOOP
+# ****************************************************************************
+
+
+board = reset_board()
+outcome = ['undecided']
+valid_choices = []
+update_valid_choices()
+celebrate("Are you ready to rumble???")
+
+while True:
+    player_chooses()
+    update_outcome()
     
-    valid_choices = return_valid_choices(board)
-    display_board(board, clear=True)
-    
-    while True:
-        help_text = "Where would you like your X? " + \
-                    "Format = <Column,Row>. " + \
-                    "Example '2,2' for bottom-right."
-        choice = prompt_valid_input(valid_choices, 'Your turn!', help_text, board)
-        board = add_choice_to_board(choice, board, MARKS['human'])
-        if return_winner(board) == 'human':
-            print('You win!')
-            prompt_play_again(board)
-        
-        valid_choices = return_valid_choices(board)
-        
-        if not valid_choices:
-            print("It's a tie!")
-            prompt_play_again(board)
+    if outcome == ['undecided']:
+        computer_chooses()
+        update_outcome()
+    else:
+        celebrate(outcome)
+        prompt_play_again()
 
-        delay_short()
-
-        choice = return_computer_choice(valid_choices)
-        board = add_choice_to_board(choice, board, MARKS['computer'])
-        if return_winner(board) == 'computer':
-            print('Computer wins!')
-            prompt_play_again(board)              
-
-        valid_choices = return_valid_choices(board)
-        delay_short()
-
-
-main()
+    if outcome == ['play_again']:
+        board = reset_board()
+        update_valid_choices()
+        display_board()
