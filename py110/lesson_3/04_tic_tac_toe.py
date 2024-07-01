@@ -192,77 +192,59 @@ def return_computer_choice(valid_choices):
 def delay_short():
     time.sleep(0.25)
 
-def compare_against_winning_boards():
+def test_for_winner():
     '''
     Return = winner
     '''
     # compare each winning board to the current board
     # and create a set of   
     for winning_board in WINNING_BOARDS:
-        set_of_marks = set()
-        for row_idx, row in enumerate(winning_board):
-            for col_idx, cell in enumerate(row):
-                if cell == MARKS['placeholder']:
-                    set_of_marks = set_of_marks.union(
-                                        set(board[row_idx][col_idx]))
-        if set_of_marks == set(MARKS['human']):
-            return 'human'
-        if set_of_marks == set(MARKS['computer']):
-            return 'computer'
+        board_results = compare_against_winning_board(winning_board)
+        for key, value in board_results.items():
+            if len(value) == REQUIRED_TO_WIN:
+                # breakpoint()
+                return key
 
-def analyze_board(winning_board):
+def compare_against_winning_board(winning_board):
     THRESHOLD = 2   # 2 marks in a row is an 'almost win'
-    results = {
-        'winning' : set(),
+    board_results = {
+        'human' : set(),
+        'computer' : set(),
         'missing' : set(),
-        'opposing' : set(),
     }
-    winning = []
-    opposing = []
-    missing = []
     # for each winning board, determine who is winning, opposing, or missing
     for row_idx, row in enumerate(winning_board):
         for col_idx, cell in enumerate(row):
             if cell == MARKS['placeholder']:
+                cell_coords = (row_idx, col_idx)
                 if board[row_idx][col_idx] == MARKS['human']:
-                    winning.append( (row_idx, col_idx) )
+                    board_results['human'].add(cell_coords)
                 elif board[row_idx][col_idx] == MARKS['computer']:
-                    opposing.append( (row_idx, col_idx))
+                    board_results['computer'].add(cell_coords)
                 else:
-                    missing.append( (row_idx, col_idx))   
-        if len(winning) >= THRESHOLD:
-                results['winning'] = results['winning'].union(winning)
-                results['opposing'] = results['opposing'].union(opposing)
-                results['missing'] = results['missing'].union(missing)
-    return results
+                    board_results['missing'].add(cell_coords)
+    return board_results
 
-def compare_v2():
+def combine_dict_sets(dict_to_mutate, other_dict):
+    '''
+    Input = dicts, all values must be a single set
+    '''
+    for key in dict_to_mutate.keys():
+        dict_to_mutate[key] |= other_dict[key]
+
+def compare_against_all_winning_boards():
     THRESHOLD = 2   # 2 marks in a row is an 'almost win'
     results = {
-        'winning' : set(),
+        'human' : set(),
+        'computer' : set(),
         'missing' : set(),
-        'opposing' : set(),
     }
     for winning_board in WINNING_BOARDS:
-        winning = []
-        opposing = []
-        missing = []
-        # for each winning board, determine who is winning, opposing, or missing
-        for row_idx, row in enumerate(winning_board):
-            for col_idx, cell in enumerate(row):
-                if cell == MARKS['placeholder']:
-                    if board[row_idx][col_idx] == MARKS['human']:
-                        winning.append( (row_idx, col_idx) )
-                    elif board[row_idx][col_idx] == MARKS['computer']:
-                        opposing.append( (row_idx, col_idx))
-                    else:
-                        missing.append( (row_idx, col_idx))   
-        if len(winning) == REQUIRED_TO_WIN:
-
-        if len(winning) >= THRESHOLD:
-            results['winning'] = results['winning'].union(winning)
-            results['opposing'] = results['opposing'].union(opposing)
-            results['missing'] = results['missing'].union(missing)
+        board_results = compare_against_winning_board(winning_board)
+        for key, value in board_results.items():
+            if len(value) >= THRESHOLD:
+                combine_dict_sets(results, board_results)
+    # breakpoint()
     return results
 
 def player_chooses():
@@ -287,14 +269,15 @@ def mutate_outcome(new_string):
     outcome.append(new_string)
 
 def update_outcome():
-    if not valid_choices:
-        mutate_outcome("It's a tie! 😬")
-        return
-    if compare_against_winning_boards() == 'human':
+    
+    if test_for_winner() == 'human':
         mutate_outcome('Human wins! 💃')
         return
-    if compare_against_winning_boards() == 'computer':
+    if test_for_winner() == 'computer':
         mutate_outcome('You lose ☹️')
+        return
+    if not valid_choices:
+        mutate_outcome("It's a tie! 😬")
         return
     # Else
     mutate_outcome('undecided')
@@ -305,18 +288,17 @@ def update_outcome():
 
 if True:
     board = [
-    ['X', '0', 'X'],
-    ['0', '0', 'X'],
-    ['X', ' ', ' '],
+    ['X', ' ', 'X'],
+    ['0', 'X', 'X'],
+    ['0', ' ', '0'],
     ]
-    print(compare_v2())
+    print(compare_against_all_winning_boards())
+    print(test_for_winner())
     breakpoint()
-    
 
 # ****************************************************************************
 # MAIN LOOP
 # ****************************************************************************
-
 
 board = reset_board()
 outcome = ['undecided']

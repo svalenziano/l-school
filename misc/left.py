@@ -1,13 +1,23 @@
+from pprint import pp
+
 my_dict = {
     'a' : {1, 2, 3, 4},
     'b' : {4, 5, 6, 7},
 }
 
-# this doesn't do anything.  Returns a new object, doesn't mutate!
-my_dict['a'].union({10, 11, 12}); print(my_dict)
+my_other_dict = {
+    'a' : {'a', 'b', 'c'},
+    'b' : {1, 2, 3},
+}
 
-# this works
-my_dict['a'] = my_dict['a'].union({10, 11, 12}); print(my_dict)
+def union_dict_sets(dict_to_mutate, other_dict):
+    '''
+    Input = dicts, all values must be a single set
+    '''
+    for key in dict_to_mutate.keys():
+        dict_to_mutate[key] |= other_dict[key]
 
-# this works too
-my_dict['a'] = my_dict['a'] | my_dict['b']; print(my_dict)
+pp(my_dict)
+union_dict_sets(my_dict, my_other_dict)
+pp(my_dict)
+
