@@ -19,6 +19,9 @@ MARKS = {
     'empty': ' ',
 }
 
+# How many in a row are required to win?
+REQUIRED_TO_WIN = 3
+
 WINNING_BOARDS = [
     [
         ['?', ' ', ' '],
@@ -207,6 +210,61 @@ def compare_against_winning_boards():
         if set_of_marks == set(MARKS['computer']):
             return 'computer'
 
+def analyze_board(winning_board):
+    THRESHOLD = 2   # 2 marks in a row is an 'almost win'
+    results = {
+        'winning' : set(),
+        'missing' : set(),
+        'opposing' : set(),
+    }
+    winning = []
+    opposing = []
+    missing = []
+    # for each winning board, determine who is winning, opposing, or missing
+    for row_idx, row in enumerate(winning_board):
+        for col_idx, cell in enumerate(row):
+            if cell == MARKS['placeholder']:
+                if board[row_idx][col_idx] == MARKS['human']:
+                    winning.append( (row_idx, col_idx) )
+                elif board[row_idx][col_idx] == MARKS['computer']:
+                    opposing.append( (row_idx, col_idx))
+                else:
+                    missing.append( (row_idx, col_idx))   
+        if len(winning) >= THRESHOLD:
+                results['winning'] = results['winning'].union(winning)
+                results['opposing'] = results['opposing'].union(opposing)
+                results['missing'] = results['missing'].union(missing)
+    return results
+
+def compare_v2():
+    THRESHOLD = 2   # 2 marks in a row is an 'almost win'
+    results = {
+        'winning' : set(),
+        'missing' : set(),
+        'opposing' : set(),
+    }
+    for winning_board in WINNING_BOARDS:
+        winning = []
+        opposing = []
+        missing = []
+        # for each winning board, determine who is winning, opposing, or missing
+        for row_idx, row in enumerate(winning_board):
+            for col_idx, cell in enumerate(row):
+                if cell == MARKS['placeholder']:
+                    if board[row_idx][col_idx] == MARKS['human']:
+                        winning.append( (row_idx, col_idx) )
+                    elif board[row_idx][col_idx] == MARKS['computer']:
+                        opposing.append( (row_idx, col_idx))
+                    else:
+                        missing.append( (row_idx, col_idx))   
+        if len(winning) == REQUIRED_TO_WIN:
+
+        if len(winning) >= THRESHOLD:
+            results['winning'] = results['winning'].union(winning)
+            results['opposing'] = results['opposing'].union(opposing)
+            results['missing'] = results['missing'].union(missing)
+    return results
+
 def player_chooses():
     help_text = f'''Where would you like your {MARKS["human"]}? \
 Format = <Column,Row>. Example '2,2' for bottom-right.'''
@@ -240,6 +298,20 @@ def update_outcome():
         return
     # Else
     mutate_outcome('undecided')
+
+# ****************************************************************************
+# TESTING
+# ****************************************************************************
+
+if True:
+    board = [
+    ['X', '0', 'X'],
+    ['0', '0', 'X'],
+    ['X', ' ', ' '],
+    ]
+    print(compare_v2())
+    breakpoint()
+    
 
 # ****************************************************************************
 # MAIN LOOP
