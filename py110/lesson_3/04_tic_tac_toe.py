@@ -20,10 +20,10 @@ MARKS = {
 }
 
 # How many in a row are required to win?
-REQUIRED_TO_WIN = 3
+QTY_REQUIRED_TO_WIN = 3
 
 # 2 marks in a row is an 'almost win'
-ALMOST_WIN = 2   
+QTY_ALMOST_WIN = 2   
 
 WINNING_SCENARIOS_VISUAL = [
     [
@@ -157,11 +157,11 @@ def prompt_valid_input(valid_choices:list, msg_txt, help_txt, delay:int = 0):
 def flash_msg(msg):
     def flash_on():
         display_board(msg)
-        time.sleep(0.4)
+        time.sleep(0.3)
     
     def flash_off():
         display_board()
-        time.sleep(0.2)
+        time.sleep(0.15)
     
     for i in range(0,6):
         if i % 2 == 1:
@@ -210,7 +210,7 @@ def about_to_win(mark):
                 empty.append(coords)
             elif cell == mark:
                 taken.append(coords)
-        if len(taken) == ALMOST_WIN and len(empty) > 0:
+        if len(taken) == QTY_ALMOST_WIN and len(empty) > 0:
             return empty[0]
 
 def return_computer_choice():
@@ -227,65 +227,6 @@ def return_computer_choice():
     else:
         empty_cells = return_all_locations_for_mark(board, MARKS['empty'])
         return random.choice(empty_cells)
-
-def analyze_board(winning_scenario):
-    analysis = {
-        'human' :       set(),
-        'computer' :    set(),
-        'hi' :          set(),  # hi, med, low are computer priorities
-        'med' :         set(),
-        'low' :         set(),
-        'tbd' :         set(),
-    }
-    # First pass of analysis
-    for row_idx, row in enumerate(winning_scenario):
-        for col_idx, cell in enumerate(row):
-            if cell == MARKS['placeholder']:
-                cell_coords = (row_idx, col_idx)
-                if board[row_idx][col_idx] == MARKS['human']:
-                    analysis['human'].add(cell_coords)
-                elif board[row_idx][col_idx] == MARKS['computer']:
-                    analysis['computer'].add(cell_coords)
-                else:
-                    analysis['tbd'].add(cell_coords)
-    # Analyze the TBD's
-    for cell in analysis['tbd']:
-        # if human has a mark on the row, it's a low priority
-        if len(analysis['human']) > 0:
-            analysis['low'].add(cell)
-        # if computer has marks, it's a high priority
-        elif len(analysis['computer']) >= ALMOST_WIN:
-            analysis['hi'].add(cell)
-        # otherwise, it's a medium priority
-        else:
-            analysis['med'].add(cell)
-    analysis['tbd'].clear()
-    return analysis
-
-def combine_dict_sets(dict_to_mutate, other_dict):
-    '''
-    Input = dicts, all values must be a single set
-    '''
-    for key in dict_to_mutate.keys():
-        dict_to_mutate[key] |= other_dict[key]
-
-
-def compare_against_all_winning_boards():
-    analysis = {
-        'human' :       set(),
-        'computer' :    set(),
-        'hi' :          set(),  # hi, med, low are computer priorities
-        'med' :         set(),
-        'low' :         set(),
-        'tbd' :         set(),
-    }
-    for scenario in WINNING_SCENARIOS_VISUAL:
-        board_results = analyze_board(scenario)
-        for key, value in board_results.items():
-            if len(value) >= ALMOST_WIN:
-                combine_dict_sets(analysis, board_results)
-    # breakpoint()
-    return analysis
 
 def convert_CSV_to_tuple(csv_string):
     col, row = csv_string.split(',')
@@ -317,6 +258,7 @@ def test_for_winner():
         # if there's only one mark in the scenario
         if len(set_of_marks) == 1:
             return set_of_marks.pop()
+
 def board_is_full():
     return len(return_all_locations_for_mark(board, MARKS['empty'])) == 0
 
