@@ -83,9 +83,6 @@ def return_all_locations_for_mark(board, mark_to_find):
                 mark_locations.append((col_idx, row_idx))
     return mark_locations
 
-def return_mark_at_location(board, row_idx, col_idx):
-    pass
-
 def reset_board():
     board = [
     [' ', ' ', ' '],
@@ -180,7 +177,7 @@ def prompt_play_again():
     if choice == 'n':
         prompt_goodbye_and_quit()
     else:
-        mutate_outcome('play_again')
+        outcome[0] = 'play_again'
 
 def prompt_goodbye_and_quit():
     messages = [
@@ -191,31 +188,12 @@ def prompt_goodbye_and_quit():
     print(random.choice(messages))
     quit()
 
-def add_choice_to_board(choice, symbol):
-    column, row = choice.split(',')  # expects CSV string: '<row>,<column>'
-    column = int(column); row = int(row)
+def add_choice_to_board(choice:tuple, symbol):
+    column, row = choice
     board[row][column] = symbol
-
-def return_computer_choice(valid_choices):
-    # randomly choose among valid choices
-    choice = random.choice(valid_choices)
-    return choice
 
 def delay_short():
     time.sleep(0.25)
-
-def  test_for_winner():
-    '''
-    Return = winner
-    '''
-    # compare each winning board to the current board
-    # and create a set of   
-    for scenario in WINNING_SCENARIOS_VISUAL:
-        board_results = analyze_board(scenario)
-        for key, value in board_results.items():
-            if len(value) == REQUIRED_TO_WIN:
-                # breakpoint()
-                return key
 
 def about_to_win(mark):
     '''
@@ -235,72 +213,20 @@ def about_to_win(mark):
         if len(taken) == ALMOST_WIN and len(empty) > 0:
             return empty[0]
 
-def WIP_analyze_possible_moves():
+def return_computer_choice():
     '''
-    PROBLEM: 
-    evaluate which moves are most advantageous from an offensive perspective
-    
-    EXAMPLES AND TEST CASES: 
-
-    X _ X
-    _ 0 X
-    _ _ 0
-    Result: Computer should play 0,1 to prevent a loss
-
-    X _ X
-    0 0 _
-    _ _ _
-    Result: computer should play 1,2 to win
-
-    X 0 X
-    _ 0 _
-    _ X _
-    Result: computer should play either 1,0 or 1,2
-
-    DATA STRUCTURES
-
-
-    ALGORITHM
-    HIGH LEVEL
-        V2
-            1) Check for win opportunities.  If so, take em
-            2) Check for loss risks.  If so, address em
-            3) Otherwise, choose randomly from remaining options
-                (Bonus: implement weighted evaluation of potential options)
-        V1
-        Input: board (global)
-        Output: matrix of lists representing evaluations of each cell.  Each list
-            item represents quality of move in each scenario. 
-                0  =  taken
-                1  =  low, human has mark on this row (computer can’t win)
-                3  =  hi = two marks on a row, human doesn't have mark
-                2  =  medium (all others)
-                -1 =  TBD
-
-    V3 - ELABORATING ON V2
-        `about_to_win(mark)`
-            - check each winning board
-            - count number of 'mark' in the winning cells
-            - if the `mark` occupies `THRESHOLD` cells:
-                - return the empty cell(s)
-            - otherwise, return None
-
-        `computer_chooses`
-        1) IF `about_to_win(computer mark)` returns a cell
-            - Mark the cell
-        2) ELIF `about_to_win(human_mark)` returns a cell:
-            - mark that cell
-        3) ELSE:
-            - Choose randomly among open cells using `query_board_for_mark(' ')
-
-        SEE FLOWCHART
+    INPUT:
+    OUTPUT: computer choice as (x,y) tuple
     '''
-    # first pass
-    # for each winning scenario
-        # for each cell in the scenario
-            # if the cell is taken, mark it as 0, otherwise -1 (TBD)
-    # second pass
-    pass
+    computer_winning_move = about_to_win(MARKS['computer'])
+    if computer_winning_move:
+        return computer_winning_move
+    human_winning_move = about_to_win(MARKS['human'])
+    if human_winning_move:
+        return human_winning_move
+    else:
+        empty_cells = return_all_locations_for_mark(board, MARKS['empty'])
+        return random.choice(empty_cells)
 
 def analyze_board(winning_scenario):
     analysis = {
@@ -361,40 +287,49 @@ def compare_against_all_winning_boards():
     # breakpoint()
     return analysis
 
+def convert_CSV_to_tuple(csv_string):
+    col, row = csv_string.split(',')
+    return (int(col), int(row))
+
 def player_chooses():
     help_text = f'''Where would you like your {MARKS["human"]}? \
-Format = <Column,Row>. Example '2,2' for bottom-right.'''
+Format = <Column,Row>. Example '2,2' for bottom-right or \
+0,2 for top right.'''
     msg_text = ['Your turn!']
-    choice = prompt_valid_input(valid_choices, msg_text, help_text)
+    choice_string = prompt_valid_input(valid_choices, msg_text, help_text)
+    choice = convert_CSV_to_tuple(choice_string)
     add_choice_to_board(choice, MARKS['human'])
     update_valid_choices()
     display_board()
 
 def computer_chooses():
-    choice = random.choice(valid_choices)
+    choice = return_computer_choice()
     add_choice_to_board(choice, MARKS['computer'])
     update_valid_choices()
     delay_short()
     display_board()
 
-
-def mutate_outcome(new_string):
-    outcome.clear()
-    outcome.append(new_string)
+def test_for_winner():
+    for scenario in winning_scenarios:
+        set_of_marks = set()
+        for col_idx, row_idx in scenario:
+            set_of_marks.add(board[row_idx][col_idx])
+        # if there's only one mark in the scenario
+        if len(set_of_marks) == 1:
+            return set_of_marks.pop()
 
 def update_outcome():
-    
-    if test_for_winner() == 'human':
-        mutate_outcome('Human wins! 💃')
+    if test_for_winner() == MARKS['human']:
+        outcome[0] = 'Human wins! 💃'
         return
-    if test_for_winner() == 'computer':
-        mutate_outcome('You lose ☹️')
+    if test_for_winner() == MARKS['computer']:
+        outcome[0] = 'The computer wins! 💪🖥️'
         return
     if not valid_choices:
-        mutate_outcome("It's a tie! 😬")
+        outcome[0] = "It's a tie! 😬"
         return
     # Else
-    mutate_outcome('undecided')
+    outcome[0] = 'undecided'
 
 # ****************************************************************************
 # SETUP
@@ -404,42 +339,47 @@ winning_scenarios = []
 for scenario in WINNING_SCENARIOS_VISUAL:
     winning_scenarios.append(
         return_all_locations_for_mark(scenario, MARKS['placeholder']))
+board = reset_board()
+outcome = ['undecided']
+valid_choices = []
+update_valid_choices()
 
 # ****************************************************************************
 # TESTING
 # ****************************************************************************
 
-if True:
+if False:
     board = [
-    ['0', 'X', 'X'],
-    ['0', ' ', 'X'],
-    ['0', ' ', ' '],
+    [' ', 'X', '0'],
+    ['X', '0', '0'],
+    ['X', ' ', '0'],
     ]
     #print(compare_against_all_winning_boards())
     #print(test_for_winner())
     # print(return_all_locations_for_mark(board, ' '))
     # print(winning_scenarios)
-    print(about_to_win('X'))
-    breakpoint()
+    #print(about_to_win('X'))
+    #update_outcome()
+    #print(outcome)
+    #breakpoint()
 
 # ****************************************************************************
 # MAIN LOOP
 # ****************************************************************************
 
 
-board = reset_board()
-outcome = ['undecided']
-valid_choices = []
-update_valid_choices()
+
 celebrate("Are you ready to rumble???")
 
 while True:
     player_chooses()
     update_outcome()
+    breakpoint()
     
     if outcome == ['undecided']:
         computer_chooses()
         update_outcome()
+        breakpoint()
     else:
         celebrate(outcome)
         prompt_play_again()
