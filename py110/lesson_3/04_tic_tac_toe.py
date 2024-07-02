@@ -25,7 +25,7 @@ REQUIRED_TO_WIN = 3
 # 2 marks in a row is an 'almost win'
 ALMOST_WIN = 2   
 
-WINNING_SCENARIOS = [
+WINNING_SCENARIOS_VISUAL = [
     [
         ['?', ' ', ' '],
         ['?', ' ', ' '],
@@ -68,12 +68,23 @@ WINNING_SCENARIOS = [
     ],
 ]
 
+
 # ****************************************************************************
 # ****************************************************************************
 # FUNCTIONS
 # ****************************************************************************
 # ****************************************************************************
 
+def return_all_locations_for_mark(board, mark_to_find):
+    mark_locations = []
+    for row_idx, row in enumerate(board):
+        for col_idx, cell in enumerate(row):
+            if cell == mark_to_find:
+                mark_locations.append((col_idx, row_idx))
+    return mark_locations
+
+def return_mark_at_location(board, row_idx, col_idx):
+    pass
 
 def reset_board():
     board = [
@@ -88,11 +99,9 @@ def clear_terminal():
 
 def update_valid_choices():
     valid_choices.clear()
-    for row_num, row in enumerate(board):
-        # for every column
-        for col_num, cell in enumerate(row):
-            if cell == ' ':
-                valid_choices.append(f'{col_num},{row_num}')
+    empty_cells = return_all_locations_for_mark(board, MARKS['empty'])
+    for row, col in empty_cells:
+        valid_choices.append(f'{row},{col}')
 
 
 def display_board(msg:list = [], clear = True):
@@ -201,17 +210,97 @@ def  test_for_winner():
     '''
     # compare each winning board to the current board
     # and create a set of   
-    for scenario in WINNING_SCENARIOS:
+    for scenario in WINNING_SCENARIOS_VISUAL:
         board_results = analyze_board(scenario)
         for key, value in board_results.items():
             if len(value) == REQUIRED_TO_WIN:
                 # breakpoint()
                 return key
 
-def analyze_possible_moves():
+def about_to_win(mark):
+    '''
+    Limitations: will not return multiple cells if there are 
+        multiple locations where the `mark` is about to win.
+    '''
+    for scenario in winning_scenarios:
+        taken = []
+        empty = []
+        for col_idx, row_idx in scenario:
+            cell = board[row_idx][col_idx]
+            coords = (col_idx, row_idx)
+            if cell == MARKS['empty']:
+                empty.append(coords)
+            elif cell == mark:
+                taken.append(coords)
+        if len(taken) == ALMOST_WIN and len(empty) > 0:
+            return empty[0]
+
+def WIP_analyze_possible_moves():
+    '''
+    PROBLEM: 
+    evaluate which moves are most advantageous from an offensive perspective
+    
+    EXAMPLES AND TEST CASES: 
+
+    X _ X
+    _ 0 X
+    _ _ 0
+    Result: Computer should play 0,1 to prevent a loss
+
+    X _ X
+    0 0 _
+    _ _ _
+    Result: computer should play 1,2 to win
+
+    X 0 X
+    _ 0 _
+    _ X _
+    Result: computer should play either 1,0 or 1,2
+
+    DATA STRUCTURES
+
+
+    ALGORITHM
+    HIGH LEVEL
+        V2
+            1) Check for win opportunities.  If so, take em
+            2) Check for loss risks.  If so, address em
+            3) Otherwise, choose randomly from remaining options
+                (Bonus: implement weighted evaluation of potential options)
+        V1
+        Input: board (global)
+        Output: matrix of lists representing evaluations of each cell.  Each list
+            item represents quality of move in each scenario. 
+                0  =  taken
+                1  =  low, human has mark on this row (computer can’t win)
+                3  =  hi = two marks on a row, human doesn't have mark
+                2  =  medium (all others)
+                -1 =  TBD
+
+    V3 - ELABORATING ON V2
+        `about_to_win(mark)`
+            - check each winning board
+            - count number of 'mark' in the winning cells
+            - if the `mark` occupies `THRESHOLD` cells:
+                - return the empty cell(s)
+            - otherwise, return None
+
+        `computer_chooses`
+        1) IF `about_to_win(computer mark)` returns a cell
+            - Mark the cell
+        2) ELIF `about_to_win(human_mark)` returns a cell:
+            - mark that cell
+        3) ELSE:
+            - Choose randomly among open cells using `query_board_for_mark(' ')
+
+        SEE FLOWCHART
+    '''
+    # first pass
     # for each winning scenario
-        # for each cell
-            # 
+        # for each cell in the scenario
+            # if the cell is taken, mark it as 0, otherwise -1 (TBD)
+    # second pass
+    pass
 
 def analyze_board(winning_scenario):
     analysis = {
@@ -264,13 +353,13 @@ def compare_against_all_winning_boards():
         'low' :         set(),
         'tbd' :         set(),
     }
-    for scenario in WINNING_SCENARIOS:
+    for scenario in WINNING_SCENARIOS_VISUAL:
         board_results = analyze_board(scenario)
         for key, value in board_results.items():
             if len(value) >= ALMOST_WIN:
-                combine_dict_sets(results, board_results)
+                combine_dict_sets(analysis, board_results)
     # breakpoint()
-    return results
+    return analysis
 
 def player_chooses():
     help_text = f'''Where would you like your {MARKS["human"]}? \
@@ -308,22 +397,35 @@ def update_outcome():
     mutate_outcome('undecided')
 
 # ****************************************************************************
+# SETUP
+# ****************************************************************************
+
+winning_scenarios = []
+for scenario in WINNING_SCENARIOS_VISUAL:
+    winning_scenarios.append(
+        return_all_locations_for_mark(scenario, MARKS['placeholder']))
+
+# ****************************************************************************
 # TESTING
 # ****************************************************************************
 
 if True:
     board = [
-    ['X', ' ', 'X'],
     ['0', 'X', 'X'],
-    ['0', ' ', '0'],
+    ['0', ' ', 'X'],
+    ['0', ' ', ' '],
     ]
-    print(compare_against_all_winning_boards())
-    print(test_for_winner())
+    #print(compare_against_all_winning_boards())
+    #print(test_for_winner())
+    # print(return_all_locations_for_mark(board, ' '))
+    # print(winning_scenarios)
+    print(about_to_win('X'))
     breakpoint()
 
 # ****************************************************************************
 # MAIN LOOP
 # ****************************************************************************
+
 
 board = reset_board()
 outcome = ['undecided']
