@@ -154,7 +154,7 @@ def prompt_valid_input(valid_choices:list, msg_txt, help_txt, delay:int = 0):
             display_board(error_msg)
             prompt(help_txt)
 
-def celebrate(msg):
+def flash_msg(msg):
     def flash_on():
         display_board(msg)
         time.sleep(0.4)
@@ -171,13 +171,13 @@ def celebrate(msg):
 
 def prompt_play_again():
     valid_choices = ['y', 'n']
-    msg_txt = [*outcome, "Would you like to play again?"]
+    msg_txt = [outcome, "Would you like to play again?"]
     help_txt = "Enter 'y' to play again, 'n' to quit"
     choice = prompt_valid_input(valid_choices, msg_txt, help_txt, delay=0.5)
     if choice == 'n':
         prompt_goodbye_and_quit()
     else:
-        outcome[0] = 'play_again'
+        return True
 
 def prompt_goodbye_and_quit():
     messages = [
@@ -295,17 +295,17 @@ def player_chooses():
     help_text = f'''Where would you like your {MARKS["human"]}? \
 Format = <Column,Row>. Example '2,2' for bottom-right or \
 0,2 for top right.'''
+    update_valid_choices()
     msg_text = ['Your turn!']
     choice_string = prompt_valid_input(valid_choices, msg_text, help_text)
     choice = convert_CSV_to_tuple(choice_string)
     add_choice_to_board(choice, MARKS['human'])
-    update_valid_choices()
     display_board()
 
 def computer_chooses():
+    update_valid_choices()
     choice = return_computer_choice()
     add_choice_to_board(choice, MARKS['computer'])
-    update_valid_choices()
     delay_short()
     display_board()
 
@@ -317,19 +317,16 @@ def test_for_winner():
         # if there's only one mark in the scenario
         if len(set_of_marks) == 1:
             return set_of_marks.pop()
+def board_is_full():
+    return len(return_all_locations_for_mark(board, MARKS['empty'])) == 0
 
-def update_outcome():
+def return_outcome():
+    if board_is_full():
+        return "It's a tie! 😬"
     if test_for_winner() == MARKS['human']:
-        outcome[0] = 'Human wins! 💃'
-        return
+        return 'Human wins! 💃'
     if test_for_winner() == MARKS['computer']:
-        outcome[0] = 'The computer wins! 💪🖥️'
-        return
-    if not valid_choices:
-        outcome[0] = "It's a tie! 😬"
-        return
-    # Else
-    outcome[0] = 'undecided'
+        return 'The computer wins! 💪🖥️'
 
 # ****************************************************************************
 # SETUP
@@ -340,7 +337,7 @@ for scenario in WINNING_SCENARIOS_VISUAL:
     winning_scenarios.append(
         return_all_locations_for_mark(scenario, MARKS['placeholder']))
 board = reset_board()
-outcome = ['undecided']
+outcome = None
 valid_choices = []
 update_valid_choices()
 
@@ -350,18 +347,18 @@ update_valid_choices()
 
 if False:
     board = [
-    [' ', 'X', '0'],
-    ['X', '0', '0'],
-    ['X', ' ', '0'],
+    ['X', 'X', '0'],
+    ['X', '0', ' '],
+    ['0', 'X', ' '],
     ]
     #print(compare_against_all_winning_boards())
     #print(test_for_winner())
     # print(return_all_locations_for_mark(board, ' '))
     # print(winning_scenarios)
     #print(about_to_win('X'))
-    #update_outcome()
+    print(return_outcome())
     #print(outcome)
-    #breakpoint()
+    breakpoint()
 
 # ****************************************************************************
 # MAIN LOOP
@@ -369,22 +366,22 @@ if False:
 
 
 
-celebrate("Are you ready to rumble???")
+# flash_msg("Are you ready to rumble???")
 
 while True:
-    player_chooses()
-    update_outcome()
-    breakpoint()
-    
-    if outcome == ['undecided']:
-        computer_chooses()
-        update_outcome()
-        breakpoint()
-    else:
-        celebrate(outcome)
-        prompt_play_again()
+    while not outcome:
+        player_chooses()
+        outcome = return_outcome()
+        if outcome:
+            break
 
-    if outcome == ['play_again']:
+        computer_chooses()
+        outcome = return_outcome()
+
+    flash_msg(outcome)
+    
+    if prompt_play_again():
+        outcome = None
         board = reset_board()
-        update_valid_choices()
-        display_board()
+        #update_valid_choices()
+        #display_board()
