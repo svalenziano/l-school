@@ -113,10 +113,10 @@ def display_board(msg='', clear = True):
     print(f'|  {board[2][0]}  |  {board[2][1]}  |  {board[2][2]}  |  2')
     print('|_____|_____|_____|')
     if msg:
-        if msg.isinstance(str):
+        if isinstance(msg, str):
             delay_short()
             prompt(msg)
-        elif msg.isinstance(list):
+        elif isinstance(msg, list):
             for i in msg:
                 delay_short()
                 prompt(i)
@@ -127,18 +127,15 @@ def display_intro():
     clear_terminal()
     intro_text = '''WELCOME TO TIC-TAC-TOE
 
-    KNOWN ISSUES:
-    - The display flickers when run on Windows WSL2/Ubuntu, however, \
-        it works fine in
+SCREEN FLICKERING? The display flickers when run in the Windows terminal using\
+ Windows WSL2/Ubuntu, however it works fine in VSCode.  Not yet tested\
+ on MacOS
 
+IF YOU GET LOST OR BORED:
+Enter 'h' anytime to get help.
+Enter 'q' anytime to quit.
 
-
-    IF YOU GET LOST OR BORED:
-    Enter 'h' anytime to get help.
-    Enter 'q' anytime to quit.
-
-    Press 'Enter' to start playing! 🙌
-    '''
+Press 'Enter' to start playing! 🙌'''
     for line in intro_text.splitlines():
         print(line)
         time.sleep(0.05)
