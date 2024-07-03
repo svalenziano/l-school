@@ -1,11 +1,13 @@
-import os, random, time, pprint
-from copy import deepcopy
+import os
+import random
+import time
+import sys
 
 # How many in a row are required to win?
 QTY_REQUIRED_TO_WIN = 3
 
 # 2 marks in a row is an 'almost win'
-QTY_ALMOST_WIN = 2   
+QTY_ALMOST_WIN = 2
 
 # The center cell is always the best first move
 CENTER_CELL = (1,1)
@@ -63,37 +65,35 @@ WINNING_SCENARIOS_VISUAL = [
 
 
 # ****************************************************************************
-# ****************************************************************************
 # FUNCTIONS
-# ****************************************************************************
 # ****************************************************************************
 
 def convert_winning_scenarios_to_coordinates():
-    winning_scenarios = []
+    win_scenarios = []
     for scenario in WINNING_SCENARIOS_VISUAL:
-        winning_scenarios.append(
+        win_scenarios.append(
             return_all_locations_for_mark(scenario, MARKS['placeholder']))
-    return winning_scenarios
+    return win_scenarios
 
 def reset_board():
-    board = [
+    clean_board = [
     [' ', ' ', ' '],
     [' ', ' ', ' '],
     [' ', ' ', ' '],
     ]
-    return board
+    return clean_board
 
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def update_valid_choices():
-    valid_choices.clear()
+def update_valid_moves():
+    valid_moves.clear()
     empty_cells = return_all_locations_for_mark(board, MARKS['empty'])
     for row, col in empty_cells:
-        valid_choices.append(f'{row},{col}')
+        valid_moves.append(f'{row},{col}')
 
 
-def display_board(msg:list = [], clear = True):
+def display_board(msg='', clear = True):
     '''
     msg = messages.  Each element in the list prints as a separate line.
     '''
@@ -101,7 +101,7 @@ def display_board(msg:list = [], clear = True):
         clear_terminal()
     print('  0     1     2  ')
     print(' _________________ ')
-    print('|     |     |     |') 
+    print('|     |     |     |')
     print(f'|  {board[0][0]}  |  {board[0][1]}  |  {board[0][2]}  |  0')
     print('|     |     |     |')
     print('|-----+-----+-----|')
@@ -113,10 +113,10 @@ def display_board(msg:list = [], clear = True):
     print(f'|  {board[2][0]}  |  {board[2][1]}  |  {board[2][2]}  |  2')
     print('|_____|_____|_____|')
     if msg:
-        if type(msg) == str:
+        if msg.isinstance(str):
             delay_short()
             prompt(msg)
-        elif type(msg) == list:
+        elif msg.isinstance(list):
             for i in msg:
                 delay_short()
                 prompt(i)
@@ -125,14 +125,18 @@ def display_board(msg:list = [], clear = True):
 
 def display_intro():
     clear_terminal()
-    intro_text = '''WELCOME TO TIC-TAC-TOE 
+    intro_text = '''WELCOME TO TIC-TAC-TOE
 
-    REMEMBER TO GIVE IT 110%!
+    KNOWN ISSUES:
+    - The display flickers when run on Windows WSL2/Ubuntu, however, \
+        it works fine in
+
+
 
     IF YOU GET LOST OR BORED:
     Enter 'h' anytime to get help.
     Enter 'q' anytime to quit.
-        
+
     Press 'Enter' to start playing! 🙌
     '''
     for line in intro_text.splitlines():
@@ -149,11 +153,11 @@ def flash_msg(msg):
     def flash_on():
         display_board(msg)
         time.sleep(0.3)
-    
+
     def flash_off():
         display_board()
         time.sleep(0.15)
-    
+
     for i in range(0,6):
         if i % 2 == 1:
             flash_on()
@@ -171,7 +175,7 @@ def prompt_valid_input(valid_choices:list, msg_txt, help_txt, delay:int = 0):
         choice = input().casefold().strip(" ,'").replace(' ','')
         if choice in valid_choices:
             return choice
-        elif choice in ['h', 'help', '?,']:
+        if choice in ['h', 'help', '?,']:
             display_board(['HINT:', help_txt])
         elif choice in ['q', 'quit']:
             prompt_goodbye_and_quit()
@@ -187,9 +191,8 @@ def prompt_play_again():
     help_txt = "Enter 'y' to play again, 'n' to quit"
     choice = prompt_valid_input(valid_choices, msg_txt, help_txt, delay=0.5)
     if choice == 'n':
-        prompt_goodbye_and_quit()
-    else:
-        return True
+        return False
+    return True
 
 def prompt_goodbye_and_quit():
     messages = [
@@ -198,7 +201,7 @@ def prompt_goodbye_and_quit():
         'Have a nice day! 😃',
     ]
     print(random.choice(messages))
-    quit()
+    sys.exit()
 
 def add_choice_to_board(choice:tuple, symbol):
     column, row = choice
@@ -209,21 +212,22 @@ def delay_short():
 
 def about_to_win(mark):
     '''
-    Limitations: will not return multiple cells if there are 
+    Limitations: will not return multiple cells if there are
         multiple locations where the `mark` is about to win.
     '''
     for scenario in winning_scenarios:
         taken = []
-        empty = []
+        available = []
         for col_idx, row_idx in scenario:
             cell = board[row_idx][col_idx]
             coords = (col_idx, row_idx)
             if cell == MARKS['empty']:
-                empty.append(coords)
+                available.append(coords)
             elif cell == mark:
                 taken.append(coords)
-        if len(taken) == QTY_ALMOST_WIN and len(empty) > 0:
-            return empty[0]
+        if len(taken) == QTY_ALMOST_WIN and len(available) > 0:
+            return available[0]
+    return None
 
 def return_computer_choice():
     '''
@@ -239,10 +243,9 @@ def return_computer_choice():
     empty_cells = return_all_locations_for_mark(board, MARKS['empty'])
     if CENTER_CELL in empty_cells:
         return CENTER_CELL
-    else:
-        return random.choice(empty_cells)
+    return random.choice(empty_cells)
 
-def convert_CSV_to_tuple(csv_string):
+def convert_csv_to_tuple(csv_string):
     col, row = csv_string.split(',')
     return (int(col), int(row))
 
@@ -250,24 +253,24 @@ def player_chooses():
     help_text = f'''Where would you like your {MARKS["human"]}? \
 Format = <Column,Row>. Example: '2,2' for bottom-right or \
 '0,2' for top right.
-Here are your options: {valid_choices}'''
-    update_valid_choices()
+Here are your options: {valid_moves}'''
+    update_valid_moves()
     msg_text = ['Your turn! (x,y)']
-    choice_string = prompt_valid_input(valid_choices, msg_text, help_text)
-    choice = convert_CSV_to_tuple(choice_string)
+    choice_string = prompt_valid_input(valid_moves, msg_text, help_text)
+    choice = convert_csv_to_tuple(choice_string)
     add_choice_to_board(choice, MARKS['human'])
     display_board()
 
 def computer_chooses():
-    update_valid_choices()
+    update_valid_moves()
     choice = return_computer_choice()
     add_choice_to_board(choice, MARKS['computer'])
     delay_short()
     display_board()
 
-def return_all_locations_for_mark(board, mark_to_find):
+def return_all_locations_for_mark(test_board, mark_to_find):
     mark_locations = []
-    for row_idx, row in enumerate(board):
+    for row_idx, row in enumerate(test_board):
         for col_idx, cell in enumerate(row):
             if cell == mark_to_find:
                 mark_locations.append((col_idx, row_idx))
@@ -281,6 +284,7 @@ def test_for_winner():
         # if there's only one mark in the scenario
         if len(set_of_marks) == 1:
             return set_of_marks.pop()
+    return None
 
 def board_is_full():
     return len(return_all_locations_for_mark(board, MARKS['empty'])) == 0
@@ -292,6 +296,7 @@ def return_outcome():
         return 'Human wins! 💃'
     if test_for_winner() == MARKS['computer']:
         return 'The computer wins! 💪🖥️'
+    return None
 
 # ****************************************************************************
 # SETUP
@@ -300,15 +305,14 @@ def return_outcome():
 winning_scenarios = convert_winning_scenarios_to_coordinates()
 board = reset_board()
 outcome = None
-valid_choices = []
-update_valid_choices()
+valid_moves = []
+update_valid_moves()
+display_intro()
 
 
 # ****************************************************************************
 # MAIN LOOP
 # ****************************************************************************
-
-display_intro()
 
 while True:
     while not outcome:
@@ -321,7 +325,9 @@ while True:
         outcome = return_outcome()
 
     flash_msg(outcome)
-    
+
     if prompt_play_again():
         outcome = None
         board = reset_board()
+    else:
+        prompt_goodbye_and_quit()
