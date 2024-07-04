@@ -1,0 +1,32 @@
+---  # document start
+
+intro_text: |
+  WELCOME TO TIC-TAC-TOE
+
+  SCREEN FLICKERING? The display flickers when run in the Windows terminal using Windows WSL2/Ubuntu, however it works fine in VSCode.  Not yet tested on MacOS.
+
+  IF YOU GET LOST OR BORED:
+  Enter 'h' anytime to get help.
+  Enter 'q' anytime to quit.
+
+  Press 'Enter' to start playing! 🙌
+
+error_generic: "🔴 Something has gone terribly wrong"
+
+goodbye: [
+        'Goodbye! 😃',
+        'Good riddance! 😃',
+        'Have a nice day! 😃',
+    ]
+
+play_again_msg: "Would you like to play again? (y/n)"
+play_again_help: "Enter 'y' to play again, 'n' to quit"
+
+player_chooses_msg: 'Your turn! (x,y)'
+player_chooses_help: |
+  f'''Where would you like your {MARKS["human"]}? Format = <Column,Row>. Example: '2,2' for bottom-right or '0,2' for top right.
+  Here are your options: {valid_moves}'''
+
+
+
+...  # document end

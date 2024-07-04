@@ -2,6 +2,11 @@ import os
 import random
 import time
 import sys
+import json
+import yaml
+
+with open('tic_tac_toe.yaml', 'r') as file:
+	msgs = yaml.safe_load(file)
 
 # How many in a row are required to win?
 QTY_REQUIRED_TO_WIN = 3
@@ -121,21 +126,11 @@ def display_board(msg='', clear = True):
                 delay_short()
                 prompt(i)
         else:
-            prompt("🔴 Something has gone terribly wrong")
+            prompt(msgs['error_generic'])
 
 def display_intro():
     clear_terminal()
-    intro_text = '''WELCOME TO TIC-TAC-TOE
-
-SCREEN FLICKERING? The display flickers when run in the Windows terminal using\
- Windows WSL2/Ubuntu, however it works fine in VSCode.  Not yet tested\
- on MacOS
-
-IF YOU GET LOST OR BORED:
-Enter 'h' anytime to get help.
-Enter 'q' anytime to quit.
-
-Press 'Enter' to start playing! 🙌'''
+    intro_text = msgs['intro_text']
     for line in intro_text.splitlines():
         print(line)
         time.sleep(0.05)
@@ -184,20 +179,15 @@ def prompt_valid_input(valid_choices:list, msg_txt, help_txt, delay:int = 0):
 
 def prompt_play_again():
     valid_choices = ['y', 'n']
-    msg_txt = [outcome, "Would you like to play again? (y/n)"]
-    help_txt = "Enter 'y' to play again, 'n' to quit"
+    msg_txt = [outcome, msgs['play_again_msg']]
+    help_txt = msgs['play_again_help']
     choice = prompt_valid_input(valid_choices, msg_txt, help_txt, delay=0.5)
     if choice == 'n':
         return False
     return True
 
 def prompt_goodbye_and_quit():
-    messages = [
-        'Goodbye! 😃',
-        'Good riddance! 😃',
-        'Have a nice day! 😃',
-    ]
-    print(random.choice(messages))
+    print(random.choice(msgs['goodbye']))
     sys.exit()
 
 def add_choice_to_board(choice:tuple, symbol):
@@ -247,13 +237,13 @@ def convert_csv_to_tuple(csv_string):
     return (int(col), int(row))
 
 def player_chooses():
-    help_text = f'''Where would you like your {MARKS["human"]}? \
-Format = <Column,Row>. Example: '2,2' for bottom-right or \
-'0,2' for top right.
-Here are your options: {valid_moves}'''
+    
     update_valid_moves()
-    msg_text = ['Your turn! (x,y)']
-    choice_string = prompt_valid_input(valid_moves, msg_text, help_text)
+    choice_string = prompt_valid_input(
+        valid_moves, 
+        msgs['player_chooses_msg'], 
+        f"{msgs['player_chooses_help']}"
+        )
     choice = convert_csv_to_tuple(choice_string)
     add_choice_to_board(choice, MARKS['human'])
     display_board()
