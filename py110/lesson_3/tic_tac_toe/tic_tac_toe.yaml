@@ -24,9 +24,25 @@ play_again_help: "Enter 'y' to play again, 'n' to quit"
 
 player_chooses_msg: 'Your turn! (x,y)'
 player_chooses_help: |
-  f'''Where would you like your {MARKS["human"]}? Format = <Column,Row>. Example: '2,2' for bottom-right or '0,2' for top right.
-  Here are your options: {valid_moves}'''
+  Where would you like your {0}? Format = <Column,Row>. Example: '2,2' for bottom-right or '0,2' for top right.
+  Here are your options: {1}
 
+outcomes:
+  tie:
+    [
+      "It's a tie! 😬",
+      "How boring, it's a tie 😪"
+    ]
+  human_wins:
+    [
+      "Human wins! 💃",
+      "Winner!!! You've made us proud 🥲"
+    ]
+  computer_wins:
+    [
+      "The computer wins! 💪🖥️",
+      "You lose. Maybe one day we will forgive you 😢"
+    ]
 
 
 ...  # document end

@@ -237,12 +237,12 @@ def convert_csv_to_tuple(csv_string):
     return (int(col), int(row))
 
 def player_chooses():
-    
+
     update_valid_moves()
     choice_string = prompt_valid_input(
         valid_moves, 
         msgs['player_chooses_msg'], 
-        f"{msgs['player_chooses_help']}"
+        msgs['player_chooses_help'].format(MARKS['human'], valid_moves)
         )
     choice = convert_csv_to_tuple(choice_string)
     add_choice_to_board(choice, MARKS['human'])
@@ -277,13 +277,24 @@ def board_is_full():
     return len(return_all_locations_for_mark(board, MARKS['empty'])) == 0
 
 def return_outcome():
+    yaml_outcome = None
     if board_is_full():
-        return "It's a tie! 😬"
-    if test_for_winner() == MARKS['human']:
-        return 'Human wins! 💃'
-    if test_for_winner() == MARKS['computer']:
-        return 'The computer wins! 💪🖥️'
+        yaml_outcome = 'tie'
+    elif test_for_winner() == MARKS['human']:
+        yaml_outcome = 'human_wins'
+    elif test_for_winner() == MARKS['computer']:
+        yaml_outcome = 'computer_wins'
+    if yaml_outcome:
+        return random.choice(msgs['outcomes'][yaml_outcome])
     return None
+
+# ****************************************************************************
+# TESTING
+# ****************************************************************************
+
+for i in range(10):
+    print(random.choice(msgs['outcomes']['tie']))
+breakpoint()
 
 # ****************************************************************************
 # SETUP
