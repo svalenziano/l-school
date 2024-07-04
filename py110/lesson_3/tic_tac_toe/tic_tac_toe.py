@@ -91,11 +91,12 @@ def reset_board():
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def update_valid_moves():
-    valid_moves.clear()
+def update_valid_moves(board):
+    valid_moves = []
     empty_cells = return_all_locations_for_mark(board, MARKS['empty'])
     for row, col in empty_cells:
         valid_moves.append(f'{row},{col}')
+    return valid_moves
 
 
 def display_board(msg='', clear = True):
@@ -190,9 +191,10 @@ def prompt_goodbye_and_quit():
     print(random.choice(msgs['goodbye']))
     sys.exit()
 
-def add_choice_to_board(choice:tuple, symbol):
+def add_choice_to_board(choice:tuple, symbol, board):
     column, row = choice
     board[row][column] = symbol
+    return board
 
 def delay_short():
     time.sleep(0.25)
@@ -216,7 +218,7 @@ def about_to_win(mark):
             return available[0]
     return None
 
-def return_computer_choice():
+def return_computer_choice(board):
     '''
     INPUT:
     OUTPUT: computer choice as (x,y) tuple
@@ -236,24 +238,22 @@ def convert_csv_to_tuple(csv_string):
     col, row = csv_string.split(',')
     return (int(col), int(row))
 
-def player_chooses():
-
-    update_valid_moves()
+def player_chooses(board):
+    valid_moves = update_valid_moves(board)
     choice_string = prompt_valid_input(
         valid_moves, 
         msgs['player_chooses_msg'], 
         msgs['player_chooses_help'].format(MARKS['human'], valid_moves)
         )
     choice = convert_csv_to_tuple(choice_string)
-    add_choice_to_board(choice, MARKS['human'])
-    display_board()
+    return choice
 
-def computer_chooses():
-    update_valid_moves()
-    choice = return_computer_choice()
-    add_choice_to_board(choice, MARKS['computer'])
+def computer_chooses(board):
+    valid_moves = update_valid_moves(board)
+    choice = return_computer_choice(valid_moves)
     delay_short()
     display_board()
+    return choice
 
 def return_all_locations_for_mark(test_board, mark_to_find):
     mark_locations = []
@@ -288,44 +288,44 @@ def return_outcome():
         return random.choice(msgs['outcomes'][yaml_outcome])
     return None
 
+
 # ****************************************************************************
 # TESTING
 # ****************************************************************************
 
-for i in range(10):
-    print(random.choice(msgs['outcomes']['tie']))
-breakpoint()
+def test():
 
-# ****************************************************************************
-# SETUP
-# ****************************************************************************
+    for i in range(10):
+        print(random.choice(msgs['outcomes']['tie']))
+    breakpoint()
 
-winning_scenarios = convert_winning_scenarios_to_coordinates()
-board = reset_board()
-outcome = None
-valid_moves = []
-update_valid_moves()
-display_intro()
+def main():
+    winning_scenarios = convert_winning_scenarios_to_coordinates()
+    board = reset_board()
+    outcome = None
+    display_intro()
 
+    while True:
+        while not outcome:
+            choice = player_chooses(board)
+            board = add_choice_to_board(choice, MARKS['human'])
+            # display_board()
+            outcome = return_outcome()
+            if outcome:
+                break
 
-# ****************************************************************************
-# MAIN LOOP
-# ****************************************************************************
+            choice = computer_chooses(board)
+            board = add_choice_to_board(choice, MARKS['computer'])
+            outcome = return_outcome()
 
-while True:
-    while not outcome:
-        player_chooses()
-        outcome = return_outcome()
-        if outcome:
-            break
+        flash_msg(outcome)
 
-        computer_chooses()
-        outcome = return_outcome()
+        if prompt_play_again():
+            outcome = None
+            board = reset_board()
+        else:
+            prompt_goodbye_and_quit()
 
-    flash_msg(outcome)
-
-    if prompt_play_again():
-        outcome = None
-        board = reset_board()
-    else:
-        prompt_goodbye_and_quit()
+if __name__ == '__main__':
+    test()
+    main()
