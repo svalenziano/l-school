@@ -21,6 +21,9 @@ QTY_REQUIRED_TO_WIN = 3
 # 2 marks in a row is an 'almost win'
 QTY_ALMOST_WIN = 2
 
+# How many squares are on the board?
+QTY_CELLS = 9
+
 # The center cell is always the best first move
 CENTER_CELL = (1,1)
 
@@ -48,11 +51,12 @@ def reset_board():
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def update_valid_moves(board):
+def return_valid_move_strings(board):
     valid_moves = []
     empty_cells = return_all_locations_for_mark(board, MARK_EMPTY)
     for row, col in empty_cells:
         valid_moves.append(f'{row},{col}')
+        valid_moves.append(f'{row} {col}')
     return valid_moves
 
 
@@ -132,7 +136,7 @@ def prompt_valid_input(board,
     time.sleep(delay)
     while True:
         # Remove commas and quotes in case they're accidentally entered
-        choice = input().casefold().strip(" ,'").replace(' ','')
+        choice = input().casefold().strip(" ,')(><")
         if choice in valid_choices:
             return choice
         if choice in ['h', 'help', '?,']:
@@ -202,19 +206,26 @@ def return_computer_choice(board):
         return CENTER_CELL
     return random.choice(empty_cells)
 
-def convert_csv_to_tuple(csv_string):
-    col, row = csv_string.split(',')
+def convert_csv_or_ssv_to_tuple(string):
+    '''
+    Input: two comma-separated values, or two space-separated values
+    Output: tuple with two values
+    '''
+    if ',' in string:
+        col, row = string.split(',')
+    else:
+        col, row = string.split()
     return (int(col), int(row))
 
 def player_chooses(board):
-    valid_moves = update_valid_moves(board)
+    valid_moves = return_valid_move_strings(board)
     choice_string = prompt_valid_input(
         board,
         valid_moves,
         msgs['player_chooses_msg'],
-        msgs['player_chooses_help'].format(MARK_HUMAN, valid_moves)
+        msgs['player_chooses_help'].format(MARK_HUMAN, valid_moves[:QTY_CELLS])
         )
-    choice = convert_csv_to_tuple(choice_string)
+    choice = convert_csv_or_ssv_to_tuple(choice_string)
     board = add_choice_to_board(choice, MARK_HUMAN,board)
     return board
 

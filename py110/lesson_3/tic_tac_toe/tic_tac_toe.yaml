@@ -31,7 +31,7 @@ play_again_help: "Enter 'y' to play again, 'n' to quit"
 
 player_chooses_msg: 'Your turn! (x,y)'
 player_chooses_help: |
-  Where would you like your {0}? Format = <Column,Row>. Example: '2,2' for bottom-right or '0,2' for top right.
+  Where would you like your {0}? Format = <Column,Row>. Example: '2 2' for bottom-right or '0,2' for top right.  You can separate your choices with either spaces or commas.
   Here are your options: {1}
 
 outcomes:
