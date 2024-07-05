@@ -11,6 +11,13 @@ intro_text: |
 
   Press 'Enter' to start playing! 🙌
 
+intro_confused: |
+  Oh no, you're already having trouble?
+  How about you just press 'Enter' right now and ask for help using 'h' later?
+
+intro_help: |
+  Please press 'Enter' to continue and press 'h' if/when you run into trouble!
+
 error_generic: "🔴 Something has gone terribly wrong"
 
 goodbye: [

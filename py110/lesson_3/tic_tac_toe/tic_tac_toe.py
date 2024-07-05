@@ -11,7 +11,6 @@ import random
 import time
 import sys
 import yaml
-import pdb #tktk
 
 with open('tic_tac_toe.yaml', 'r') as file:
     msgs = yaml.safe_load(file)
@@ -87,13 +86,19 @@ def display_board(board, msg='', clear = True):
         else:
             prompt(msgs['error_generic'])
 
-def display_intro():
+def display_intro(board):
     clear_terminal()
     intro_text = msgs['intro_text']
     for line in intro_text.splitlines():
         print(line)
         time.sleep(0.05)
-    input()
+    if input():
+        prompt_valid_input(
+            board,
+            ['', 'y', 'yes', 'okay', 'whatever'],
+            msgs['intro_confused'],
+            msgs['intro_help'],
+            )
 
 def prompt(msg):
     msg = msg.splitlines()
@@ -137,7 +142,7 @@ def prompt_valid_input(board,
         else:
             error_msg = \
             f"Invalid input ☹️.  I heard: '{choice}'.  Enter 'h' for help."
-            display_board(error_msg)
+            display_board(board, error_msg)
             prompt(help_txt)
 
 def prompt_play_again(board, outcome):
@@ -193,7 +198,6 @@ def return_computer_choice(board):
     if human_winning_move:
         return human_winning_move
     empty_cells = return_all_locations_for_mark(board, MARK_EMPTY)
-    print(empty_cells)  #tktk
     if CENTER_CELL in empty_cells:
         return CENTER_CELL
     return random.choice(empty_cells)
@@ -221,10 +225,8 @@ def computer_chooses(board):
     return board
 
 def return_all_locations_for_mark(test_board, mark_to_find):
-    #print(test_board) #tktk
     mark_locations = []
     for row_idx, row in enumerate(test_board):
-        #print('row_idx:', row_idx, '| row:', row) #tktk
         for col_idx, cell in enumerate(row):
             if cell == mark_to_find:
                 mark_locations.append((col_idx, row_idx))
@@ -291,7 +293,7 @@ def test():
 def main():
     board = reset_board()
     outcome = None
-    display_intro()
+    display_intro(board)
 
     while True:
         while not outcome:
@@ -317,5 +319,5 @@ def main():
 
 if __name__ == '__main__':
     #test()
-    pdb.set_trace()
+    breakpoint()
     main()
