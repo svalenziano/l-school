@@ -16,7 +16,7 @@ intro_confused: |
   How about you just press 'Enter' right now and ask for help using 'h' later?
 
 intro_help: |
-  Please press 'Enter' to continue and press 'h' if/when you run into trouble!
+  Please press 'Enter' to continue and press 'h' if/when you run into trouble! 'q' = quit.
 
 error_generic: "🔴 Something has gone terribly wrong"
 

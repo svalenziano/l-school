@@ -10,7 +10,7 @@ import os
 import random
 import time
 import sys
-import yaml
+import yaml  #pyYAML, installed via pip
 
 with open('tic_tac_toe.yaml', 'r') as file:
     msgs = yaml.safe_load(file)
@@ -96,13 +96,17 @@ def display_intro(board):
     for line in intro_text.splitlines():
         print(line)
         time.sleep(0.05)
-    if input():
-        prompt_valid_input(
-            board,
-            ['', 'y', 'yes', 'okay', 'whatever'],
-            msgs['intro_confused'],
-            msgs['intro_help'],
-            )
+    choice = input().strip().casefold()
+    if choice:
+        if choice == 'q':
+            prompt_goodbye_and_quit()
+        else:
+            prompt_valid_input(
+                board,
+                ['', 'y', 'yes', 'okay', 'whatever'],
+                msgs['intro_confused'],
+                msgs['intro_help'],
+                )
 
 def prompt(msg):
     msg = msg.splitlines()
@@ -219,11 +223,13 @@ def convert_csv_or_ssv_to_tuple(string):
 
 def player_chooses(board):
     valid_moves = return_valid_move_strings(board)
+    # create a simplified list for help display
+    valid_moves_abbreviated = [str for str in valid_moves if ',' in str]
     choice_string = prompt_valid_input(
         board,
         valid_moves,
         msgs['player_chooses_msg'],
-        msgs['player_chooses_help'].format(MARK_HUMAN, valid_moves[:QTY_CELLS])
+        msgs['player_chooses_help'].format(MARK_HUMAN, valid_moves_abbreviated)
         )
     choice = convert_csv_or_ssv_to_tuple(choice_string)
     board = add_choice_to_board(choice, MARK_HUMAN,board)
