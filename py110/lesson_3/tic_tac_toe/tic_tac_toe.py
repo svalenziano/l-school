@@ -285,21 +285,9 @@ def return_outcome(board):
         return random.choice(msgs['outcomes'][outcome])
     return None
 
-
-def test():
-    outcome = None
-    board = [
-        [' ', ' ', 'X'],
-        [' ', 'X', ' '],
-        ['X', ' ', ' '],
-    ]
-    print(return_all_locations_for_mark(board, mark_to_find = MARK_EMPTY))
-    board = computer_chooses(board)
-    outcome = return_outcome(board)
-#    for i in range(10):
-#        print(random.choice(msgs['outcomes']['tie']))
-    # breakpoint()
-    pass
+# ****************************************************************************
+#
+# ****************************************************************************
 
 def main():
     board = reset_board()
@@ -327,8 +315,9 @@ def main():
             prompt_goodbye_and_quit()
 
 
+# ****************************************************************************
+#
+# ****************************************************************************
 
 if __name__ == '__main__':
-    #test()
-    breakpoint()
     main()
