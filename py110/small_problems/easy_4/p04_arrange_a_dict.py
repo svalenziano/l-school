@@ -13,20 +13,25 @@ A
         - Make a list of the dict keys
         - Sort the list by the value of each key
     - V2
-        For key in dict.keys():
-            
+        - Helper function
+            - return the dict value for the key
+        - Main func
+            - Sort dict items (key, value) using the Helper function
+            - return keys, using a comprehension
+        - 
+
 C
 
 
 '''
 
 
-def return_key_value(my_dict):
-    return my_dict[key]
+def return_value_from_dict_items(item_tuple):
+    return item_tuple[1]  # Return the 2nd value (the value)
 
 def order_by_value(dict_):
-    dict_keys = list(my_dict.keys())
-    return dict_keys.sorted(key = return_key_value(dict_, ))
+    tuples = sorted(list(dict_.items()), key = return_value_from_dict_items)
+    return [key for key, _ in tuples]
 
 my_dict = {'p': 8, 'q': 2, 'r': 6}
 keys = ['q', 'r', 'p']
