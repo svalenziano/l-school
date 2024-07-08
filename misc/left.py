@@ -1,23 +1,9 @@
-from pprint import pp
 
-my_dict = {
-    'a' : {1, 2, 3, 4},
-    'b' : {4, 5, 6, 7},
-}
+lst = [[1, 6, 7], [1, 5, 3, [9, 20, 5, 8]], [1, 8, 3]]
 
-my_other_dict = {
-    'a' : {'a', 'b', 'c'},
-    'b' : {1, 2, 3},
-}
+def sum_odd_numbers(list_obj):
+    total = [num for num in list_obj if num % 2 == 1]
+    return sum(total)
 
-def union_dict_sets(dict_to_mutate, other_dict):
-    '''
-    Input = dicts, all values must be a single set
-    '''
-    for key in dict_to_mutate.keys():
-        dict_to_mutate[key] |= other_dict[key]
-
-pp(my_dict)
-union_dict_sets(my_dict, my_other_dict)
-pp(my_dict)
-
+sorted_list = sorted(lst, key=sum_odd_numbers)
+print(sorted_list)
