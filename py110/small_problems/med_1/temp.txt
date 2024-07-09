@@ -1,0 +1,10 @@
+p01_Rot_1.py
+p02_Rot_2.py
+p03_Rot_3.py
+p04_Stack_machine.py
+p05_Word_to_digit.py
+p06_Is_it_prime.py
+p07_Fibonacci_procedural.py
+p08_Fibonacci_recursion.py
+p09_Fibonacci_memoization.py
+p10_Fibonacci_loc_by_length.py
