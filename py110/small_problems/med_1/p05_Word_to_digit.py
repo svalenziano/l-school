@@ -14,27 +14,24 @@ A
 C
 '''
 
-DIGITS = [
+DIGITS = {
 # indices serve as stand-in for digit
-    'zero',
-    'one',
-    'two',
-    'three',
-    'four',
-    'five',
-    'six',
-    'seven',
-    'eight',
-    'nine',
-]
+    'zero' : '0',
+    'one' : '1',
+    'two' : '2',
+    'three' : '3',
+    'four' : '4',
+    'five' : '5',
+    'six' : '6',
+    'seven' : '7',
+    'eight' : '8',
+    'nine' : '9',
+}
 
 def word_to_digit(string):
     list_of_words = string.split()
-    for idx, word in enumerate(list_of_words):
-        if word.casefold() in DIGITS:
-            digit = str(DIGITS.index(word))
-            list_of_words[idx] = digit
-    return ' '.join(list_of_words)
+    return ' '.join(DIGITS.get(word, word) for word in list_of_words)
+    
 
 
 # LS test
