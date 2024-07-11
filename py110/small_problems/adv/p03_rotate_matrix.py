@@ -3,6 +3,7 @@ def rotate90(orig_matrix):
     number_of_columns = range(len(orig_matrix[0]))
     for column_index in number_of_columns:
         orig_column = [row[column_index] for row in orig_matrix]
+        # Last column becomes last row
         rotated.append(list(reversed(orig_column)))
     return rotated
 
