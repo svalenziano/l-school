@@ -1,9 +1,38 @@
+'''
+https://www.codewars.com/kata/54e6533c92449cc251001667/train/python
 
-lst = [[1, 6, 7], [1, 5, 3, [9, 20, 5, 8]], [1, 8, 3]]
+P
+    INPUT: sequence --> list or string
+    OUTPUT: 
+    REQS
+        EX:
+            - accepts strings, lists
+        IMP
+            - must work for any type of sequence or sequence-like object, including strings?
+    Q's
+        See 'implicit' above
+E
+    See below
+D
+    List - convert argument into list (see below)
+A
+    - convert input into list using list()... prevents errors with immutable
+        types such as tuples or strings
+    - pop first element of `lst` and append to `result`
+    - for each element in `lst`
+        - if that element isn't identical to the last element in `result`:
+            - append the element to `result`
+    - return `result`
+C
+'''
 
-def sum_odd_numbers(list_obj):
-    total = [num for num in list_obj if num % 2 == 1]
-    return sum(total)
+def unique_in_order(seq):
+    seq = list(seq)
+    result = seq.pop(0)
 
-sorted_list = sorted(lst, key=sum_odd_numbers)
-print(sorted_list)
+
+
+print(unique_in_order('AAAABBBCCDAABBB') == ['A', 'B', 'C', 'D', 'A', 'B'])
+print(unique_in_order('ABBCcAD')         == ['A', 'B', 'C', 'c', 'A', 'D'])
+print(unique_in_order([1, 2, 2, 3, 3])   == [1, 2, 3])
+print(unique_in_order((1, 2, 2, 3, 3))   == [1, 2, 3])

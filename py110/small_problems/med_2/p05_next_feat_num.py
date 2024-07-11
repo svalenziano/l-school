@@ -24,12 +24,6 @@ ERROR = ("There is no possible number that "
 
 def prompt(x):
     print(f"==> {x}")
-    
-
-def mult_of_7(num:int):
-    result = not bool(num % 7)
-    #prompt(f"{num} is multiple of 7? {result}")
-    return result
 
 def unique_digits(num:int):
     digits =  len(str(num))
@@ -40,29 +34,17 @@ def unique_digits(num:int):
 
 def is_featured(num:int):
     #prompt(num)
+    num += 1
     if num > 9876543201:
         return ERROR
-    if num % 2 == 0:  # if even
-        num += 1      # make odd
-    while (not mult_of_7(num)) or (not unique_digits(num)):
-        num += 2  # increment to next odd number
+    while num % 7 != 0:  # if not a multiple of 7
+        num += 1      # make it so
+    while (num % 2 == 0) or (not unique_digits(num)):
+        num += 7  # increment to next mult of 7
         #prompt(num)
     #prompt(f'Returning {num}')
     return num
 
-def my_tests():
-    #unique_digits(1)
-    #unique_digits(22)
-    #unique_digits(123)
-    #unique_digits(1231)
-
-    # mult_of_7(6)
-    # mult_of_7(7)
-    # mult_of_7(8)
-    for num in [7*2, 7*3, 7*5, 7*20]:
-        print((mult_of_7(num)) and (unique_digits(num)))
-
-#my_tests()
 
 def ls_tests():
     print(is_featured(12) == 21)                  # True
