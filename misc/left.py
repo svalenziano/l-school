@@ -1,38 +1,49 @@
 '''
-https://www.codewars.com/kata/54e6533c92449cc251001667/train/python
-
 P
-    INPUT: sequence --> list or string
-    OUTPUT: 
-    REQS
-        EX:
-            - accepts strings, lists
-        IMP
-            - must work for any type of sequence or sequence-like object, including strings?
-    Q's
-        See 'implicit' above
+    in - string
+    out - integer, count of 'pair letters'
+    req
+        ex
+            pairs cannot overlap / each letter is counted only once
+        imp
 E
-    See below
+    see below
 D
-    List - convert argument into list (see below)
+    list of letters?
 A
-    - convert input into list using list()... prevents errors with immutable
-        types such as tuples or strings
-    - pop first element of `lst` and append to `result`
-    - for each element in `lst`
-        - if that element isn't identical to the last element in `result`:
-            - append the element to `result`
-    - return `result`
+    - init `count`
+    - Create list of chars
+    - while True
+        - if length is < 2, 
+            - return `count`
+        - if element at idx is identical to previous element
+            - increment the count by one
+            - remove the two elements from the list
+        - else:
+            - remove one element
+        
 C
 '''
 
-def unique_in_order(seq):
-    seq = list(seq)
-    result = seq.pop(0)
+
+# Count the number of 'pair letters' in a given string.
+# A pair letter is when two of the same letter appear in sequence.
+# Pairs cannot overlap.
+
+def count_duplicates(word):
+    count = 0
+    lst = list(word)
+    while True:
+        if len(lst) < 2:
+            return count
+        if lst[1] == lst[0]:
+            count += 1
+            lst = lst[2:]  # remove first two elements
+        else:
+            lst = lst[1:]
 
 
 
-print(unique_in_order('AAAABBBCCDAABBB') == ['A', 'B', 'C', 'D', 'A', 'B'])
-print(unique_in_order('ABBCcAD')         == ['A', 'B', 'C', 'c', 'A', 'D'])
-print(unique_in_order([1, 2, 2, 3, 3])   == [1, 2, 3])
-print(unique_in_order((1, 2, 2, 3, 3))   == [1, 2, 3])
+print(count_duplicates('success'))  # expected: 2
+print(count_duplicates('aabbccc'))  # expected: 3
+print(count_duplicates('aabbcccc')) # expected: 4
