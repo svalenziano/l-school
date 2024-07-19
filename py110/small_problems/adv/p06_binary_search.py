@@ -81,34 +81,6 @@ def binary_search(lst, search):
             lst = lst[:midpoint]  # discard top half
 
 
-'''
-*****************************************************************************
-LS SOLUTION
-variables renamed so that I could understand it more easily.
-All comments are mine.
-*****************************************************************************
-'''
-def binary_search_ls(lst, search_item):
-    end_index = len(lst) - 1
-    start_index = 0
-
-    # while there are still elements in the list
-    while start_index <= end_index:
-        '''
-        Example:
-            start = 0, end 10 ==>   0 + (10 - 0) // 2 ==>  midpoint = 5
-        '''
-        midpoint = start_index + (end_index - start_index) // 2
-        if lst[midpoint] == search_item:
-            return midpoint
-        elif lst[midpoint] < search_item:
-            start_index = midpoint + 1
-        else:
-            end_index = midpoint - 1
-
-    return -1
-
-
 
 
 

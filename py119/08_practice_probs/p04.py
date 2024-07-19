@@ -21,10 +21,12 @@ D
 A
 
     return_list_of_pairs [HELPER]
-        - for end_index (range(1, len(lst)))
-            - for start index in range(0, len(lst) - 1)
-                - if end doesn't equal start
-                    -append
+        - INIT empy list
+        - for each `first_idx` (0 to length minus one)
+            - for each `second_idx` btw `first_idx + 1` and len(lst)
+                - append lst[first idx: second idx]
+        - return list
+
 
     [MAIN FUNC]
         - [HELPER] create list of number pairs
@@ -35,13 +37,9 @@ A
 
 '''
 def return_list_of_pairs(lst):
-    pairs = []
-    for first_idx in range(0, len(lst)):
-        for second_idx in range(0, len(lst)):
-            if first_idx != second_idx:
-                pairs.append([lst[first_idx], lst[second_idx]])
-    return pairs
-
+    return [[lst[first_idx], lst[second_idx]]
+            for first_idx in range(len(lst) - 1)
+            for second_idx in range(first_idx + 1, len(lst))]
 #print(return_list_of_pairs([5, 25, 15, 11, 20]))
 
 def return_diff(lst):

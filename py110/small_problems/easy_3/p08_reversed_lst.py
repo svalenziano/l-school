@@ -31,17 +31,6 @@ def reverse_list(lst):
     lst.extend(temp_lst)
     return lst
 
-# this is the LS solution
-def reverse_list_ls(lst):
-    first = 0
-    last = -1
-
-    while first < (len(lst) // 2):
-        lst[first], lst[last] = lst[last], lst[first]
-        first += 1
-        last -= 1
-    return lst
-
 
 list1 = [1, 2, 3, 4]
 result = reverse_list(list1)
