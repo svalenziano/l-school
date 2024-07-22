@@ -1,56 +1,52 @@
 '''
-RESULT = 🔴  Train wreck code.  This was a terrible approach, I think.  Maybe worth debugging?
+RESULT = 🟢 Easily solved in ~10-12 mins, unlike my train wreck first attempt.
 
 P
     INPUT = list of ints
-    OUTPUT = integer: number of identical pairs of ints in that list
+    OUTPUT = num of identical pairs of ints in that list
     REQS
-        IMPL
-        EXPL
-            - Each number can only count towards a pair once
-
+        - Count each complete pair once (do not share integers btw pairs)
 E
-
 D
-    just a count integer?
 A
-    v1
-    - interate through the list.  For each number:
-    - If an identical number is found,
-        - increment the count
-        - remove the pair from the list
-    - repeat until no more pairs are found
+    v1 high level
+    pairs = []
+    for each integer:
+        if the count of that integer is greater than one:
+            append the integer to `pairs`
+            remove the pair using `remove` (to avoid index issues re: mutate while iterate)
+    repeat until there are no more pairs
 
-    v2
-    - while start_index < len(lst)
-        - for `other_idx` compare all other numbers to `start_idx` (use enumerate?)
-            - if they are equal
-                - increment count
-                - remove the pair from the list using .pop
-        - increment start_idx 
+    testing the alg:
+        [32, 32, 32]
+    
+    v1 low level
+    INDEFINITE ITERATION
+    while True? [ SELECTED]
+        return when index = len()
+    
+    for idx, int in enumerate()?
+        if idx = len
 '''
 
 def prompt(string):
     print('==>', string)
 
 def pairs(lst):
-    prompt(lst)
-    pairs = []
-    left_idx = 0
-    while left_idx < len(lst) - 1:
-        for right_idx in range(left_idx + 1, len(lst)):
-            prompt(f"{left_idx}>{right_idx}")
-            left = lst[left_idx]
-            right = lst[right_idx - 1]  # remember that hte list was mutated by the last operation
-            if left == right:
-                pairs.append((left, right))
-                lst.pop(left_idx)
-                lst.pop(right_idx)
-                break
-        left_idx += 1
-    prompt(pairs)
-    return len(pairs)
-
+    lst = lst.copy()
+    lst_of_pairs = []
+    idx = 0
+    while idx < len(lst):
+        num = lst[idx]
+        if lst.count(num) > 1:
+            lst_of_pairs.append(num)
+            # remove the pair
+            lst.remove(num)
+            lst.remove(num)
+            idx = 0
+        else:
+            idx += 1
+    return len(lst_of_pairs)
 
 def ls_tests():
     print(pairs([3, 1, 4, 5, 9, 2, 6, 5, 3, 5, 8, 9, 7]) == 3)
