@@ -35,17 +35,14 @@ A
 VOWELS = 'aeiou'
 
 
-def return_vowel_substring(string, start_idx):
-    '''
-    Returns empty string if char at `start_idx` is not a vowel
-    '''
-    idx = start_idx  # rename the var for readability within function
+def return_vowel_substring(string, vowel_idx):
+    idx = vowel_idx  # rename the var for readability within function
     result = ''
     while idx < len(string) and string[idx] in VOWELS:
         char = string[idx]
         result += char
         idx += 1
-    return result
+    return result if result else None
 
 def longest_vowel_substring(string):
     
@@ -61,7 +58,7 @@ def longest_vowel_substring(string):
     lengths = [len(substr) for substr in result]
     return max(lengths) if lengths else 0
 
-#print(return_vowel_substring('foofoo', 4))
+print(return_vowel_substring('foofoo', 3))
 
 
 def ls_tests():
