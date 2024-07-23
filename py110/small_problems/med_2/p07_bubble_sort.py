@@ -1,99 +1,85 @@
 '''
+RESULT = 🟢 DONE IN 20 MINS!  
+            It was easy when I abandoned my overcomplication and figured out I could use 
+            a 'while' loop
+
 P
-    INPUT = list of integers
-    OUTPUT = sorted list of integers
-    REQS
-        EX
-            mutate the list
-            use the 'bubble sort' method of iterative swapping
-        IMP
+    input = list
+    output = none
+    return = none
+    side effect = mutate list
+    reqs
+        ex
+        impl
 E
 D
-    ?
+    existing list
 A
-    - Create a range of `ending indices` between 0 and the end of the `parent_list`, 
-        non-inclusive.  For example:
-        list: [1, 2, 3] ==> indices: [1, 2]
-    - For each ending index:
-        - Create a list of sublist indices: [[0, 1], [1,2]]
-    - INIT var `is_sorted` = None  (None means TBD in this case)
-        to track whether list has been verified as sorted or not
-    - While `is_sorted` equals None or False
-        - Reset `is_sorted` to None
-        - For each set of sublist indices
-            - Create a sublist
-            - If the sublist isn't sorted
-                - swap the elements
-                - Reassign `is_sorted` to False
-            - re-create the `parent_list` using slicing
-        - If `is_sorted` still equals None, reassign to True
-    - Return list
+    v1
+    [MAIN FUNC]
+    while True
+    for each index between zero and the last index minus one
+        check to see if next element is larger than element at index
+        if yes
+            use slice syntax to flip the elements
+            continue (with next iteration)
+        if you reach end of list:
+            return the list
+
+    [SKETCH]
+    swap occurred = None (TBD)
+    while swap_occurred is not equal to False
+        do stuff
+        if swap happens
+            swap_occurred  = True
+        if you reach end, 
+            return the list
+        swap_occurred = None (reset back to TBD)
+
+    v2
+    [MAIN FUNC]
+    idx = 0
+    while idx is les than last index minus one
+        check to see if next element is larger than element at index
+        if yes
+            use slice syntax to flip the elements
+            continue (with next iteration)
+        if no
+            increment index
+    return lst
 C
 '''
 
-def prompt(x):
-    print(f"==> {x}")
-
-'''
-I wrote this version prior to looking at LS's solution.  It's way more complicated
-than it needs to be 😭.  See above for algorithm / pseudocode.
-'''
-def bubble_sort_v1(lst):
-    end_indices = range(1, len(lst))
-    sublist_indices = [(idx - 1, idx) for idx in end_indices]
-    is_sorted = None
-    while not is_sorted:
-        is_sorted = None
-        for idx1, idx2 in sublist_indices:
-            sublist = lst[idx1: idx2 + 1]
-            # if un-sorted
-            if sublist[0] > sublist[1]:
-                sublist.reverse()
-                is_sorted = False
-            # recreate parent list
-            reordered = lst[:idx1] + sublist + lst[idx2 + 1:]
-            lst.clear()
-            lst.extend(reordered)
-        if is_sorted == None:
-            is_sorted = True
+def bubble_sort(lst):
+    idx = 0
+    while idx < len(lst) - 1:
+        left = lst[idx]
+        right = lst[idx + 1]
+        if left > right:
+            lst[idx] = right
+            lst[idx + 1] = left
+            idx = 0
+        else:
+            idx += 1
+    return lst
+                
 
 
-'''
-I wrote this solution after looking at LS's solution
+def ls():
+    lst1 = [5, 3]
+    bubble_sort(lst1)
+    print(lst1 == [3, 5])                   # True
 
-ALG:
-    - while True
-        - for idx in list (starting at one... range(1, len(lst))
-            - determine if the element at idx is greater than the element preceding it
-                - if it is ... continue
-            - re-create the list with the elements swapped
-            - `swap_ocurred` = True
-        - if not swap_ocurred:
-            - break
+    lst2 = [6, 2, 7, 1, 4]
+    bubble_sort(lst2)
+    print(lst2 == [1, 2, 4, 6, 7])          # True
 
-'''
+    lst3 = ['Sue', 'Pete', 'Alice', 'Tyler', 'Rachel',
+            'Kim', 'Bonnie']
+    bubble_sort(lst3)
 
+    expected = ["Alice", "Bonnie", "Kim", "Pete",
+                "Rachel", "Sue", "Tyler"]
+    print(lst3 == expected)                 # True
 
-
-
-
-
-
-
-
-
-lst1 = [5, 3]
-bubble_sort(lst1)
-print(lst1 == [3, 5])                   # True
-
-lst2 = [6, 2, 7, 1, 4]
-bubble_sort(lst2)
-print(lst2 == [1, 2, 4, 6, 7])          # True
-
-lst3 = ['Sue', 'Pete', 'Alice', 'Tyler', 'Rachel',
-        'Kim', 'Bonnie']
-bubble_sort(lst3)
-
-expected = ["Alice", "Bonnie", "Kim", "Pete",
-            "Rachel", "Sue", "Tyler"]
-print(lst3 == expected)                 # True
+ls()
