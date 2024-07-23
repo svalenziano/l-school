@@ -16,10 +16,9 @@ A
 # working
 def substrings(string):
     subs =  [string[start_idx: end_idx]
-#    subs =  [print(start_idx,':',end_idx)
             for start_idx in range(len(string))
             for end_idx in range(start_idx + 1, len(string) + 1)]
-    print(subs)
+    #print(subs)
     return subs
 
 
