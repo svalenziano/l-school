@@ -1,38 +1,41 @@
 '''
-p
-    INPUT - STR
-    OUTPUT - String w/ alternating case.  Non-alpha chars don't count for toggling
-        see examples below
-e
-d
-a
-    INIT empty str `result` = ''
-    next_char_upper = True
-    WHILE idx < len(string)
-        if char is alphabetic:
-            if next_char_upper:
-                append char.upper() to `result`
-            otherwise:
-                append char.casefold() to `result`
-            Toggle the value of `next_char_upper`
-        idx += 1
+P
+    INPUT = string
+    OUTPUT = alternated-case string.  
+                Non-alpha chars don't count towards toggling but 
+                they DO get returned in the string
+E
+D
+A
+    - use a for loop and a `capitalize` toggle variable (boolean) to iterate through the 
+        string, appending each character to a result string
+        - upper/lower only if the character `isalpha`
+
+    v1 low level:
+        - if char is alpha:
+            - if make upper:
+                - append uppercase
+            - else:
+                - append lowecase
+            - toggle `make_upper`
+        - else:
+            -append lowercase
+
 '''
 
-def staggered_case(str):
+
+def staggered_case(string):
     result = ''
-    next_char_upper = True
-    idx = 0
-    while idx < len(str):
-        char = str[idx]
+    make_upper = True
+    for char in string:
         if char.isalpha():
-            if next_char_upper:
+            if make_upper:
                 result += char.upper()
             else:
                 result += char.casefold()
-            next_char_upper = not next_char_upper
+            make_upper = not make_upper
         else:
             result += char
-        idx += 1
     return result
 
 
