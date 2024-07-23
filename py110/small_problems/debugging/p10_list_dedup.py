@@ -1,37 +1,26 @@
 '''
-RESULT
-P
-    INPUT = lst
-    OUTPUT = lst with duplicates removed
-E
-D
-    exst list?
-A
-    remove_dups(lst, element, start index) [HELPER]    
+MODIFYING THE CODE AFTER GLANCING AT LS SOLUTION
 
-    [MAIN FUNC]
-    for each item in the list
-        if the count of that item is greater than one
-            remove all duplicates beyond that index
+REQS:
+    CREATE NEW OBJECT, DON'T MUTATE
 
-    how to remove dupes?
-    while dupes are present
-        find the next occurence, starting at the current index + 1
-        pop that item
+ALG
+    RE
 '''
 
 # UPDATED BY SV
 def dedup_list(lst):
-    for idx, ele in enumerate(lst):
-        while lst.count(ele) > 1:
-            next_occurence = lst.index(ele, idx + 1)
-            lst.pop(next_occurence)
+    seen = []
+    for ele in lst:
+        if ele not in seen:
+            seen.append(ele)
+    return seen
 
 
 data = [4, 2, 4, 2, 1, 3, 2, 3, 2, 4, 3]
 
-dedup_list(data)
-print(data == [4, 2, 1, 3]) # order not guaranteed
+cleaned_data = dedup_list(data)
+print(cleaned_data == [4, 2, 1, 3]) # order not guaranteed
 
 
 
