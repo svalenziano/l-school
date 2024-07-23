@@ -1,20 +1,20 @@
 '''
 P
     INPUT = positive integer
-    OUTPUT = sum of the digits
+    OUTPUT = integer, sum of the digits
 E
 D
+    ?
 A
-    - convert int to string
-    - split into digits using list()
-    - return sum of those digits
-C
+    Convert int to string
+    Use comprehension to convert into list of integers
+    Return sum
 '''
 
 def sum_digits(integer):
-    digits = list(str(integer))
-    digits = [int(digit) for digit in digits]
-    return sum(digits)
+    return sum([int(char)
+                for char in str(integer)])
+
 
 
 print(sum_digits(23) == 5)              # True
