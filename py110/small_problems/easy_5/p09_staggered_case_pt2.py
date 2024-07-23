@@ -29,10 +29,7 @@ def staggered_case(string):
     make_upper = True
     for char in string:
         if char.isalpha():
-            if make_upper:
-                result += char.upper()
-            else:
-                result += char.casefold()
+            result += char.upper() if make_upper else char.casefold()
             make_upper = not make_upper
         else:
             result += char
