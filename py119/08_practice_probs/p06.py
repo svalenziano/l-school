@@ -1,35 +1,35 @@
 '''
-RESULT = 🟡 Pretty good, though I had a little trouble with the correct algorithm
+RESULT = 🟢 8 mins, Easy with comprehensions!
+
 
 P
     INPUT = string
-    OUTPUT = dict
-                keys = lowercase letters in str
-                values = how often the letter occurs in the str
+    OUTPUT = dict:
+                    keys = lowercase letters
+                    values = count of the letter in the orig string
     REQS
         EX
         IMPL
-            - alphabetic chars only
-            - Uppercase chars are ignored / excluded from counts
+            If it's not a lowercase letter, omit it!
 E
 D
-    - dict
+    cleaned string
+    dict
 A
-    - SET: include only alphabetic lowercase
-    - INIT empty dict `chars`
-    - for char in set:
-        - get count of char in string, and assign to dict key
-    - return dict
-C
+    v1 high level
+    - Create set of characters from the orig string that are 1) alphabetical and 2) lowercase
+    - Create a dictionary whose keys are from the set, and whose values are 
+            counts from the original string
 '''
 
 def count_letters(string):
-    chars = {char for char in string
-             if char.islower() and char.isalpha()}
-    counts = {}
-    for char in chars:
-        counts[char] = string.count(char)
+    chars = {char
+             for char in string
+             if char.isalpha() and char.islower()}
+    counts = {char: string.count(char)
+              for char in chars}
     return counts
+
 
 
 expected = {'w': 1, 'o': 2, 'e': 3, 'b': 1, 'g': 1, 'n': 1}
