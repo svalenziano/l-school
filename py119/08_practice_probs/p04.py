@@ -1,57 +1,35 @@
 '''
-RESULT = 34 MINS 😭
-         I had a LOT of trouble with return_list_of_pairs.  
-         My final answer was pretty dirty.
-         I fundamentally misunderstood WHAT I WAS TRYING TO ACCOMPLISH: every
-         combo of 2 numbers possible.  Definitely need to revisit.
+RESULT = 🟢 Try 2, easy, 12 mins :)
 
 P
     INPUT = list of ints
     OUTPUT = tuple of 2 nums that are closest together in value
-    REQS
-        ex: 
-            if there are mult pairs that occur equally as close, return 
-            the pair that occurs first
-        impl
-            occurs first = INDEX OF 1ST ELEMENT IS LOWEST
-
+              return lowest-index tuple if there's a tie
 E
 D
-    - list of diffs?
+    list of tuples
 A
+    v1
+    Make list of every possible number pair (a left number and a right number)
+    Make a list of sums: one sum for each pair of nums
+    Return the minimum sum
 
-    return_list_of_pairs [HELPER]
-        - INIT empy list
-        - for each `first_idx` (0 to length minus one)
-            - for each `second_idx` btw `first_idx + 1` and len(lst)
-                - append lst[first idx: second idx]
-        - return list
-
-
-    [MAIN FUNC]
-        - [HELPER] create list of number pairs
-        - sort the pairs by `return_diff`
-        - return the pair with the lowest sum
-    
-    - 
-
+    v2
+    Make list of every possible number pair (a left number and a right number)
+    Sort pairs by the absolute value of their difference
+    Return the minimum sum
 '''
-def return_list_of_pairs(lst):
-    return [[lst[first_idx], lst[second_idx]]
-            for first_idx in range(len(lst) - 1)
-            for second_idx in range(first_idx + 1, len(lst))]
-#print(return_list_of_pairs([5, 25, 15, 11, 20]))
 
-def return_diff(lst):
-    diff = lst[0] - lst[1]
-    return abs(diff)
+def diff_absolute_value(pair):
+    left, right = pair
+    return abs(left - right)
 
 def closest_numbers(lst):
-    lst_of_pairs = return_list_of_pairs(lst)
-    lst_of_pairs.sort(key=return_diff)
-    #print(lst_of_pairs)
-    result = tuple(lst_of_pairs[0])
-    return result
+    pairs = [(lst[left_idx], lst[right_idx])
+             for left_idx in range(len(lst))   # omit last index
+             for right_idx in range(left_idx + 1, len(lst))]
+    pairs.sort(key=diff_absolute_value)
+    return pairs[0]
 
 
 print(closest_numbers([5, 25, 15, 11, 20]) == (15, 11))
