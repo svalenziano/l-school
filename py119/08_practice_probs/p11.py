@@ -1,75 +1,53 @@
 '''
-RESULT = 🟡 DONE IN 29 MINS.  
-            Good news: didn't have much trouble.  Adapted to surprises gracefully
-            Bad news: it was complicated, and it took me a while.  Maybe
-                there was a much simpler way?
-            
+RESULT = 🟢 16 MINS
+            Good!  Tested regularly, was able to handle errors pretty easily!
+
 P
-    INPUT = non-empty string `s`
-    OUTPUT = tuple = (str, int) =  `s == str * int`
+    INPUT = non empty string
+    RETURN = tuple = (string, integer)
+                string that can be repeated to form the whole word
+                integer = number of times the string must be repeated to form the whole word
 E
+
 D
-    ?
+    list of substrings
 A
     v1 high level
-    new list = Find every substring
-    new list of counts = Count every substring
-    If max count is more than one:
-        determine if that substring can be multiplied to equal the full string
-    Otherwise:
-        return (full string, 1)
-
-    v1 low level
-    new list of tuples = (every substring, counts of that substring)
-    If max count is more than one:
-        Sort substrings tuples by count, descending
-        Sort by length, descending
-        Operate on the 0th element:
-            determine if that substring can be multiplied to equal the full string
-    Otherwise:
-        return (full string, 1)
+    [MAIN]
+        - Comprehension: create list of all substrings
+            - Filter: substring, when multiplied, equals parent string
+        - Sort strings by length
+        - Return shortest string
+    is_divisible(parent_string, substring) [HELPER]
+        - Use floor division to determine how many times the substring will go into the parent_string
+        - Multiply the substring by that amount
+        - test for equality between the parent string and the multiplied substring
+        - return True or False 
 '''
 
-def return_2nd(tup):
-    return tup[1]
+def return_length(string):
+    return len(string)
 
-def return_length_of_first(tup):
-    return len(tup[0])
+def is_divisible(parent_string, substring):
+    factor = len(parent_string) // len(substring)
+    return parent_string == substring * factor
 
-def can_be_multiplied(tup, string):
-    '''
-    Input = (substring, count)
-        string = parent string
-    Output = bool
-    Alg 
-        do the math
-    '''
-    substring, count = tup
-    return substring * count == string
+#print(is_divisible('abab', 'ab'))
 
 def repeated_substring(string):
-    substrings = {string[start_idx: end_idx]
-                  for start_idx in range(len(string))
-                  for end_idx in range(start_idx + 1, len(string) + 1)}  
-    counts = [(substr, int(string.count(substr)))
-              for substr in substrings]
+    children = {string[start_idx: end_idx]
+                for start_idx in range(len(string))
+                for end_idx in range(start_idx + 1, len(string) + 1)
+                if is_divisible(string, string[start_idx: end_idx])}
+    children = sorted(list(children), key=return_length)
+    shortest_child = children[0]
+    factor = len(string) / len(shortest_child)
+    return (shortest_child, factor)
 
-    counts.sort(key=return_length_of_first, reverse=True)
-    counts.sort(key=return_2nd, reverse=True)
-
-    if can_be_multiplied(counts[0], string):
-        return counts[0]
-    return (string, 1)
-
-
-#repeated_substring('xyxy')
-print(repeated_substring('superduper'))
-
-
-
-
-print(repeated_substring('xyzxyzxyz') == ('xyz', 3))
-print(repeated_substring('xyxy') == ('xy', 2))
-print(repeated_substring('xyz') == ('xyz', 1))
-print(repeated_substring('aaaaaaaa') == ('a', 8))
-print(repeated_substring('superduper') == ('superduper', 1))
+def ls():
+    print(repeated_substring('xyzxyzxyz') == ('xyz', 3))
+    print(repeated_substring('xyxy') == ('xy', 2))
+    print(repeated_substring('xyz') == ('xyz', 1))
+    print(repeated_substring('aaaaaaaa') == ('a', 8))
+    print(repeated_substring('superduper') == ('superduper', 1))
+ls()
