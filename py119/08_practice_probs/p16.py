@@ -1,38 +1,28 @@
 '''
-RETURN: 🟡  Done in 13 mins, although this should have been much easier!  My v1
-            algorithm failed bc I failed to identify the fact that my alg
-            would fail if a character occured > 2 times
-
+RESULT = 🟢.  Easy, 9 minutes!
 
 P
-    IN = alphanumeric string
-    OUT = count of distinct case-insenstive alphabetic characters and numeric digits
-            that occur MORE THAN ONCE
+    input = string
+    output = integer; count of digits that occur more than once
+                ignore case
+                alphanumeric only
 E
-    
-    'xxyypzzr' = 3 ... length 8, set 'xypzr' length 5
-    'xXyYpzZr'.casefold = 'ccyypzzr' ... length 8, set 'cypzr' length 5
-D
-    ?
-A
-    v1 - FAILED BC IT ONLY WORKS FOR DUPS THAT OCCUR TWICE.  IF A CHAR
-        OCCURS 3X, THIS WILL FAIL
-    casefold the string (ignore case)
-    return length of string minus length of set
 
-    v2
-    - Use set comprehension to create set of chars whose count is greater than 1
-C
+D
+    set?
+A
+    casefold the string
+    Make a set using a comprehension
+        Filter: count is greater than one
+    Return the length of the set
 '''
 
 def distinct_multiples(string):
     string = string.casefold()
-    dups =  {char
+    dups = {char
             for char in string
             if string.count(char) > 1}
-    #print(string); print(dups)
-    return len(dups) if dups else 0
-
+    return len(dups)
 
 
 print(distinct_multiples('xyz') == 0)               # (none)
