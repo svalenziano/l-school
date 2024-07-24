@@ -1,54 +1,35 @@
 '''
-RESULT = 🟢 Easily solved in ~10-12 mins, unlike my train wreck first attempt.
-
+RESULT = 🟢  Not bad!  ~10 mins (forgot to time)
+            Should have QC'ed my Algorithm against my requirements, but figured it out!
 P
-    INPUT = list of ints
-    OUTPUT = num of identical pairs of ints in that list
+    INPUT = list of integers
+    OUTPUT = integer; num of identical pairs of ints in that list
     REQS
-        - Count each complete pair once (do not share integers btw pairs)
+        EX
+            Identical pair = two integers that are equal
+        IMPL
+            Number of pairs = number of singles // 2
 E
+
 D
+    NO >>>  set of pairs?  NO > WON'T COUNT if there's >1 pair of a single num
+    
+    YES >>> dict of count_of_pairs
 A
     v1 high level
-    pairs = []
-    for each integer:
-        if the count of that integer is greater than one:
-            append the integer to `pairs`
-            remove the pair using `remove` (to avoid index issues re: mutate while iterate)
-    repeat until there are no more pairs
-
-    testing the alg:
-        [32, 32, 32]
-    
-    v1 low level
-    INDEFINITE ITERATION
-    while True? [ SELECTED]
-        return when index = len()
-    
-    for idx, int in enumerate()?
-        if idx = len
+    - create a dictionary:
+        key = integer
+        value = count of that int in the original list
+    - return sum
 '''
 
-def prompt(string):
-    print('==>', string)
-
 def pairs(lst):
-    lst = lst.copy()
-    lst_of_pairs = []
-    idx = 0
-    while idx < len(lst):
-        num = lst[idx]
-        if lst.count(num) > 1:
-            lst_of_pairs.append(num)
-            # remove the pair
-            lst.remove(num)
-            lst.remove(num)
-            idx = 0
-        else:
-            idx += 1
-    return len(lst_of_pairs)
+    count_of_pairs = {num: lst.count(num) // 2
+              for num in lst}
+    return sum(count_of_pairs.values())
 
-def ls_tests():
+
+def ls():
     print(pairs([3, 1, 4, 5, 9, 2, 6, 5, 3, 5, 8, 9, 7]) == 3)
     print(pairs([2, 7, 1, 8, 2, 8, 1, 8, 2, 8, 4]) == 4)
     print(pairs([]) == 0)
@@ -57,4 +38,4 @@ def ls_tests():
     print(pairs([32, 32, 32]) == 1)
     print(pairs([7, 7, 7, 7, 7, 7, 7]) == 3)
 
-ls_tests()
+ls()
