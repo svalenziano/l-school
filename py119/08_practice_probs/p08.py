@@ -1,72 +1,47 @@
 '''
-RESULT: 🟡 ~25 mins.
-            I intentionally made this harder for myself by working with strings
-            instead of a list, with the intention of practicing string operations.
-            I was successful, though I do think it slowed me down.
-
+RESULT = 🟢 done in 10 mins.  Not the cleanest code, but it works fine
 P
-    INPUT = 'non-empty string, 100% lowercase alphabetic chars'
-    OUTPUT = length of the longest vowel substring (aeiou, not y)
+    input = non-empty lowercase alphabetic string
+    output = integer; length of longest vowel substring
+    reqs
+        ex
+            VOWELS = 'aeiou'
+        impl
 E
+
 D
-    Just a count? 
-    List?
+    integers, two counts = max and current 
 A
-    `result` = []
-    For each character
-        If the char is a vowel
-            Add the vowel substring to `result`
-            Find the substring (get starting index and length)
-            Remove the substring (reassign)
-        Repeat while the string still has vowels
+    v1
+        Iterate through string
+        If a vowel substring is found, get the length
+        If the length is greater than the max length, update the max length
+        Return the max length
 
-    `return_vowel_substring` [HELPER]
-    INPUT = string, start index
-    OUTPUT = vowel substring
-    Alg
-        idx = start idx
-        result = ''
-        while char in vowels and idx < len(string)
-            add char to result
-            increment index
-        return result
-
+    v2
+        For 
 '''
 VOWELS = 'aeiou'
 
-
-def return_vowel_substring(string, vowel_idx):
-    idx = vowel_idx  # rename the var for readability within function
-    result = ''
-    while idx < len(string) and string[idx] in VOWELS:
-        char = string[idx]
-        result += char
-        idx += 1
-    return result if result else None
-
 def longest_vowel_substring(string):
-    
-    result = []
-    idx = 0
-    while idx < len(string):
-        char = string[idx]
+    length = 0
+    max_length = 0
+    for char in string:
         if char in VOWELS:
-            substring = (return_vowel_substring(string, idx))
-            result.append(substring)
-            string = string[:idx] + string[idx + len(substring):]
-        idx += 1
-    lengths = [len(substr) for substr in result]
-    return max(lengths) if lengths else 0
+            length += 1
+        else:
+            if length > max_length:
+                max_length = length
+            length = 0
+    if length > max_length:
+        max_length = length
+    return max_length
 
-print(return_vowel_substring('foofoo', 3))
 
-
-def ls_tests():
-    print(longest_vowel_substring('cwm') == 0)
-    print(longest_vowel_substring('many') == 1)
-    print(longest_vowel_substring('launchschoolstudents') == 2)
-    print(longest_vowel_substring('eau') == 3)
-    print(longest_vowel_substring('beauteous') == 3)
-    print(longest_vowel_substring('sequoia') == 4)
-    print(longest_vowel_substring('miaoued') == 5)
-ls_tests()
+print(longest_vowel_substring('cwm') == 0)
+print(longest_vowel_substring('many') == 1)
+print(longest_vowel_substring('launchschoolstudents') == 2)
+print(longest_vowel_substring('eau') == 3)
+print(longest_vowel_substring('beauteous') == 3)
+print(longest_vowel_substring('sequoia') == 4)
+print(longest_vowel_substring('miaoued') == 5)
