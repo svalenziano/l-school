@@ -1,83 +1,43 @@
 '''
-RESULT: DONE IN ~20 MINS, THOUGH I HAD SOME TROUBLE WITH THE `sublists_of_5`
-        Helper function.  Specifically, I had trouble with start and stop indexes.
-        This is something I should practice!
+RESULT = 🟡 Fine in 14 mins.
+          Had some trouble with start and stop indexes for the `sublists_of_5` comprehension.
+          This stuff is still tricky!
+          Writing my own test cases probably would have helped!
 
 P
-    INPUT = list of ints
-    OUTPUT = min sum of 5 consecutive nums in the list
-                or
-            None if list contains fewer than 5 elements
-    REQ
-        EX = 
-        IMP
+    intput = list of ints
+    output = integer if 5 elements or more
+             None if fewer than 5 elements
+             Min sum of 5 consecutive nums in the list
 E
+
 D
+    lst of lists?
 A
-
-    V3
-    [SUBLISTS OF 5]
-        - INPUT = list of nums
-        - OUTPUT = all possible sublists of length 5
-        - ALG
-            - create a list of lists
-                - for each starting index, create a list, using list slicing
-                    starting at the start index
-                    and
-                    ending at the end of the list
-            - (comprehension)
-                create a new list containing only those lists whose length = 5
-    
-    [MAIN FUNC]
-    - if fewer than 5 elements:
-        - return None
-    - else:
-        - [see helper] Get all combos of '5 consective nums'
-        - (comprehension)
-            create a list of sums
-        - return minimum sum
-
-    V4
-    [SUBLISTS OF 5]
-        - INPUT = list of nums
-        - OUTPUT = all possible sublists of length 5
-        - ALG
-            - for end_index between 5 and len(lst)
-            - create a sublist with:
-                start index = end_index - 6
-                end index = end_index
-            - append that index
-            - return
-    
-    [MAIN FUNC]
-    - if fewer than 5 elements:
-        - return None
-    - else:
-        - [see helper] Get all combos of '5 consective nums'
-        - (comprehension)
-            create a list of sums
-        - return minimum sum
-
+    if fewer than 5, return None
+    otherwise
+        create list of all sublists of length 5
+        create list of sums (of all sublists)
+        return minimum sum
 '''
-
-def sublists_of_5(lst):
-    sublists = [lst[end_idx - 5: end_idx]
-                for end_idx in range(5, len(lst) + 1)]   # 0,1,2,3,4
-
-    return sublists
-
-#sublists_of_5([55, 2, 6, 5, 1, 2, 9, 3, 5, 100])
 
 def minimum_sum(lst):
     if len(lst) < 5:
         return None
-    else:
-        sublists = sublists_of_5(lst)
-        return min([sum(sublist) for sublist in sublists])
+    sublists_of_5 = [lst[start_idx: start_idx + 5]
+                     for start_idx in range(len(lst) - 4)]
+    sums = [sum(sublist)
+            for sublist in sublists_of_5]
+    return min(sums)
 
 
-print(minimum_sum([1, 2, 3, 4]) is None)
-print(minimum_sum([1, 2, 3, 4, 5, -5]) == 9)
-print(minimum_sum([1, 2, 3, 4, 5, 6]) == 15)
-print(minimum_sum([55, 2, 6, 5, 1, 2, 9, 3, 5, 100]) == 16)
-print(minimum_sum([-1, -5, -3, 0, -1, 2, -4]) == -10)
+
+
+def ls():
+    print(minimum_sum([1, 2, 3, 4]) is None)
+    print(minimum_sum([1, 2, 3, 4, 5, -5]) == 9)
+    print(minimum_sum([1, 2, 3, 4, 5, 6]) == 15)
+    print(minimum_sum([55, 2, 6, 5, 1, 2, 9, 3, 5, 100]) == 16)
+    print(minimum_sum([-1, -5, -3, 0, -1, 2, -4]) == -10)
+
+ls()
