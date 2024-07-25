@@ -1,104 +1,104 @@
-SV_TEST_STRINGS = [
-        '',
-        'aaa',
-        'aba',
-        'aabbaa',
-        'bbb',
-        'pty',
-        'bbbaaa',
-        'aaasdf',
-        'bxwrtaaaaxyza',
-        'aewoijwavmwowoiefawaajj',
-    ]
+'''
+P
+    INPUT = list of strings
+    OUTPUT = none
+    RETURN = new list of strings, sorted based on 'highest qty of adjacent 
+                consonants a string contains', descending order
+    REQS
+        EX
+            - If tie: retain original order in relation to each other
+            - 'adjacent' = ignore spaces btw words, ie 'p q' == adjacent
+        IMPL
+            - min number of adjacents = 2 (no such thing as one adjacent consonant)
 
-def string_of_consonants():
-    '''
-    This helper function simply returns a string of all the consonants 
-    in the english language, including 'y'
-    '''
-    alphabet = set([chr(i) for i in range(ord('a'), ord('z') + 1)])
-    consonants = alphabet.difference(set('aeiou'))
-    return ''.join(sorted(list(consonants)))
+    QS
+E
+    LS TESTS:
+        my_list = ['aa', 'baa', 'ccaa', 'dddaa']
+        print(sort_by_consonant_count(my_list))
+        # ['dddaa', 'ccaa', 'aa', 'baa']
 
-def get_consonant_substrings(string):
-    '''
-    Returns: list of 'adjacent consonant' substrings, without spaces
-    TODO: this function is longer than 15 lines but I'm not sure how to fix that?
-        perhaps I should extract the 'if else' block?
-    '''
-    index = 0; substring = ''; result = []
+        my_list = ['can can', 'toucan', 'batman', 'salt pan']
+        print(sort_by_consonant_count(my_list))
+        # ['salt pan', 'can can', 'batman', 'toucan']
+
+        my_list = ['bar', 'car', 'far', 'jar']
+        print(sort_by_consonant_count(my_list))
+        # ['bar', 'car', 'far', 'jar']
+
+        my_list = ['day', 'week', 'month', 'year']
+        print(sort_by_consonant_count(my_list))
+        # ['month', 'day', 'week', 'year']
+
+        my_list = ['xxxa', 'xxxx', 'xxxb']
+        print(sort_by_consonant_count(my_list))
+        # ['xxxx', 'xxxb', 'xxxa']
+D
+    list of strings
+V
+    'dddaa' > 3
+    'ccaa'  > 2
+    'aa'    > 0
+    'baa'   > 0
+A
+    v1 high level
+        - create new list
+        - for each string
+            - determine the max num of adjacent consonants within that string
+                - REMEMBER: MIN ADJACENTS = 2.  1 IS NOT AN OPTION
+        - sort the strings according to highest num, DESCENDING
+        - return list
+
+        v1 max_adjacent_in_str [helper]
+        - INPUT =STRING
+        - RETURN = MAX ADJACENT
+        - remove spaces from string using `.replace()`
+        - if length is less than 2, 
+            return 0
+        - count = 1
+        - max count = 0
+        - for each prev_char (exclude last char, to prevent index error)
+            - if both current and prev_char are consonants
+                - increment `count` by 1
+            - if idx = last character in string:
+                - reassign max count = max(count, max_count)
+                - return ,max_count
+            - else
+                - reassign max count = max(count, max_count)
+                - reset count to one
+
+
+        'bbaab'
+        'bb'
+
+'''
+
+def max_adjacent_in_str(string):
+    consonants = 'bcdfghjklmnpqrstvwxyz'
     string = string.replace(' ', '')
-    if string == '':
-        return result
-
-    while True:
-        char = string[index]
-        if is_consonant(char):
-            substring += char
-        elif len(substring) >= 2:
-            result.append(substring)
-            substring = ''
+    if len(string) < 2:
+        return 0
+    max_count = 0
+    count = 1
+    for idx in range(1, len(string)):
+        prev_char = string[idx - 1]
+        current_char = string[idx]
+        if prev_char in consonants and current_char in consonants:
+            count += 1
+        elif count > 1:
+            max_count = max((max_count, count))
         else:
-            substring = ''
-        index += 1
-        if index >= len(string):
-            if substring:
-                result.append(substring)
-            return result
+            count = 1
 
-def is_consonant(character):
-    '''
-    Returns: is the character a consonant? True or False.
-    '''
-    if len(character) > 1:
-        return 'Accepts one character only!'
-    return character in 'bcdfghjklmnpqrstvwxyz'
+    return max_count
 
-def get_max_length(list_of_strings):
-    '''
-    Returns length of longest string
-    '''
-    lengths = [len(x) for x in list_of_strings]
-    return max(lengths) if lengths else 0
-
-def get_max_adjacent_consonants(string):
-    return get_max_length(get_consonant_substrings(string))
-
-def sort_by_consonant_count(list_of_strings):
-    '''
-    Returns a new list, sorted by length
-    '''
-    def second_element(x):
-        return x[1]
-    
-    tuples = []
-    for i in list_of_strings:
-        tuples.append( (i, get_max_adjacent_consonants(i)) )
-    tuples.sort(key = second_element, reverse= True)
-
-    return [i[0] for i in tuples]
+print(max_adjacent_in_str('bbaabbb'))
 
 
-# ****************************************************************
-# TESTS
-# ****************************************************************
 
 
-def test_string_consonants(tests):
-    for i in tests:
-        print(f"{i} ==> {get_consonant_substrings(i)}")
-# test_string_consonants(TEST_STRINGS)
 
-def test2():
-    for i in SV_TEST_STRINGS:
-        print(
-    f'''\
-    {i} ==> {get_consonant_substrings(i)} \
-    ==> {get_max_adjacent_consonants(i)}\
-    ''')
-# test2()
-
-def final_test():
+def ls():
     my_list = ['aa', 'baa', 'ccaa', 'dddaa']
     print(sort_by_consonant_count(my_list))
     # ['dddaa', 'ccaa', 'aa', 'baa']
@@ -118,5 +118,3 @@ def final_test():
     my_list = ['xxxa', 'xxxx', 'xxxb']
     print(sort_by_consonant_count(my_list))
     # ['xxxx', 'xxxb', 'xxxa']
-
-final_test()
