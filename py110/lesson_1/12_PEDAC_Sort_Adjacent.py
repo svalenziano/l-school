@@ -1,4 +1,8 @@
 '''
+RESULT = 🟡 Done in 17.5 mins
+            Worked fine, although it's probably not an optimised way of accomplishing this!
+            I **DO** need to figure out how to make my option 2 work!
+
 P
     INPUT = list of strings
     OUTPUT = none
@@ -52,20 +56,19 @@ A
         v1 max_adjacent_in_str [helper]
         - INPUT =STRING
         - RETURN = MAX ADJACENT
-        - remove spaces from string using `.replace()`
-        - if length is less than 2, 
-            return 0
-        - count = 1
-        - max count = 0
-        - for each prev_char (exclude last char, to prevent index error)
-            - if both current and prev_char are consonants
-                - increment `count` by 1
-            - if idx = last character in string:
-                - reassign max count = max(count, max_count)
-                - return ,max_count
-            - else
-                - reassign max count = max(count, max_count)
-                - reset count to one
+        - create list of all substrings using comprehension
+            - Filter: consists only of consonants
+        - create list of lengths (lengths of substrings)
+        - return max length
+
+        v1 all_consonants(str) [helper]
+        - INPUT = string
+        - OUTPUT = boolean
+        - for char in str
+            - if char isn't a consonant
+                - return False
+        - return True
+
 
 
         'bbaab'
@@ -73,29 +76,40 @@ A
 
 '''
 
-def max_adjacent_in_str(string):
-    consonants = 'bcdfghjklmnpqrstvwxyz'
-    string = string.replace(' ', '')
-    if len(string) < 2:
-        return 0
-    max_count = 0
-    count = 1
-    for idx in range(1, len(string)):
-        prev_char = string[idx - 1]
-        current_char = string[idx]
-        if prev_char in consonants and current_char in consonants:
-            count += 1
-        elif count > 1:
-            max_count = max((max_count, count))
-        else:
-            count = 1
+def all_consonants(string):
+    for char in string:
+        if char in 'aeiou':
+            return False
+    return True
 
-    return max_count
+def max_adjacent_consonants(string):
+    substrings = [string[start_idx: end_idx]
+                  for start_idx in range(len(string))
+                  for end_idx in range(start_idx + 1, len(string) + 1)]
+    adjacent = [substr
+                for substr in substrings
+                if all_consonants(substr) and len(substr) > 1]
+    lengths = [len(substr)
+                for substr in adjacent]
+    #print(string); print(adjacent)
+    return max(lengths) if lengths else 0
 
-print(max_adjacent_in_str('bbaabbb'))
+def sort_by_consonant_count(lst):
+    sorted_by_count = sorted(lst, key=max_adjacent_consonants, reverse=True)
+    return sorted_by_count
 
 
+tests = [
+    'abcdddd',
+    'a',
+    'ccaa',
+]
 
+for t in tests:
+    pass
+    #print(max_adjacent_consonants(t))
+
+#print(all_consonants('bbbaccc'))
 
 
 def ls():
@@ -118,3 +132,5 @@ def ls():
     my_list = ['xxxa', 'xxxx', 'xxxb']
     print(sort_by_consonant_count(my_list))
     # ['xxxx', 'xxxb', 'xxxa']
+
+ls()
