@@ -10,8 +10,8 @@ class Car:
         print(f"Hello human, I'm a {self.color} {self.year} " +
               f"{self._model}, at your service!")
 
-    @classmethod
-    def efficiency(cls, km_travelled, liters_burned):
+    @staticmethod
+    def efficiency(km_travelled, liters_burned):
         eff = round(km_travelled / liters_burned, 2)
         if isclose(eff % 1, 0):
             eff = int(eff)
@@ -49,26 +49,31 @@ class Car:
     def print_color(self):
         print(f"My color is still {self.color}, glad you asked!")
 
+    def set_cruise(self, cruise_speed):
+        print(f"Cruise control set to {cruise_speed}.")
+        self._speed = cruise_speed
+    
     @property
     def color(self):
         return self._color
-        
 
     @color.setter
     def color(self, color:str):
         self._color = color
         #print(f"Sweet paintjob!  Color = {self.color}")
 
-    
 
 m = Car('Mazda 3', '2015', 'silverish')  # Marla
 g = Car('LHT', '2008', 'green')  # Gertrude
-g.color = 'Purple'
-m.color = 'Gray'
-m.year = 1999
-g.year = 2022
-Car.efficiency(93,2)
-m.efficiency(25,1)
+#g.color = 'Purple'
+#m.color = 'Gray'
+#m.year = 1999
+#g.year = 2022
+#Car.efficiency(93,2)
+#m.efficiency(25,1)
+m.set_cruise(99)
+g.set_cruise(20)
+
 
 while True:
     msg = input(">>> ")
