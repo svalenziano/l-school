@@ -35,10 +35,12 @@ class Election:
 
 
     def results(self):
+        result_msg = ''
         for c in self.candidates:
-            print(f"{c.name}: {c.votes} votes")
-        print()
-        print(self.get_winner_msg())
+            result_msg += f"{c.name}: {c.votes} votes\n"
+
+        result_msg +=  '\n' + self.get_winner_msg()
+        return result_msg
             
 
     def get_winner_msg(self):
