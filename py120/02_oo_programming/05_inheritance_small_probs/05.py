@@ -1,4 +1,9 @@
-class Cat:
+class WalkingMixin:
+    def walk(self):
+        print("Let's go for a walk!")
+
+
+class Cat(WalkingMixin):
     def __init__(self, name):
         self._name = name
 
