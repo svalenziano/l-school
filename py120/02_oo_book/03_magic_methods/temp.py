@@ -1,17 +1,7 @@
-class Vehicle:
-    pass
+class Bike:
 
-class Car(Vehicle):
-    pass
+    def __init__(self, color):
+        self._color = color
 
-class Truck(Vehicle):
-    pass
-
-car = Car()
-print(isinstance(car, Car))       # True
-#print(isinstance(car, Vehicle))   # True
-#print(isinstance(car, Truck))     # False
-#
-#truck = Truck()
-#print(isinstance(truck, Vehicle)) # True
-#print(isinstance(truck, Car))     # False
+gertrude = Bike('green')
+print(gertrude._color)

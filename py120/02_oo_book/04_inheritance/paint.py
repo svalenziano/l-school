@@ -1,7 +1,9 @@
 class PaintJobMixin:
 
-    def set_color(self, color):
-        self._color = color
-
-    def get_color(self):
+    @property
+    def color(self):
         return self._color
+    
+    @color.setter
+    def color(self, color):
+        self._color = color
