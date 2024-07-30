@@ -7,7 +7,9 @@ class Vehicle:
         return self._year
 
 class Truck(Vehicle):
-    pass
+    def __init__(self, year, bed_type):
+        super().__init__(year)
+        self.bed_type = bed_type
 
 class Car(Vehicle):
     pass
