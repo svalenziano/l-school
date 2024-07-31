@@ -2,7 +2,8 @@ class FlyingMixin:
     pass
 
 class Animal:
-    pass
+    def __init__(self) -> None:
+        print('Cool cool')
 
 class Bird(FlyingMixin, Animal):
     pass
