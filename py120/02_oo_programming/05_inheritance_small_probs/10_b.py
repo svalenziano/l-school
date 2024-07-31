@@ -1,5 +1,4 @@
-class FlyingMixin:
-    pass
+from flying_mixin import FlyingMixin
 
 class Animal:
     pass

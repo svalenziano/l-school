@@ -1,0 +1,2 @@
+class FlyingMixin:
+    pass

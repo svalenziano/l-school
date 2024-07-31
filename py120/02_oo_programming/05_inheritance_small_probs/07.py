@@ -2,11 +2,25 @@ class TowingMixin:
     def tow(self):
         return 'I can tow a trailer!'
 
-class Truck(TowingMixin):
+class Vehicle:
+
+    def __init__(self, year):
+        self.year = year
+    
+    @property
+    def year(self):
+        return self._year
+    
+    @year.setter
+    def year(self, year):
+        self._year = year
+
+class Truck(TowingMixin, Vehicle):
     pass
 
-class Car:
+class Car(Vehicle):
     pass
+
 
 # Comments show expected output
 truck1 = Truck(1994)
