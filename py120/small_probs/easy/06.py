@@ -15,47 +15,76 @@ class Pet:
 
     @property
     def name(self):
-        return self._pet_type
+        return self._name
     
     @name.setter
     def name(self, name):
-        self.name = name
+        self._name = name
+
+'''
+shelter.adopt
+    - Call person.adopt
+    - Create list of (pet, person) tuples?
+person
+    - adopt method
+        - add to list of adopted pets
+    - number of pets
+        - return length of list (of adopted pets)
+'''
 
 class Owner:
 
     def __init__(self, name):
         self.name = name
-        self.number_of_pets = 0
+        self._pets = []
 
-    @property
+    def adopt(self, pet:Pet):
+        self._pets.append(pet)
+
     def number_of_pets(self):
-        return self._number_of_pets
+        return len(self._pets)
     
-    @number_of_pets.setter
-    def number_of_pets(self, num):
-        self._number_of_pets = num
+    @property
+    def pets(self):
+        return self._pets
+    
 
     @property
     def name(self):
-        return self._pet_type
+        return self._name
     
     @name.setter
     def name(self, name):
-        self.name = name
+        self._name = name
 
 
 class Shelter:
-    pass
+    def __init__(self):
+        self._adoption_ledger = []
 
-    def adopt(bleepbloop, owner, pet):
-        pass
+    def adopt(self, owner:Owner, pet:Pet):
+        owner.adopt(pet)
+        self._adoption_ledger.append((owner, pet))
 
+    @property
+    def owners(self):
+        return {adoption[0] for adoption in self._adoption_ledger}
+    
+    def adoptions_by_owner(self, owner):
+        return [adoption[1]
+                for adoption in self._adoption_ledger
+                if adoption[0] == owner]
 
+    def print_adoptions(self):
+        if not self.owners:
+            print("No adoptions ☹️")
+        for owner in self.owners:
+            print(f"{owner.name} has adopted the following pets:")
+            for pet in self.adoptions_by_owner(owner):
+                print(f"a {pet.pet_type} named {pet.name}")
+            print()
 
-
-
-
-
+        
 
 # LS tests
 
@@ -79,16 +108,7 @@ shelter.adopt(bholmes, sweetie)
 shelter.adopt(bholmes, molly)
 shelter.adopt(bholmes, chester)
 
-'''
-shelter.adopt
-    - Call person.adopt
-    - Create list of (pet, person) tuples?
-person
-    - adopt method
-        - add to list of adopted pets
-    - number of pets
-        - return length of list (of adopted pets)
-'''
+
 
 shelter.print_adoptions()
 print(f"{phanson.name} has {phanson.number_of_pets()} "
@@ -112,3 +132,5 @@ a fish named Chester
 P Hanson has 3 adopted pets.
 B Holmes has 4 adopted pets.
 '''
+
+#print(shelter.adoptions_by_owner(phanson))
