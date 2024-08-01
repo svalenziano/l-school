@@ -13,6 +13,9 @@ class Wallet:
 
     def __add__(self, other):
         return Wallet(self.amount + other.amount)
+    
+    def __str__(self):
+        return f"Wallet with ${self.amount}"
 
 wallet1 = Wallet(50)
 wallet2 = Wallet(30)
