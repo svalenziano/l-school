@@ -1,0 +1,47 @@
+- `cell` class:
+	- Properties:
+		- idx = integer (helpful, even though it's somewhat redundant.  ~~not necessary bc the `buffer` list contains this info?~~)
+		- `value` = None
+		- `age` = None
+	- Behaviors:
+		- `value`
+		- `age`
+		- `increment_age`
+			- if there is a `value`:
+				- if the value is `None`
+					- set age to `1`
+				- else:
+					- increment age by 1
+			- else (no `value`)
+				- do nothing
+- buffer class:
+	- State:
+		- buffer = list of `cell` objects
+	- Behaviors:
+		- `__init__`
+			- cells
+		- `is_full` returns Boolean, all positions are full?
+			- `empty_cells` = list comprehension
+			- if any cells are empty:
+				- return True
+			- return False
+		- `newest_idx` returns the idx 
+			- create list of objects, sorted by age (sort using `key`)
+			- return index of the first object
+		- `oldest_idx` 
+			- same as newest, above
+		- `all_cells_empty`
+			- if the value of every cell is `None`, return True
+		- `put` adds object to buffer
+			- **If empty**:
+				- Assign the value to the first cell
+			- else If not full
+				- Find the newest element
+					- Add number to the next cell
+				- Increment all ages
+			- else (if full)
+				- Find the idx of the oldest element
+				- Replace that element
+				- Increment all ages
+		- `get` removes and returns the oldest element
+			- removing = replace with new `Cell` (age and value are `None`)
