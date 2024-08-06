@@ -40,23 +40,17 @@ class Rule:
 
 class RPSGame:
 
-    WINNING_HANDS = [
-        {
-            'win': 'rock',  
-            'lose': 'scissors', 
-            'msg': 'Rock smashes scissors!'
-        },
-        {
-            'win': 'paper', 
-            'lose': 'rock', 
-            'msg': 'Paper smothers rock!'
-        },
-        {
-            'win': 'scissors', 
-            'lose': 'paper', 
-            'msg': 'Scissors cuts paper!'
-        },
-    ]
+    WIN_AND_LOSE = {
+        'rock': 'scissors',
+        'paper': 'rock',
+        'scissors': 'paper',
+    }
+
+    OUTCOME_MESSAGES = {
+        ('rock', 'scissors') :  'Rock smashes scissors',
+        ('paper', 'rock') :     'Paper smothers rock',
+        ('scissors', 'paper'):  'Scissors cuts paper',
+    }
 
 
     def __init__(self):
@@ -70,33 +64,49 @@ class RPSGame:
     def display_goodbye_message(self):
         print("Goodbye! 👋")
 
+    def return_winner(self):
+        if self._human.move == self._computer.move:
+            return "It's a tie!"
+        else:
+            for winner, loser in self.WIN_AND_LOSE.items():
+                if (winner == self._human.move and
+                loser == self._computer.move):
+                    return 'Human wins!'
+                else:
+                    return 'Computer wins!'
+    
+    def return_outcome_explanation(self):
+        for combo in self.OUTCOME_MESSAGES.keys():
+            if set(combo) == set([self._human.move, self._computer.move]):
+                return self.OUTCOME_MESSAGES[combo]
+
     def display_winner(self):
         '''
         DS:
-            scissors : 
-                paper: 'scissors cuts paper'
-            rock :
-                scissors: 'rock crushes scissors'
-            paper :
-                rock: 'paper smothers rock'
+            winner/loser
+                rock: scissors
+                paper: rock
+                scissors: paper
+            messages ()
+                (rock, scissors) : rock smashes scissors
+                (paper, scissors): paper smothers scissors ...
+
         Alg:
             - If they're equal, it's a tie
-            - Try to get the combo of human/computer moves, If the human's move is in 
-                 the winning, human wins
-            - Otherwise
-                - player loses
+            DETERMINE WINNER
+                - for each possibility in WINNERS:
+                    - If winners[human choice] == computer choice
+                        - human wins
+                - else:
+                    computer wins
+            PRINT FUN MESSAGE
+                - for each tuple in messages VALUES
+                    - if set(tuple) == set(computer and human choices)
+                        - print the VALUE (message)
         '''
         print(f"Human chose {self._human.move}, Computer chose {self._computer.move}")
-        if self._human.move == self._computer.move:
-            print(f"It's a tie!")
-        else:
-            for scenario in self.WINNING_HANDS:
-                if (scenario['win'] == self._human.move and 
-                    scenario['lose'] == self._computer.move):
-                    msg = 'Human wins!'
-                else:
-                    msg = 'Computer wins!'
-                print(msg)
+        print(self.return_outcome_explanation())
+        print(self.return_winner())
         
 
     def play(self):
