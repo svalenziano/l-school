@@ -1,3 +1,5 @@
+from random import shuffle
+
 '''
 P
     - Edit `PokerHand` so that `ls_tests` print True
@@ -5,6 +7,20 @@ P
     - Description of poker hands: https://www.cardplayer.com/rules-of-poker/hand-rankings
 E
 D
+    Data structure for counting 4 of a kind, full house, pairs
+    v1
+    - Dict
+        - {
+            'Ace': 2, 
+            2: 3,
+          }
+        - For each rank
+            - If the count of that card is > 1
+            - add rank and count to dict
+        - `pairs`
+            return count of occurences of `2` in dict values
+        - `three_of_a_kind`
+            return count of occurences of `3` in dict values
 A
 '''
 
@@ -15,7 +31,7 @@ class Deck:
     SUITS = ['Hearts', 'Clubs', 'Diamonds', 'Spades']
 
     def __init__(self):
-        self.cards = self.shuffled_deck()
+        self._deck = self.shuffled_deck()
     
     def shuffled_deck(self):
         cards = [Card(rank, suit)
@@ -25,9 +41,9 @@ class Deck:
         return cards
     
     def draw(self):
-        if len(self.cards) < 1:
-            self.cards = self.shuffled_deck()
-        return self.cards.pop()
+        if len(self._deck) < 1:
+            self._deck = self.shuffled_deck()
+        return self._deck.pop()
 
 class Card:
     
@@ -37,6 +53,10 @@ class Card:
         self.rank = rank
         self.suit = suit
         self._value = self.rank_to_value(rank)
+
+    @property
+    def value(self):
+        return self._value
 
     def rank_to_value(self, rank):
         for idx, value in enumerate(Card.VALUES, start=2):
@@ -53,11 +73,51 @@ class Card:
         return (self.rank == other.rank) and (self.suit == other.suit)
     
 class PokerHand:
+    HAND_SIZE = 5
+    
     def __init__(self, deck):
-        pass
+        self._cards = [deck.draw()
+                       for _ in range(PokerHand.HAND_SIZE)]
+        self._cards.sort()
+        self._values = [card.value
+                        for card in self._cards]
+        self._ranks = [card.rank
+                        for card in self._cards]
+        self._suits = {card.suit
+                        for card in self._cards}
+        self._duplicates = {card.rank : self._ranks.count(card.rank)
+                            for card in self._cards
+                            if self._ranks.count(card.rank) > 1}
+    @property
+    def number_of_pairs(self):
+        return list(self._duplicates.values()).count(2)
+    
+    @property
+    def three_of_a_kind(self):
+        return 3 in self._duplicates.values()
+
+    @property
+    def is_flush(self):
+        return len(self._suits) == 1
+
+    @property
+    def is_royal(self):
+        return self._ranks == [10, 'Jack', 'Queen', 'King', 'Ace']
+
+    @property
+    def is_straight(self):
+        for idx, value in enumerate(self._values):
+            if idx == len(self._values) - 1:
+                break
+            next_greatest_value = value + 1
+            subsequent_value = self._values[idx + 1]
+            if not next_greatest_value == subsequent_value:
+                return False
+        return True
 
     def print(self):
-       pass
+       for card in self._cards:
+           print(card)
 
     def evaluate(self):
         if self._is_royal_flush():
@@ -82,31 +142,31 @@ class PokerHand:
           return "High card"
 
     def _is_royal_flush(self):
-        pass
+        return self.is_royal and self.is_flush
 
     def _is_straight_flush(self):
-        pass
+        return self.is_straight and self.is_flush
 
     def _is_four_of_a_kind(self):
-        pass
+        return 4 in self._duplicates.values()
 
     def _is_full_house(self):
-        pass
+        return self.three_of_a_kind and self.number_of_pairs == 1
 
     def _is_flush(self):
-        pass
+        return self.is_flush
 
     def _is_straight(self):
-        pass
+        return self.is_straight
 
     def _is_three_of_a_kind(self):
-        pass
+        return self.three_of_a_kind
 
     def _is_two_pair(self):
-        pass
+        return self.number_of_pairs == 2
 
     def _is_pair(self):
-        pass
+        return self.number_of_pairs == 1
 
 # LS TESTS
 def ls_tests():
@@ -266,4 +326,4 @@ def ls_tests():
     )
     print(hand.evaluate() == "High card")
 
-#ls_tests()
+ls_tests()
