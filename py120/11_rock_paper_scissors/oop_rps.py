@@ -40,12 +40,24 @@ class Rule:
 
 class RPSGame:
 
-    WINNING_HANDS = {
-        # keys = winners
-        'rock': {'scissors': 'Rock smashes scissors!'},
-        'paper': {'rock': 'Paper smothers rock!'},
-        'scissors': {'paper': 'Scissors cuts paper!'},
-    }
+    WINNING_HANDS = [
+        {
+            'win': 'rock',  
+            'lose': 'scissors', 
+            'msg': 'Rock smashes scissors!'
+        },
+        {
+            'win': 'paper', 
+            'lose': 'rock', 
+            'msg': 'Paper smothers rock!'
+        },
+        {
+            'win': 'scissors', 
+            'lose': 'paper', 
+            'msg': 'Scissors cuts paper!'
+        },
+    ]
+
 
     def __init__(self):
         self._human = Player(is_human=True)
@@ -69,8 +81,8 @@ class RPSGame:
                 rock: 'paper smothers rock'
         Alg:
             - If they're equal, it's a tie
-            - If the opposing move is in the value
-                - player wins
+            - Try to get the combo of human/computer moves, If the human's move is in 
+                 the winning, human wins
             - Otherwise
                 - player loses
         '''
@@ -78,20 +90,22 @@ class RPSGame:
         if self._human.move == self._computer.move:
             print(f"It's a tie!")
         else:
-            outcome = self.WINNING_HANDS[self._human.move][self._computer.move]
-            if self._computer.move in self.WINNING_HANDS[self._human.move]:
-                print(f'{outcome} Human wins!')
-            else:
-                print(f'{outcome} Computer wins')
+            for scenario in self.WINNING_HANDS:
+                if (scenario['win'] == self._human.move and 
+                    scenario['lose'] == self._computer.move):
+                    msg = 'Human wins!'
+                else:
+                    msg = 'Computer wins!'
+                print(msg)
         
 
     def play(self):
-        print(self.WINNING_HANDS['rock']['scissors'])
-        # self.display_welcome_message()
-        # self._human.choose()
-        # self._computer.choose()
-        # self.display_winner()
-        # self.display_goodbye_message()
+        #print(self.WINNING_HANDS['rock']['scissors'])
+        self.display_welcome_message()
+        self._human.choose()
+        self._computer.choose()
+        self.display_winner()
+        self.display_goodbye_message()
 
 game = RPSGame()
 game.play()
