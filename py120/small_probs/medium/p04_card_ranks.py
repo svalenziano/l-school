@@ -20,33 +20,24 @@ A
 
 
 class Card:
-    
-    VALUES = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King', 'Ace']
-    
+    VALUES = {"Jack": 11, "Queen": 12, "King": 13, "Ace": 14}
+
     def __init__(self, rank, suit):
         self.rank = rank
         self.suit = suit
-        self._value = self.rank_to_value(rank)
-
-    def rank_to_value(self, rank):
-        for idx, value in enumerate(Card.VALUES, start=2):
-            if rank == value:
-                return idx
-    
-    def __lt__(self, other):
-        return self._value < other._value
-    
-    # def __gt__(self, other):
-    #     return self._value > other._value
-    
-    def __repr__(self):
-        print("Boop")
 
     def __str__(self):
         return f"{self.rank} of {self.suit}"
-    
+
+    @property
+    def value(self):
+        return Card.VALUES.get(self.rank, self.rank)  # SV NOTE: NOTE THE DEFAULT VALUE!
+
+    def __lt__(self, other):
+        return self.value < other.value
+
     def __eq__(self, other):
-        return (self.rank == other.rank) and (self.suit == other.suit)
+        return self.rank == other.rank and self.suit == other.suit
     
 
 # LS TESTS
