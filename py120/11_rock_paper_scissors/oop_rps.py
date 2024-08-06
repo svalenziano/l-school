@@ -58,13 +58,13 @@ class RPSGame:
         self._computer = Player(is_human=False)
         print('init!')
 
-    def display_welcome_message(self):
+    def _display_welcome_message(self):
         print('Welcome to rock, paper scissors!')
 
-    def display_goodbye_message(self):
+    def _display_goodbye_message(self):
         print("Goodbye! 👋")
 
-    def return_winner(self):
+    def _return_winner(self):
         if self._human.move == self._computer.move:
             return "It's a tie!"
         else:
@@ -75,47 +75,36 @@ class RPSGame:
                 else:
                     return 'Computer wins!'
     
-    def return_outcome_explanation(self):
+    def _return_outcome_explanation(self):
         for combo in self.OUTCOME_MESSAGES.keys():
             if set(combo) == set([self._human.move, self._computer.move]):
                 return self.OUTCOME_MESSAGES[combo]
 
     def display_winner(self):
-        '''
-        DS:
-            winner/loser
-                rock: scissors
-                paper: rock
-                scissors: paper
-            messages ()
-                (rock, scissors) : rock smashes scissors
-                (paper, scissors): paper smothers scissors ...
-
-        Alg:
-            - If they're equal, it's a tie
-            DETERMINE WINNER
-                - for each possibility in WINNERS:
-                    - If winners[human choice] == computer choice
-                        - human wins
-                - else:
-                    computer wins
-            PRINT FUN MESSAGE
-                - for each tuple in messages VALUES
-                    - if set(tuple) == set(computer and human choices)
-                        - print the VALUE (message)
-        '''
         print(f"Human chose {self._human.move}, Computer chose {self._computer.move}")
-        print(self.return_outcome_explanation())
-        print(self.return_winner())
-        
+        print(self._return_outcome_explanation())
+        print(self._return_winner())
+    
+    def _prompt_play_again(self):
+        response = Input(
+                valid_choices=['yes', 'no'], 
+                msg_txt='Would you like to play again? (y/n) ', 
+                invalid_txt='Invalid input. ', 
+                help_txt='Would you like to play again? The only valid options are "yes" and "no". ', 
+                delay=0)
+        if response.get() == 'yes':
+            return True
+        return False
 
     def play(self):
-        #print(self.WINNING_HANDS['rock']['scissors'])
-        self.display_welcome_message()
-        self._human.choose()
-        self._computer.choose()
-        self.display_winner()
-        self.display_goodbye_message()
+        self._display_welcome_message()
+        while True:
+            self._human.choose()
+            self._computer.choose()
+            self.display_winner()
+            if not self._prompt_play_again():
+                break
+        self._display_goodbye_message()
 
 game = RPSGame()
 game.play()
