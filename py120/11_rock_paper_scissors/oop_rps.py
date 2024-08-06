@@ -1,27 +1,30 @@
 import random
 from valid_input import Input
 
-
 class Player:
-    CHOICES = ('rock', 'paper', 'scissors')
-    
-    def __init__(self, is_human):
-        # maybe a "name"? what about a "move"?
-        self._is_human = is_human
-        self.move = None
 
+    CHOICES = ('rock', 'paper', 'scissors')
+
+    def __init__(self):
+        self._move = None
+
+class Computer(Player):
+ 
+    def choose(self):
+        self._move = random.choice(Human.CHOICES)
+
+class Human(Player):
+    
     def choose(self):
         help_txt = f'You need help.  The valid choices are: R, P, or S'
-        if self._is_human:
-            get_move = Input(valid_choices = ['rock', 'paper', 'scissors'], 
-                      msg_txt = 'Please choose: rock, paper, or scissors? ', 
-                      invalid_txt = 'Not valid, sorry!', 
-                      help_txt = help_txt, 
-                      delay = 0
-                      )
-            self.move = get_move.get()
-        else:
-            self.move = random.choice(Player.CHOICES)
+        move = Input(valid_choices = ['rock', 'paper', 'scissors'], 
+                    msg_txt = 'Please choose: rock, paper, or scissors? ', 
+                    invalid_txt = 'Not valid, sorry!', 
+                    help_txt = help_txt, 
+                    delay = 0
+                    )
+        self.move = move.get()
+
 
 class Move:
     def __init__(self):
@@ -54,8 +57,8 @@ class RPSGame:
 
 
     def __init__(self):
-        self._human = Player(is_human=True)
-        self._computer = Player(is_human=False)
+        self._human = Human()
+        self._computer = Computer()
         print('init!')
 
     def _display_welcome_message(self):
