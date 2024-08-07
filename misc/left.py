@@ -16,11 +16,14 @@ A
             - include the number if `three_divisors` returns True
 '''
 def has_three_divisors(num):
+    divisor_count = 0
     halfway = int(num / 2)
-    divisors = [divisor
-                for divisor in range(2, halfway + 1)
-                if num % divisor == 0]
-    return len(divisors) == 3
+    for divisor in range(2, halfway + 1):
+        if num % divisor == 0:
+            divisor_count += 1
+            if divisor_count > 3:
+                return False
+    return divisor_count == 3
 
 
 def solution(n, m):
@@ -28,3 +31,9 @@ def solution(n, m):
               for num in range(n, m + 1)
               if has_three_divisors(num)]
     return result
+
+print(solution(2, 100))
+print(solution(10000, 100000))
+print(solution(624, 625))
+print(solution(625, 626))
+print(solution(734, 735))
