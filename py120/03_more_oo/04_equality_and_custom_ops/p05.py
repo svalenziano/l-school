@@ -35,7 +35,11 @@ class Silly:
     
     def __add__(self, other):
         value = self.value
-        if str(value).isdigit() and str(other).isdigit():
+        if not (isinstance(other, str) or isinstance(other, int)):
+            return NotImplemented
+
+        both_numeric = str(value).isdigit() and str(other).isdigit()
+        if both_numeric:
             new_value = int(value) + int(other)
         else:
             new_value = str(value) + str(other)
