@@ -56,6 +56,6 @@ print(my_vector)
 my_vector -= Vector(1, 7)
 print(my_vector)                      # Vector(7, 9)
 
-# print(Vector(3, 2) + 5)
+print(Vector(3, 2) + 5)
 # TypeError: unsupported operand type(s) for +: 'Vector'
 # and 'int'
