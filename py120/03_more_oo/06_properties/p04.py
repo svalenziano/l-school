@@ -4,11 +4,12 @@ P
 '''
 
 class SmartLamp:
-    def __init__(self, color):
+    def __init__(self, color, brightness):
         self.color = color
+        self.brightness = brightness
 
     def glow(self):
-        return (f'The lamp glows {self.color}.')
+        return (f'The lamp glows {self.color} with brightness {self.brightness}.')
 
     @property
     def color(self):                    # Getter for _color
@@ -20,6 +21,18 @@ class SmartLamp:
             raise TypeError('Color must be a color name.')
 
         self._color = color
+    
+    @property
+    def brightness(self):
+        return self._brightness
+    
+    @brightness.setter
+    def brightness(self, brightness:int):
+        if not 0 <= brightness <= 100:
+            raise ValueError('Brightness must be between 0 and 100')
+
+        self._brightness = brightness
+
 
 
 
