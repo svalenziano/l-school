@@ -32,6 +32,14 @@ class Silly:
 
     def __str__(self):
         return f'Silly({repr(self.value)})'
+    
+    def __add__(self, other):
+        value = self.value
+        if str(value).isdigit() and str(other).isdigit():
+            new_value = int(value) + int(other)
+        else:
+            new_value = str(value) + str(other)
+        return Silly(new_value)
 
 print(Silly('abc') + 'def')        # Silly('abcdef')
 print(Silly('abc') + 123)          # Silly('abc123')
