@@ -1,19 +1,7 @@
-class Vehicle:
-    WHEELS = 4
-
-    @classmethod
-    def wheels(cls):
-        return cls.WHEELS
-
-class Motorcycle(Vehicle):
-    @classmethod
-    def vehicle_wheels(cls):
-        return cls.WHEELS
-
-print((Motorcycle.mro()))
-
-print(Motorcycle.wheels())              # 4
-print(Motorcycle.WHEELS)                # 4
-print(Vehicle.wheels())                 # 4
-print(Vehicle.WHEELS)                   # 4
-print(Motorcycle.vehicle_wheels())      # 4
+try:
+    open("no_such_file.txt", "r")
+except OSError as e:
+    print(f'Error number: {e.errno}, Error message: {e.strerror}')
+    print(f'File: {e.filename}')
+# Error number: 2, Error message: No such file or directory
+# File: no_such_file.txt
