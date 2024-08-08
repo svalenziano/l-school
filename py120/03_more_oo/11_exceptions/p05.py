@@ -1,12 +1,7 @@
 class NegativeNumberError(ValueError):
-    def __init__(self, message=""):
-        if not message:
-            message = "Value is less than zero.  Positive number expected."
-        super().__init__(message)
+    pass
 
-
-num = float(input("Give me a positive number please. "))
+num = float(input('Enter a number: '))
 if num < 0:
-    raise NegativeNumberError
-else:
-    print(f"Your number is: {num}!!!")
+    raise NegativeNumberError('Negative numbers are not allowed!')
+print(f'You entered {num}')
