@@ -7,7 +7,8 @@ class Hello(Greeting):
     
     @classmethod
     def hi(cls):
-        cls.greet('Hello')
+        g = Greeting()
+        g.greet('Hello')
 
 class Goodbye(Greeting):
     def bye(self):
