@@ -1,0 +1,1 @@
+print(c.__name__ for c in my_class.__class__.mro())
