@@ -1,0 +1,6 @@
+print(type(True))
+print(True.__class__)
+print(type(1))
+print((1).__class__)
+print((1).__class__.__name__)
+# print(1.__class__)
