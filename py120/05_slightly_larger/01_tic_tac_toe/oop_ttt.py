@@ -1,3 +1,5 @@
+import random
+
 class TTTGame:
     def __init__(self):
         self.board = Board()
@@ -11,16 +13,13 @@ class TTTGame:
         while True:
             self.board.display()
             self.first_player_moves()
-            self.board.display()
             if self.is_game_over():
                 break
             self.second_player_moves()
             if self.is_game_over():
                 break
-
-            break # for testing purposes
         
-        #self.board.display()
+        self.board.display()
         self.display_results()
         self.display_goodbye_message()
 
@@ -36,13 +35,14 @@ class TTTGame:
         pass
 
     def first_player_moves(self):
-        move = self.human.get_move()
+        empty = self.board.unused_squares
+        move = self.human.get_move(empty)
         self.board.mark_square(move, self.human.marker)
 
     def second_player_moves(self):
-        # STUB
-        # Second player makes a move
-        pass
+        options = self.board.unused_squares
+        move = self.computer.get_move(options)
+        self.board.mark_square(move, self.computer.marker)
 
     def is_game_over(self):
         # STUB
@@ -59,6 +59,17 @@ class Board:
     
     def mark_square(self, location, mark):
         self.squares[location].mark = mark
+
+    @property
+    def unused_squares(self):
+        '''
+        input = self
+        output = list of unused indexes
+        create list of unused squares
+        '''
+        return [key
+                for key, square in self.squares.items()
+                if square.is_empty]
 
     def display(self):
         print()
@@ -107,12 +118,9 @@ class Square:
     def mark(self, mark):
         self._mark = mark
 
-class Marker:
-    def __init__(self):
-        pass
-    '''
-    
-    '''
+    @property
+    def is_empty(self):
+        return self.mark == self.INITIAL_MARKER
 
 class Player:
     def __init__(self, marker):
@@ -130,32 +138,33 @@ class Human(Player):
     def __init__(self, marker):
         super().__init__(marker)
 
-    def get_move(self):
+    def get_move(self, options):
         '''
         `Board.valid_moves` = Determine what moves are valid
         Get square number from human (ensure validity)
         Update Board
         '''
-        move = input("What's your move? ")
-        try:
-            move = int(move)
-            if not 1 <= move <= 9:
-                raise ValueError("Move must be between 1 and 9, inclusive.")
-            return move
-        except ValueError as e:
-            print(f"Oops! {e}")
-        print("Sorry, that's an invalid choice.")
-        print()
-
-    def play(self):
-        pass
-
-    def mark(self):
-        pass
+        
+        while True:
+            try:
+                move = input(f"What's your move? Options: {options} ")
+                move = int(move)
+                if not move in options:
+                    raise ValueError(f"Valid choices: {options}")
+                else:
+                    return move
+            except ValueError as e:
+                print(f"Oops! {e}")
+            print("Sorry, that's an invalid choice.")
+            print()
 
 class Computer(Player):
     def __init__(self, marker):
         super().__init__(marker)
+
+    def get_move(self, options):
+        choice = random.choice(options)
+        return choice
 
 game = TTTGame()
 game.play()
