@@ -1,8 +1,8 @@
 class TTTGame:
     def __init__(self):
         self.board = Board()
-        self.human = Human()
-        self.computer = Computer()
+        self.human = Human('X')
+        self.computer = Computer('0')
     
     def play(self):
         # SPIKE
@@ -10,8 +10,8 @@ class TTTGame:
 
         while True:
             self.board.display()
-
             self.first_player_moves()
+            self.board.display()
             if self.is_game_over():
                 break
             self.second_player_moves()
@@ -20,7 +20,7 @@ class TTTGame:
 
             break # for testing purposes
         
-        self.board.display()
+        #self.board.display()
         self.display_results()
         self.display_goodbye_message()
 
@@ -37,7 +37,7 @@ class TTTGame:
 
     def first_player_moves(self):
         move = self.human.get_move()
-        self.board.mark_square(move, Square.HUMAN_MARKER)
+        self.board.mark_square(move, self.human.marker)
 
     def second_player_moves(self):
         # STUB
@@ -90,14 +90,14 @@ class Row:
 
 class Square:
     INITIAL_MARKER = ' '
-    HUMAN_MARKER = 'X'
-    COMPUTER_MARKER = '0'
+    # HUMAN_MARKER = 'X'
+    # COMPUTER_MARKER = '0'
 
     def __init__(self, marker=INITIAL_MARKER):
-        self.marker = marker
+        self.mark = marker
     
     def __str__(self):
-        return self.marker
+        return self.mark
     
     @property
     def mark(self):
@@ -115,18 +115,21 @@ class Marker:
     '''
 
 class Player:
-    def __init__(self):
-        pass
-    '''
+    def __init__(self, marker):
+        self.marker = marker
     
-    '''
+    @property
+    def marker(self):
+        return self._marker
+    
+    @marker.setter
+    def marker(self, marker):
+        self._marker = marker
 
 class Human(Player):
-    def __init__(self):
-        pass
-    '''
-    
-    '''
+    def __init__(self, marker):
+        super().__init__(marker)
+
     def get_move(self):
         '''
         `Board.valid_moves` = Determine what moves are valid
@@ -151,11 +154,8 @@ class Human(Player):
         pass
 
 class Computer(Player):
-    def __init__(self):
-        pass
-    '''
-    
-    '''
+    def __init__(self, marker):
+        super().__init__(marker)
 
 game = TTTGame()
 game.play()
