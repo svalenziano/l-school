@@ -1,13 +1,13 @@
 class TTTGame:
     def __init__(self):
-        pass
+        self.board = Board()
     
     def play(self):
         # SPIKE
         self.display_welcome_message()
 
         while True:
-            self.display_board()
+            self.board.display()
 
             self.first_player_moves()
             if self.is_game_over():
@@ -18,7 +18,7 @@ class TTTGame:
 
             break # for testing purposes
         
-        self.display_board()
+        self.board.display()
         self.display_results()
         self.display_goodbye_message()
 
@@ -32,21 +32,6 @@ class TTTGame:
         # STUB
         # show results: win/lose/tie
         pass
-
-    def display_board(self):
-        print()
-        print("     |     |     ")
-        print("  O  |     |  O  ")
-        print("     |     |     ")
-        print("-----+-----+-----")
-        print("     |     |     ")
-        print("     |  X  |     ")
-        print("     |     |     ")
-        print("-----+-----+-----")
-        print("     |     |     ")
-        print("  X  |     |     ")
-        print("     |     |     ")
-        print()
 
     def first_player_moves(self):
         # STUB
@@ -67,10 +52,38 @@ class TTTGame:
 
 class Board:
     def __init__(self):
-        pass
-    '''
+        self.squares = {
+            1: Square(),
+            2: Square('X'),
+            3: Square(),
+            4: Square('O'),
+            5: Square(),
+            6: Square(),
+            7: Square(),
+            8: Square(),
+            9: Square(),
+        }
     
-    '''
+    def display(self):
+        print()
+        print("     |     |     ")
+        print(f"  {self.squares[1]}  |"
+              f"  {self.squares[2]}  |"
+              f"  {self.squares[3]}  ")
+        print("     |     |     ")
+        print("-----+-----+-----")
+        print("     |     |     ")
+        print(f"  {self.squares[4]}  |"
+              f"  {self.squares[5]}  |"
+              f"  {self.squares[6]}  ")
+        print("     |     |     ")
+        print("-----+-----+-----")
+        print("     |     |     ")
+        print(f"  {self.squares[7]}  |"
+              f"  {self.squares[8]}  |"
+              f"  {self.squares[9]}  ")
+        print("     |     |     ")
+        print()
 
 class Row:
     def __init__(self):
@@ -80,11 +93,11 @@ class Row:
     '''
 
 class Square:
-    def __init__(self):
-        pass
-    '''
+    def __init__(self, marker=' '):
+        self.marker = marker
     
-    '''
+    def __str__(self):
+        return self.marker
 
 class Marker:
     def __init__(self):
