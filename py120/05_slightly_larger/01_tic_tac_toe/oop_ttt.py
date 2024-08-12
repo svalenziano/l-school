@@ -66,7 +66,7 @@ class TTTGame:
         return self.board.is_full or self.someone_won()
 
 
-    def three_in_a_row(self):
+    def someone_won(self):
         '''
         Output: has anyone gotten three in a row?
         Alg: 
@@ -76,11 +76,9 @@ class TTTGame:
         '''
         for mark in self.list_of_markers:
             for row in self.POSSIBLE_WINNING_ROWS:
-                if self.board.count_markers_at_locations(mark, row) == self.REQUIRED_TO_WIN:
+                if self.board.count_markers(mark, row) == self.REQUIRED_TO_WIN:
                     return True
         return False
-
-
     
 
 class Board:
@@ -102,9 +100,9 @@ class Board:
         return len(self.unused_squares) == 0
 
     def square_contains_mark(self, location, mark):
-        return self.squares[location].mark - mark
+        return self.squares[location].mark == mark
     
-    def count_markers_at_locations(self, mark, locations:tuple):
+    def count_markers(self, mark, locations:tuple):
         '''
         input = mark to count, locations to check
         output = count. btw 0 and 3
