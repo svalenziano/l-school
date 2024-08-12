@@ -1,11 +1,29 @@
 import random
 
 class TTTGame:
+
+    REQUIRED_TO_WIN = 3
+
+    POSSIBLE_WINNING_ROWS = (
+        (1, 2, 3),  # top row of board
+        (4, 5, 6),  # center row of board
+        (7, 8, 9),  # bottom row of board
+        (1, 4, 7),  # left column of board
+        (2, 5, 8),  # middle column of board
+        (3, 6, 9),  # right column of board
+        (1, 5, 9),  # diagonal: top-left to bottom-right
+        (3, 5, 7),  # diagonal: top-right to bottom-left
+    )
+
     def __init__(self):
         self.board = Board()
         self.human = Human('X')
         self.computer = Computer('0')
-    
+
+    @property
+    def list_of_markers(self):
+        return [self.human.marker, self.computer.marker]
+
     def play(self):
         # SPIKE
         self.display_welcome_message()
@@ -45,8 +63,21 @@ class TTTGame:
         self.board.mark_square(move, self.computer.marker)
 
     def is_game_over(self):
-        # STUB
-        # for now, assume game is never ends
+        return self.board.is_full or self.someone_won()
+
+
+    def three_in_a_row(self):
+        '''
+        Output: has anyone gotten three in a row?
+        Alg: 
+            For each  winning combo
+                - return True if `count markers at location` is >= 3
+            Return False
+        '''
+        for mark in self.list_of_markers:
+            for row in self.POSSIBLE_WINNING_ROWS:
+                if self.board.count_markers_at_locations(mark, row) == self.REQUIRED_TO_WIN:
+                    return True
         return False
 
 
@@ -62,14 +93,25 @@ class Board:
 
     @property
     def unused_squares(self):
-        '''
-        input = self
-        output = list of unused indexes
-        create list of unused squares
-        '''
         return [key
                 for key, square in self.squares.items()
                 if square.is_empty]
+
+    @property
+    def is_full(self):
+        return len(self.unused_squares) == 0
+
+    def square_contains_mark(self, location, mark):
+        return self.squares[location].mark - mark
+    
+    def count_markers_at_locations(self, mark, locations:tuple):
+        '''
+        input = mark to count, locations to check
+        output = count. btw 0 and 3
+        '''
+        locations_with_mark = [location
+                               for location in locations
+                               if self.square_contains_mark(location, mark)]
 
     def display(self):
         print()
