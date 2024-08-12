@@ -1,6 +1,8 @@
 class TTTGame:
     def __init__(self):
         self.board = Board()
+        self.human = Human()
+        self.computer = Computer()
     
     def play(self):
         # SPIKE
@@ -34,8 +36,8 @@ class TTTGame:
         pass
 
     def first_player_moves(self):
-        # STUB
-        pass
+        move = self.human.get_move()
+        self.board.mark_square(move, Square.HUMAN_MARKER)
 
     def second_player_moves(self):
         # STUB
@@ -55,6 +57,9 @@ class Board:
         self.squares = {num: Square()
                         for num in range(1, 10)}
     
+    def mark_square(self, location, mark):
+        self.squares[location].mark = mark
+
     def display(self):
         print()
         print("     |     |     ")
@@ -93,6 +98,14 @@ class Square:
     
     def __str__(self):
         return self.marker
+    
+    @property
+    def mark(self):
+        return self._mark
+    
+    @mark.setter
+    def mark(self, mark):
+        self._mark = mark
 
 class Marker:
     def __init__(self):
@@ -114,6 +127,23 @@ class Human(Player):
     '''
     
     '''
+    def get_move(self):
+        '''
+        `Board.valid_moves` = Determine what moves are valid
+        Get square number from human (ensure validity)
+        Update Board
+        '''
+        move = input("What's your move? ")
+        try:
+            move = int(move)
+            if not 1 <= move <= 9:
+                raise ValueError("Move must be between 1 and 9, inclusive.")
+            return move
+        except ValueError as e:
+            print(f"Oops! {e}")
+        print("Sorry, that's an invalid choice.")
+        print()
+
     def play(self):
         pass
 
