@@ -52,17 +52,8 @@ class TTTGame:
 
 class Board:
     def __init__(self):
-        self.squares = {
-            1: Square(),
-            2: Square('X'),
-            3: Square(),
-            4: Square('O'),
-            5: Square(),
-            6: Square(),
-            7: Square(),
-            8: Square(),
-            9: Square(),
-        }
+        self.squares = {num: Square()
+                        for num in range(1, 10)}
     
     def display(self):
         print()
@@ -93,7 +84,11 @@ class Row:
     '''
 
 class Square:
-    def __init__(self, marker=' '):
+    INITIAL_MARKER = ' '
+    HUMAN_MARKER = 'X'
+    COMPUTER_MARKER = '0'
+
+    def __init__(self, marker=INITIAL_MARKER):
         self.marker = marker
     
     def __str__(self):
