@@ -55,6 +55,23 @@ class TTTGame(DisplayMixin):
         return [self.human.marker, self.computer.marker]
 
     def play(self):
+        '''
+        Alg v1
+            - hello message
+            - play game
+            - ask if user wants new game
+            -if yes
+                - start new game
+            - if no
+                - quit
+        Alg v2
+            - hello message
+            - while True:
+                - play game
+                - ask if user wants new game
+                - if no
+                    - quit
+        '''
         self.board.clear_and_display()
         self.display_welcome_message()
 
