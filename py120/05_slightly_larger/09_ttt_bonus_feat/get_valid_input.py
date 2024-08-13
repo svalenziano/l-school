@@ -13,7 +13,7 @@ class Input:
                  delay=0):
         self.valid_choices = tuple(valid_choices)
         self.msg_txt = msg_txt
-        self.invalid_txt = invalid_txt if invalid_txt else f'Invalid.  Please choose one: {valid_choices}'
+        self.invalid_txt = invalid_txt if invalid_txt else f'Invalid.  Please choose one: {valid_choices} '
         self.help_txt = help_txt
         self.delay = delay
         self.goodbye = 'Goodbye!'
@@ -33,11 +33,14 @@ class Input:
             return unaliased[0]
         if len(unaliased) > 1:
             print(f"There's more than one choice that begins with {choice}, " +
-                  "can you be more specific?")
+                  "can you be more specific? ")
 
     def get(self):
         while True:
             choice = input(self.msg_txt).strip().casefold()
+            if not choice:
+                print(f"I didn't hear anything, can you repeat yoursef? ")
+                continue
             choice = self.unalias_choice(self.valid_choices, choice)
             if choice in self.valid_choices:
                 return choice

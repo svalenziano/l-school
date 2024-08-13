@@ -57,15 +57,7 @@ class TTTGame(DisplayMixin):
 
     def play(self):
         '''
-        Alg v1
-            - hello message
-            - play game
-            - ask if user wants new game
-            -if yes
-                - start new game
-            - if no
-                - quit
-        Alg v2
+        Alg v3
             `play`
             - hello message
             - while True:
@@ -77,26 +69,27 @@ class TTTGame(DisplayMixin):
                 - quit
         '''
         self.board.clear_and_display()
-        self.display_welcome_message()
-        
+        self.display_welcome_message()      
         while True:
-            while True:
-                self.first_player_moves()
-                if self.is_game_over():
-                    break
-                self.second_player_moves()
-                if self.is_game_over():
-                    break
-                self.board.clear_and_display()
-
-            self.board.clear_and_display()
-            self.display_results()
-            if self.prompt_keep_going():
-                self.board.reset()
-                self.board.clear_and_display()
-            else:
+            self.play_single_round()
+            if not self.prompt_keep_going():
                 self.display_goodbye_message()
                 quit()
+
+    def play_single_round(self):
+        self.board.reset()
+        self.board.clear_and_display()
+        while True:
+            self.first_player_moves()
+            if self.is_game_over():
+                break
+            self.second_player_moves()
+            if self.is_game_over():
+                break
+            self.board.clear_and_display()
+
+        self.board.clear_and_display()
+        self.display_results()
 
     def display_welcome_message(self):
         print("Welcome to Tic Tac Toe!")
