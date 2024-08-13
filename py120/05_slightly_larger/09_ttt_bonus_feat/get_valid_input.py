@@ -11,9 +11,9 @@ class Input:
                  invalid_txt='', 
                  help_txt='', 
                  delay=0):
-        self.valid_choices = valid_choices
+        self.valid_choices = tuple(valid_choices)
         self.msg_txt = msg_txt
-        self.invalid_txt = invalid_txt
+        self.invalid_txt = invalid_txt if invalid_txt else f'Invalid.  Please choose one: {valid_choices}'
         self.help_txt = help_txt
         self.delay = delay
         self.goodbye = 'Goodbye!'
@@ -31,7 +31,7 @@ class Input:
                      if valid_choice.startswith(choice)]
         if len(unaliased) == 1:
             return unaliased[0]
-        if len(unaliased > 1):
+        if len(unaliased) > 1:
             print(f"There's more than one choice that begins with {choice}, " +
                   "can you be more specific?")
 

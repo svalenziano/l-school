@@ -1,5 +1,6 @@
 import random
 import os
+from get_valid_input import Input
 
 class DisplayMixin:
     @staticmethod
@@ -65,28 +66,37 @@ class TTTGame(DisplayMixin):
             - if no
                 - quit
         Alg v2
+            `play`
             - hello message
             - while True:
-                - play game
-                - ask if user wants new game
-                - if no
-                    - quit
+                - while True:
+                    - result = `play_round`  
+            - update and display score ('You: 3, Computer: 74')
+            - ask if user wants new game
+            - if no
+                - quit
         '''
         self.board.clear_and_display()
         self.display_welcome_message()
-
+        
         while True:
-            self.first_player_moves()
-            if self.is_game_over():
-                break
-            self.second_player_moves()
-            if self.is_game_over():
-                break
-            self.board.clear_and_display()
+            while True:
+                self.first_player_moves()
+                if self.is_game_over():
+                    break
+                self.second_player_moves()
+                if self.is_game_over():
+                    break
+                self.board.clear_and_display()
 
-        self.board.clear_and_display()
-        self.display_results()
-        self.display_goodbye_message()
+            self.board.clear_and_display()
+            self.display_results()
+            if self.prompt_keep_going():
+                self.board.reset()
+                self.board.clear_and_display()
+            else:
+                self.display_goodbye_message()
+                quit()
 
     def display_welcome_message(self):
         print("Welcome to Tic Tac Toe!")
@@ -95,6 +105,7 @@ class TTTGame(DisplayMixin):
         print("Goodbye!")
         print()
         print()
+        
 
     def display_results(self):
         if self.is_winner(self.human):
@@ -114,6 +125,7 @@ class TTTGame(DisplayMixin):
 
     def is_game_over(self):
         return self.board.is_full or self.someone_won
+    
 
     @property
     def someone_won(self):
@@ -131,9 +143,22 @@ class TTTGame(DisplayMixin):
         if self.board.count_markers(mark, row) == qty:
             return True
         return False
+    
+    def prompt_keep_going(self):
+        asker = Input(valid_choices=['y', 'n'],
+                      msg_txt='Would you like to play again? (y/n)',
+                      )
+        if asker.get() == 'y':
+            return True
+        return False
 
 class Board(DisplayMixin):
+    
+    
     def __init__(self):
+        self.reset()
+
+    def reset(self):
         self.squares = {num: Square()
                         for num in range(1, 10)}
 
