@@ -1,0 +1,55 @@
+---  # document start
+
+intro_text: |
+  WELCOME TO TIC-TAC-TOE
+
+  SCREEN FLICKERING? The display flickers when run in the Windows terminal using Windows WSL2/Ubuntu, however it works fine in VSCode.  Not yet tested on MacOS.
+
+  IF YOU GET LOST OR BORED:
+  Enter 'h' anytime to get help.
+  Enter 'q' anytime to quit.
+
+  Press 'Enter' to start playing! 🙌
+
+intro_confused: |
+  Oh no, you're already having trouble?
+  How about you just press 'Enter' right now and ask for help using 'h' later?
+
+intro_help: |
+  Please press 'Enter' to continue and press 'h' if/when you run into trouble! 'q' = quit.
+
+error_generic: "🔴 Something has gone terribly wrong"
+
+goodbye: [
+        'Goodbye! 😃',
+        'Good riddance! 😃',
+        'Have a nice day! 😃',
+    ]
+
+play_again_msg: "Would you like to play again? (y/n)"
+play_again_help: "Enter 'y' to play again, 'n' to quit"
+
+player_chooses_msg: 'Your turn! (x,y)'
+player_chooses_help: |
+  Where would you like your {0}? Format = <Column,Row>. Example: '2 2' for bottom-right or '0,2' for top right.  You can separate your choices with either spaces or commas.
+  Here are your options: {1}
+
+outcomes:
+  tie:
+    [
+      "It's a tie! 😬",
+      "How boring, it's a tie 😪"
+    ]
+  human_wins:
+    [
+      "Human wins! 💃",
+      "Winner!!! You've made us proud 🥲"
+    ]
+  computer_wins:
+    [
+      "The computer wins! 💪🖥️",
+      "You lose. Maybe one day we will forgive you 😢"
+    ]
+
+
+...  # document end
