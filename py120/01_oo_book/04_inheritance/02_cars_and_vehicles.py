@@ -7,6 +7,9 @@ class Vehicle:
     @classmethod
     def vehicles(cls):
         return Vehicle.number_of_vehicles
+    
+    def vehicles_self(self):
+        return self.__class__.number_of_vehicles
 
 class Car(Vehicle):
 
@@ -36,3 +39,6 @@ print(Truck.vehicles())   # 6
 boat1 = Boat()
 boat2 = Boat()
 print(Boat.vehicles())    # 8
+
+for i in [car1, car2, car3, car4, truck1, truck2, boat1, boat2]:
+    print(f"{i.__class__.__name__} {i.vehicles_self()=}")
