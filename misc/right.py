@@ -1,3 +1,4 @@
+'Code B'
 class Person:
     @property
     def name(self):

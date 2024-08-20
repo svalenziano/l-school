@@ -38,3 +38,6 @@ print(Boat.mro())
 
 lil_boat = Boat()
 # print(lil_boat.mro())  # instances don't have mro method
+
+print(range.mro())
+print(list.mro())
