@@ -3,6 +3,9 @@ class Vehicle:
 
     def __init__(self):
         Vehicle.number_of_vehicles += 1
+        v = Vehicle.number_of_vehicles
+        s = self.__class__.number_of_vehicles
+        print(f"👉Vehicle= {v}. 👉self: old = {s}, new = {s + 1}")
         self.__class__.number_of_vehicles += 1
 
     @classmethod
