@@ -2,7 +2,7 @@ class Mammal:
     instance_count = 0
     def __init__(self, name):
         self._name = name
-        Mammal.instance_count += 1  
+        self.__class__.instance_count += 1  
 
 class Dog(Mammal):
     pass
