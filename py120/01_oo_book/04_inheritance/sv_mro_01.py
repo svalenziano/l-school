@@ -1,15 +1,20 @@
 class Mammal:
-    instance_count = 0
+    counter = 0
     def __init__(self, name):
         self._name = name
-        self.__class__.instance_count += 1  
+        Mammal.counter += 1  
 
 class Dog(Mammal):
     pass
 
 luna = Dog('Luna')
-print(vars(Dog))
+print(vars(Dog)); print()  # {'__module__': '__main__', '__doc__': None}
+
 steven = Mammal("Steven")
-print(vars(Dog))
+print(vars(Mammal)); print()  # {'__module__': '__main__', 'counter': 2, ...
+
 doby = Dog('Doby')
-print(vars(Dog))
+print(vars(Dog)); print()  # {'__module__': '__main__', '__doc__': None}
+
+print(hasattr(Dog, 'counter'))
+print(Dog.counter)
