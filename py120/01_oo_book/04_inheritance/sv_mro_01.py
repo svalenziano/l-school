@@ -8,8 +8,8 @@ class Dog(Mammal):
     pass
 
 luna = Dog('Luna')
+print(vars(Dog))
 steven = Mammal("Steven")
-mel = Mammal('Mel')
-
-print(f"{Mammal.instance_count=}")
-print(f"{Dog.instance_count=}")
+print(vars(Dog))
+doby = Dog('Doby')
+print(vars(Dog))
