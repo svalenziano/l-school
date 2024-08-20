@@ -3,6 +3,7 @@ class Vehicle:
 
     def __init__(self):
         Vehicle.number_of_vehicles += 1
+        self.__class__.number_of_vehicles += 1
 
     @classmethod
     def vehicles(cls):
