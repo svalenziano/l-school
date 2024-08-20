@@ -6,10 +6,6 @@ class Mammal:
         Mammal.instances.append(self)
         Mammal.instance_count += 1  
 
-    @property
-    def identify(self):
-        return f"{self._name}, {self.__class__.__name__}"
-
 class Dog(Mammal):
     pass
 
@@ -18,10 +14,5 @@ luna = Dog('Luna')
 steven = Mammal("Steven")
 mel = Mammal('Mel')
 
-for instance in Mammal.instances:
-    print(instance.identify)
-    print(f"{instance.__dict__=}")
-    print()
-
-for cls in [Mammal, Dog]:
-    print(f"{cls.__name__} {cls.instance_count=}")
+print(f"{Mammal.instance_count=}")
+print(f"{Dog.instance_count=}")
