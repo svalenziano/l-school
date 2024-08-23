@@ -5,7 +5,10 @@ class Mammal:
         Mammal.counter += 1  
 
 class Dog(Mammal):
-    pass
+    counter = 0
+    def __init__(self, name):
+        Dog.counter += 1
+        super().__init__(name)
 
 luna = Dog('Luna')
 print(vars(Dog)); print()  # {'__module__': '__main__', '__doc__': None}

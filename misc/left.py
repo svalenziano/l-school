@@ -1,13 +1,18 @@
-'Code A'
 class Person:
-    @property
-    def name(self):
-        return self.name
+    name = 'Leslie'
 
-    @name.setter
-    def name(self, name):
-        self.name = name
+    def get_name(self):
+        return [
+            Person.name,
+            self.__class__.name,
+            type(self).name,
+            self.name,
+            Teacher.name
+        ]
 
-kate = Person()
-kate.name = 'Kate'
-print(kate.name)
+class Teacher(Person):
+    name = 'Ms Taylor'
+
+teacher = Teacher()
+print(teacher.get_name())
+# ['Leslie', 'Ms Taylor', 'Ms Taylor', 'Ms Taylor']
