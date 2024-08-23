@@ -7,16 +7,13 @@ A
 '''
 
 class NegativeNumberError(ValueError):
-    def __init__(self, message="Number cannot be negative."):
-        super().__init__(message)
+    pass
 
 try:
-    num = float(input("Gimme a positive number pls "))
-    if num < 0:
-        raise NegativeNumberError()
-    if num % 1 == 0:
-        num = int(num)
-except ValueError as e:
+    raise NegativeNumberError("Here's a message")
+except NegativeNumberError as e:
     print(f"{e.__class__.__name__}: {e}")
-else:
-    print(f"Your number is ... {num}!!!")
+    print((e))
+    print(str(e))
+    print(repr(e))
+    print(type(e))
