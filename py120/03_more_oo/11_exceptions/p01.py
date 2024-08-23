@@ -1,17 +1,18 @@
-def div(a, b):
-    try:
-        return float(a) / float(b)
-    except ValueError as e:
-        print("Both values must be numbers")
-        print(e)
-    except ZeroDivisionError as e:
-        print("You can't divide by zero! 😱")
-        print(e)
+print(); print('Welcome to the Divider 3000!')
 
 while True:
     print()
-    a = input('Number? ')
-    b = input('Divisor? ')
-    c = div(a, b)
-    if c:
-        print(c)
+    try:
+        num1 = input('Your first number? ')
+        num2 = input('Your second number? ')
+        num1 = float(num1)
+        num2 = float(num2)
+    except ValueError: 
+        print("Numbers only! Please try again...")
+        continue
+    try:
+        result = num1 / num2
+        print(f"Result = {result}")
+    except ZeroDivisionError:
+        print("You can't divide by zero :(")
+        continue
