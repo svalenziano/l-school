@@ -6,14 +6,14 @@ class Pizza:
     def __init__(self, name):
         self.my_name = name
 
+
 '''
-Only class Pizza creates an object iwht an instance variable, indicated by the 
-`self` in `self.my_name = name`.  The __init__ in Fruit only creates `my_name`
-which is local to `__init__` and won't become part of an instantiated
-object's state.
+Only the `Pizza` class, because its variable contains a reference to the 
+instance object, while `Fruit` does not
 '''
 
-banana = Fruit('banana')
-print(vars(banana))
+pear = Fruit('pear')
+print(vars(pear))
+
 cheese = Pizza('cheese')
 print(vars(cheese))

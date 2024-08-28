@@ -2,23 +2,22 @@ class Game:
 
     count = 0
 
-    def __init__(self, game_name, player1='', player2=''):
+    def __init__(self):
         Game.count += 1
-        self.game_name = game_name
-        if player2:
-            self.player_name1 = player1
-            self.player_name2 = player2
-        else:
-            self.player_name = player1
 
     def play(self):
-        return f"Start the {self.game_name} game!"
+        return f'Start the {self.__class__.__name__} game!'
 
 class Bingo(Game):
-    pass
+    def __init__(self, _name, player_name):
+        super().__init__()
+        self.player_name = player_name
 
 class Scrabble(Game):
-    pass
+    def __init__(self, _name, player_1, player_2):
+        super().__init__()
+        self.player_name1 = player_1
+        self.player_name2 = player_2
 
 
 bingo = Bingo('Bingo', 'Bill')
