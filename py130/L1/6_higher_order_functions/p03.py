@@ -4,15 +4,11 @@ See [[Python, Reduce]] note
 Implement 'reduce'
 '''
 
-def reduce(callback, collection, start):
-    accumulator = start
-    idx = 0
-    while idx < len(collection):
-        element = collection[idx]
+def reduce(callback, collection, start_value):
+    accumulator = start_value
+    for element in collection:
         accumulator = callback(element, accumulator)
-        idx += 1
     return accumulator
-
 
 numbers = (1, 2, 4, 8, 16)
 total = lambda number, accum: accum + number
