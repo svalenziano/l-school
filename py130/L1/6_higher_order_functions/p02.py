@@ -5,8 +5,7 @@ You may use comprehensions if you wish.
 
 You can use the following examples to test your code:
 '''
-
-
+reject = lambda predicate, collec: [i for i in collec if not predicate(i)]
 
 
 

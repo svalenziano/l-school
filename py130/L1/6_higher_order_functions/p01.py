@@ -8,10 +8,10 @@ Start by writing a function that doesn't use any comprehensions. Once your code 
 You can use the following examples to test your code:
 
 '''
-
-
-
-
+def select(predicate, collection):
+    return [element
+            for element in collection
+            if predicate(element)]
 
 numbers = [1, 2, 3, 4, 5]
 colors = {'red', 'orange', 'yellow', 'green',
