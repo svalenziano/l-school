@@ -5,7 +5,7 @@ class Bike:
 class MountainBike(Bike):
     def ride(self):
         # return f"{super().ride()} Over rocks!"
-        return f"{Bike.ride()} Over rocks!"
+        return f"{Bike.ride('123')} Over rocks!"
 
 mtb = MountainBike()
 print(mtb.ride())
