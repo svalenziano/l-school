@@ -5,6 +5,7 @@ def count_up_to(max_count):
         count += 1
 
 counter = count_up_to(5)
+print(counter)
 
 print(next(counter))
 print(next(counter))
