@@ -2,8 +2,10 @@
 Write a function named later that takes two arguments: a function, func, and an argument for that function, argument. The return value should be a new function that calls func with argument as its argument. Here's an example of how it might be used:
 '''
 
-
-
+def later(func, argument):
+    def new_func(argument=argument, func=func):
+        func(argument)
+    return new_func
 
 def printer(message):
     print(message)
