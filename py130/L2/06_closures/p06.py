@@ -3,9 +3,7 @@ Write a function named later that takes two arguments: a function, func, and an 
 '''
 
 def later(func, argument):
-    def new_func(argument=argument, func=func):
-        func(argument)
-    return new_func
+    return func(argument)
 
 def printer(message):
     print(message)
