@@ -136,12 +136,15 @@ class Sentence:
 
 
 def longest_sentence(string:str):
-    MARKS = ['.', '!', '?']
 
     def print_sentences():
         for sentence in sentences:
             print(sentence.sentence_w_final_punctuation)
     
+    def word_count(sentence:Sentence):
+        return sentence.word_count
+
+    MARKS = ['.', '!', '?']
     sentences = []
 
     idx = 0
@@ -156,7 +159,14 @@ def longest_sentence(string:str):
             idx = 0
         idx += 1
     
-    print_sentences()
+    longest = sorted(sentences, key=word_count, reverse=True)[0]
+    
+    print()
+    print(longest)
+    print()
+    print(f"The longest sentence has {longest.word_count} words.")
+
+    # print_sentences()
 
 def sv_tests():
     def print_sentences(lst):
@@ -179,7 +189,7 @@ def sv_tests():
 
 
 
-sv_tests()
+# sv_tests()
 
 # LS EXAMPLES
 long_text = (
@@ -237,4 +247,4 @@ def ls_tests():
     #
     # The longest sentence has 6 words.
 
-# ls_tests()
+ls_tests()
