@@ -6,4 +6,5 @@ def reciprocals(max):
     for num in range(1, max + 1):
         yield 1 / num
 
-print(list(reciprocals(10)))
+for num in reciprocals(10):
+    print(num)
