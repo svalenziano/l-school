@@ -58,7 +58,7 @@ A
         - for each punctuation mark:
             - split into list of sentences
             - strip to remove trailing/leading whitespace
-            - If a sentence ends with one of the other marks
+            - If a sentence still contains one of the other marks
                 - keep it on the `sentences to process` list
             - ELSE:
                 - split the sentence into words
@@ -73,7 +73,24 @@ C
 
 
 def longest_sentence(sentence:str):
-        
+    MARKS = ['.', '!', '?']
+    
+    def has_punctuation(string:str):
+        for mark in MARKS:
+            if string.find(mark):
+                return True
+    
+    multiple_sentences = [sentence]
+    for mark in MARKS:
+        sentences = []
+        for sentence in multiple_sentences:
+            sentences.append(sentence.split(mark))
+        sentences = [sentence.strip() for sentence in sentences]
+        multiple_sentences = filter(has_punctuation, sentences)
+        single_sentences = filter(lambda x: not has_punctuation(x), sentences)
+        print(single_sentences); print()
+        print(multiple_sentences)
+
 
 # LS EXAMPLES
 long_text = (
@@ -106,7 +123,9 @@ longer_text = long_text + (
 )
 
 def sv_tests():
-    pass
+    sv_sentence = "To be or not to be! Is that the question? Where do you think you're going? What's up, Doc?Proposition that all men are created equal. "
+
+    longest_sentence(sv_sentence)
 
 sv_tests()
 
