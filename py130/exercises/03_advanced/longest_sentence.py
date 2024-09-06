@@ -38,8 +38,29 @@ D
         
             
 A
+    SENTENCE SPLIT METHOD
+        - For each character
+            - if character is in MARKS
+                - return two sentences
+    
+    V1
     - Create list of single Sentence
-    - For each Sentence in the list
+    - For each Sentence in the list:  [THIS MAY CAUSE MUTATION DURING ITERATION PROBLEMS?]
+        - if a sentence has punctuation in the string
+            - remove the sentence and replace it with two separate sentences (pop and insert)
+        - you should now 
+
+    V2
+    - sentences = []
+    - Iterate through string
+    - While idx < len(string):
+        - If punctuation is encountered:
+            - Create a sentence from the first half (string slicing)
+            - append sentence to `sentences`
+            - update the string to the value of the 2nd half
+            - reset idx to 0
+        - idx += 1
+
         - While the Sentence has > 0 punctuation
             - Find the first period
             - Instantiate two sentences
@@ -67,6 +88,7 @@ class Sentence:
                 if string.endswith(mark):
                     return True
             return False
+        string = string.strip()
         if ends_with_punctuation(string):
             self._string = string[:-1]
             self._final_punctuation = string[-1]
@@ -91,9 +113,16 @@ class Sentence:
         return self._string.find('.')
 
     @property
-    def full_sentence(self):
-        return self._string
+    def sentence_w_final_punctuation(self):
+        result = self._string
+        if self.final_punctuation:
+            result = result + self.final_punctuation
+        return result
     
+    @property
+    def sentence_without_final_punctuation(self):
+        return self._string
+
     @property
     def short_version(self):
         length = 15
@@ -103,30 +132,52 @@ class Sentence:
             return self._string
 
     def __str__(self):
-        return self._string
+        return self.sentence_w_final_punctuation
 
 
 def longest_sentence(string:str):
+    MARKS = ['.', '!', '?']
+
     def print_sentences():
         for sentence in sentences:
-            print(sentence.full_sentence)
+            print(sentence.sentence_w_final_punctuation)
     
-    sentences = [Sentence(string)]
+    sentences = []
+
+    idx = 0
+    while idx < len(string):
+        character = string[idx]
+        if character in MARKS:
+            next_char_idx = idx + 1
+            first_half = string[: next_char_idx]
+            second_half = string[next_char_idx:]
+            sentences.append(Sentence(first_half))
+            string = second_half
+            idx = 0
+        idx += 1
     
-    for idx, orig_sentence in enumerate(sentences):
-        while orig_sentence.first_period:
-            split_point = orig_sentence.first_period
-            first_sentence = Sentence(orig_sentence.full_sentence[:split_point + 1])
-            second_sentence = Sentence(orig_sentence.full_sentence[split_point + 1:])
-            sentences.insert(idx, second_sentence)
-            sentences.insert(idx, first_sentence)
-            print_sentences()
-            sentences.remove(orig_sentence)
+    print_sentences()
 
 def sv_tests():
-    sv_sentence = "To be or not to be! Is that *the* question? Hello world. Where do 'you' think you're going? What's up, Doc? Proposition that all men are -- created equal. "
+    def print_sentences(lst):
+        print(">>> PRINTING SENTENCES")
+        for sentence in lst:
+            print(sentence.full_sentence)
+        print(">>> DONE PRINTING SENTENCES")
 
-    longest_sentence(sv_sentence)
+    my_str = "To be or not to be! Is that *the* question? Hello world. Where do 'you' think you're going? What's up, Doc? Proposition that all men are -- created equal. "
+
+    longest_sentence(my_str)
+    
+    # lst = [Sentence(my_str), Sentence('A big sentence'), Sentence('Final sentence')]
+    # print_sentences(lst)
+
+    # lst.remove(lst[1])
+    # print_sentences(lst)
+
+
+
+
 
 sv_tests()
 
