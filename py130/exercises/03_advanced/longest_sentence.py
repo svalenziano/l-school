@@ -93,20 +93,42 @@ class Sentence:
     @property
     def full_sentence(self):
         return self._string
-
-    def __str__(self):
+    
+    @property
+    def short_version(self):
         length = 15
-        if len(string) > length:
+        if len(self._string) > length:
             return self._string[:length] + '...'  # return first x characters
         else:
             return self._string
 
+    def __str__(self):
+        return self._string
 
 
+def longest_sentence(string:str):
+    def print_sentences():
+        for sentence in sentences:
+            print(sentence.full_sentence)
+    
+    sentences = [Sentence(string)]
+    
+    for idx, orig_sentence in enumerate(sentences):
+        while orig_sentence.first_period:
+            split_point = orig_sentence.first_period
+            first_sentence = Sentence(orig_sentence.full_sentence[:split_point + 1])
+            second_sentence = Sentence(orig_sentence.full_sentence[split_point + 1:])
+            sentences.insert(idx, second_sentence)
+            sentences.insert(idx, first_sentence)
+            print_sentences()
+            sentences.remove(orig_sentence)
 
-def longest_sentence(sentence:str):
-    pass
+def sv_tests():
+    sv_sentence = "To be or not to be! Is that *the* question? Hello world. Where do 'you' think you're going? What's up, Doc? Proposition that all men are -- created equal. "
 
+    longest_sentence(sv_sentence)
+
+sv_tests()
 
 # LS EXAMPLES
 long_text = (
@@ -138,12 +160,7 @@ longer_text = long_text + (
     'shall not perish from the earth.'
 )
 
-def sv_tests():
-    sv_sentence = "To be or not to be! Is that the question? Where do you think you're going? What's up, Doc?Proposition that all men are created equal. "
 
-    longest_sentence(sv_sentence)
-
-sv_tests()
 
 
 
