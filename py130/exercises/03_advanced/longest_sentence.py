@@ -15,32 +15,65 @@ P
         - Newlines count as whitespace
     
 E
-    - See below
-D
+    
+    "Where do you think you're going? What's up, Doc?"
+
+    Where do you think you're going
+    What's up, Doc
+
     {
-    1 : {
+    'sentence': 'Where do you think you're going'
+    'words': ['Where', 'do', 'you', 'think', 'you're', 'going']
+    'punctuation': '?'
+    },
+    {
+    ...
+    }
+
+    
+
+D
+    CLASS WITH PROPERTIES?
+    
+    LIST OF DICTS
+    [
+        {
         sentence : 'four score and seven ...',
         words : ['four', score', ...],
         punctuation: '.'
+        length: 6
         },
-    2 : {
+        {
         sentence: ...
         words: ...
         punctuation: ...
+        length: 24
         }
-    }
+    ]
         
             
 A
     - split string into sentences, using end-of-sentence chars [.!?]
-    - split the sentence into words
-    - count the number of words
+        - `sentences to process` = make a list of one, containing the sentence as the only element
+        - for each punctuation mark:
+            - split into list of sentences
+            - strip to remove trailing/leading whitespace
+            - If a sentence ends with one of the other marks
+                - keep it on the `sentences to process` list
+            - ELSE:
+                - split the sentence into words
+                - count the number of words
+                - append it to the list of dicts, along with the punctation
+    - sort the list-of-dicts by the value of each dict's `length`     
+
     - print the longest sentence
     - print a message explaining the longest sentence
 C
 '''
 
 
+def longest_sentence(sentence:str):
+        
 
 # LS EXAMPLES
 long_text = (
@@ -72,23 +105,33 @@ longer_text = long_text + (
     'shall not perish from the earth.'
 )
 
+def sv_tests():
+    pass
 
-longest_sentence(long_text)
-# Four score and seven years ago our fathers brought forth on this continent a new nation, conceived in liberty, and dedicated to the proposition that all men are created equal.
-#
-# The longest sentence has 30 words.
+sv_tests()
 
-longest_sentence(longer_text)
-# It is rather for us to be here dedicated to the great task remaining before us -- that from these honored dead we take increased devotion to that cause for which they gave the last full measure of devotion -- that we here highly resolve that these dead shall not have died in vain -- that this nation, under God, shall have a new birth of freedom -- and that government of the people, by the people, for the people, shall not perish from the earth.
-#
-# The longest sentence has 86 words.
 
-longest_sentence("Where do you think you're going? What's up, Doc?")
-# Where do you think you're going?
-#
-# The longest sentence has 6 words.
 
-longest_sentence("To be or not to be! Is that the question?")
-# To be or not to be!
-#
-# The longest sentence has 6 words.
+def ls_tests():
+
+    longest_sentence(long_text)
+    # Four score and seven years ago our fathers brought forth on this continent a new nation, conceived in liberty, and dedicated to the proposition that all men are created equal.
+    #
+    # The longest sentence has 30 words.
+
+    longest_sentence(longer_text)
+    # It is rather for us to be here dedicated to the great task remaining before us -- that from these honored dead we take increased devotion to that cause for which they gave the last full measure of devotion -- that we here highly resolve that these dead shall not have died in vain -- that this nation, under God, shall have a new birth of freedom -- and that government of the people, by the people, for the people, shall not perish from the earth.
+    #
+    # The longest sentence has 86 words.
+
+    longest_sentence("Where do you think you're going? What's up, Doc?")
+    # Where do you think you're going?
+    #
+    # The longest sentence has 6 words.
+
+    longest_sentence("To be or not to be! Is that the question?")
+    # To be or not to be!
+    #
+    # The longest sentence has 6 words.
+
+# ls_tests()
