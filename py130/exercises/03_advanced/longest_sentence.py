@@ -2,7 +2,43 @@
 Write a program that prints the longest sentence in a string based on the number of words. Sentences may end with periods (.), exclamation points (!), or question marks (?). You should treat any sequence of characters that are not spaces or sentence-ending characters as a word. Thus, -- should count as a word. Log the longest sentence and its word count. Pay attention to the expected output, and be sure you preserve the punctuation from the end of the sentence. Note that this problem is about manipulating and processing strings. As such, every detail about the string matters (e.g., case, punctuation, tabs, spaces, etc.).
 '''
 
-
+'''
+P
+    Log the longest sentence and its word count, including the sentence-ending punctuation.
+    Explicit
+        - End of sentence chars = [.!?]
+        - Word = any sequence of chars that's not spaces or sentence ending chars
+            - "--" counts as a word
+        - Sentences may include tabs and other types of whitespace
+    Implicit
+        - Longest sentence = largest number of words (NOT largest number of characters)
+        - Newlines count as whitespace
+    
+E
+    - See below
+D
+    {
+    1 : {
+        sentence : 'four score and seven ...',
+        words : ['four', score', ...],
+        punctuation: '.'
+        },
+    2 : {
+        sentence: ...
+        words: ...
+        punctuation: ...
+        }
+    }
+        
+            
+A
+    - split string into sentences, using end-of-sentence chars [.!?]
+    - split the sentence into words
+    - count the number of words
+    - print the longest sentence
+    - print a message explaining the longest sentence
+C
+'''
 
 
 
@@ -35,6 +71,7 @@ longer_text = long_text + (
     'and that government of the people, by the people, for the people, '
     'shall not perish from the earth.'
 )
+
 
 longest_sentence(long_text)
 # Four score and seven years ago our fathers brought forth on this continent a new nation, conceived in liberty, and dedicated to the proposition that all men are created equal.
