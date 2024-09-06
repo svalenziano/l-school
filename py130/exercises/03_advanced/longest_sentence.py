@@ -33,63 +33,79 @@ E
     
 
 D
-    CLASS WITH PROPERTIES?
     
-    LIST OF DICTS
-    [
-        {
-        sentence : 'four score and seven ...',
-        words : ['four', score', ...],
-        punctuation: '.'
-        length: 6
-        },
-        {
-        sentence: ...
-        words: ...
-        punctuation: ...
-        length: 24
-        }
-    ]
+    LIST OF SENTENCE OBJECTS
         
             
 A
-    - split string into sentences, using end-of-sentence chars [.!?]
-        - `sentences to process` = make a list of one, containing the sentence as the only element
-        - for each punctuation mark:
-            - split into list of sentences
-            - strip to remove trailing/leading whitespace
-            - If a sentence still contains one of the other marks
-                - keep it on the `sentences to process` list
-            - ELSE:
-                - split the sentence into words
-                - count the number of words
-                - append it to the list of dicts, along with the punctation
-    - sort the list-of-dicts by the value of each dict's `length`     
+    - Create list of single Sentence
+    - For each Sentence in the list
+        - While the Sentence has > 0 punctuation
+            - Find the first period
+            - Instantiate two sentences
+            - Replace the original sentence with the two sentences (use `insert()` list method)
+            - Repeat until all periods are removed
+            - Repeat for all other punctuation marks
+        - You now have a list of Sentences, each of them containing zero punctuation
+    - Sort the list of Sentences with key=`word_count`  
+    - Print:
+        - the longest sentence
+        - a message explaining the longest sentence
 
-    - print the longest sentence
-    - print a message explaining the longest sentence
+
 C
 '''
 
 
-def longest_sentence(sentence:str):
+
+class Sentence:
     MARKS = ['.', '!', '?']
+
+    def __init__(self, string:str):
+        def ends_with_punctuation(string):
+            for mark in Sentence.MARKS:
+                if string.endswith(mark):
+                    return True
+            return False
+        if ends_with_punctuation(string):
+            self._string = string[:-1]
+            self._final_punctuation = string[-1]
+        else:
+            self._string = string
+            self._final_punctuation = None
+
+    @property
+    def qty_punctuation(self):
+        pass
+
+    @property
+    def final_punctuation(self):
+        return self._final_punctuation
     
-    def has_punctuation(string:str):
-        for mark in MARKS:
-            if string.find(mark):
-                return True
-    
-    multiple_sentences = [sentence]
-    for mark in MARKS:
-        sentences = []
-        for sentence in multiple_sentences:
-            sentences.append(sentence.split(mark))
-        sentences = [sentence.strip() for sentence in sentences]
-        multiple_sentences = filter(has_punctuation, sentences)
-        single_sentences = filter(lambda x: not has_punctuation(x), sentences)
-        print(single_sentences); print()
-        print(multiple_sentences)
+    @property
+    def word_count(self):
+        return len(self._string.split())
+
+    @property
+    def first_period(self):
+        return self._string.find('.')
+
+    @property
+    def full_sentence(self):
+        return self._string
+
+    def __str__(self):
+        length = 15
+        if len(string) > length:
+            return self._string[:length] + '...'  # return first x characters
+        else:
+            return self._string
+
+
+
+
+def longest_sentence(sentence:str):
+    pass
 
 
 # LS EXAMPLES
