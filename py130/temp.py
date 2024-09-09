@@ -1,3 +1,2 @@
-print(list(map(lambda number: 2 * number, [1, 2, 3])))
-print(list(map(lambda number: print(number) or 2 * number, [1, 2, 3])))
-
+is_active = True
+assert not is_active, "Boolean check failed"

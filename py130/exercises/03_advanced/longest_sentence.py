@@ -21,16 +21,6 @@ E
     Where do you think you're going
     What's up, Doc
 
-    {
-    'sentence': 'Where do you think you're going'
-    'words': ['Where', 'do', 'you', 'think', 'you're', 'going']
-    'punctuation': '?'
-    },
-    {
-    ...
-    }
-
-    
 
 D
     
@@ -38,19 +28,6 @@ D
         
             
 A
-    SENTENCE SPLIT METHOD
-        - For each character
-            - if character is in MARKS
-                - return two sentences
-    
-    V1
-    - Create list of single Sentence
-    - For each Sentence in the list:  [THIS MAY CAUSE MUTATION DURING ITERATION PROBLEMS?]
-        - if a sentence has punctuation in the string
-            - remove the sentence and replace it with two separate sentences (pop and insert)
-        - you should now 
-
-    V2
     - sentences = []
     - Iterate through string
     - While idx < len(string):
@@ -61,23 +38,7 @@ A
             - reset idx to 0
         - idx += 1
 
-        - While the Sentence has > 0 punctuation
-            - Find the first period
-            - Instantiate two sentences
-            - Replace the original sentence with the two sentences (use `insert()` list method)
-            - Repeat until all periods are removed
-            - Repeat for all other punctuation marks
-        - You now have a list of Sentences, each of them containing zero punctuation
-    - Sort the list of Sentences with key=`word_count`  
-    - Print:
-        - the longest sentence
-        - a message explaining the longest sentence
-
-
-C
 '''
-
-
 
 class Sentence:
     MARKS = ['.', '!', '?']
@@ -97,20 +58,12 @@ class Sentence:
             self._final_punctuation = None
 
     @property
-    def qty_punctuation(self):
-        pass
-
-    @property
     def final_punctuation(self):
         return self._final_punctuation
     
     @property
     def word_count(self):
         return len(self._string.split())
-
-    @property
-    def first_period(self):
-        return self._string.find('.')
 
     @property
     def sentence_w_final_punctuation(self):
@@ -123,28 +76,16 @@ class Sentence:
     def sentence_without_final_punctuation(self):
         return self._string
 
-    @property
-    def short_version(self):
-        length = 15
-        if len(self._string) > length:
-            return self._string[:length] + '...'  # return first x characters
-        else:
-            return self._string
-
     def __str__(self):
         return self.sentence_w_final_punctuation
 
 
 def longest_sentence(string:str):
-
-    def print_sentences():
-        for sentence in sentences:
-            print(sentence.sentence_w_final_punctuation)
     
     def word_count(sentence:Sentence):
         return sentence.word_count
 
-    MARKS = ['.', '!', '?']
+    MARKS = Sentence.MARKS
     sentences = []
 
     idx = 0
@@ -161,35 +102,11 @@ def longest_sentence(string:str):
     
     longest = sorted(sentences, key=word_count, reverse=True)[0]
     
-    print()
+    print('**************************************************************')
     print(longest)
-    print()
+    print('👇')
     print(f"The longest sentence has {longest.word_count} words.")
 
-    # print_sentences()
-
-def sv_tests():
-    def print_sentences(lst):
-        print(">>> PRINTING SENTENCES")
-        for sentence in lst:
-            print(sentence.full_sentence)
-        print(">>> DONE PRINTING SENTENCES")
-
-    my_str = "To be or not to be! Is that *the* question? Hello world. Where do 'you' think you're going? What's up, Doc? Proposition that all men are -- created equal. "
-
-    longest_sentence(my_str)
-    
-    # lst = [Sentence(my_str), Sentence('A big sentence'), Sentence('Final sentence')]
-    # print_sentences(lst)
-
-    # lst.remove(lst[1])
-    # print_sentences(lst)
-
-
-
-
-
-# sv_tests()
 
 # LS EXAMPLES
 long_text = (
