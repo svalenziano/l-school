@@ -42,10 +42,11 @@ class DNA:
         shorter_length = min(len(self._sequence), len(compare_seq))
         
         # compare strings
-        count_of_differences = 0
-        for idx in range(shorter_length):
-            if self._sequence[idx] != compare_seq[idx]:
-                count_of_differences += 1
-        return count_of_differences
+        count = 0
+        for char1, char2 in zip(self._sequence[:shorter_length],
+                                compare_seq  [: shorter_length]):
+            if char1 != char2:
+                count += 1
+        return count
 
 
