@@ -38,13 +38,8 @@ class DNA:
                     - increment count
             - return int
         '''
-        # shorten strings as necessary
-        shorter_length = min(len(self._sequence), len(compare_seq))
-        
-        # compare strings
         count = 0
-        for char1, char2 in zip(self._sequence[:shorter_length],
-                                compare_seq  [: shorter_length]):
+        for char1, char2 in zip(self._sequence, compare_seq):
             if char1 != char2:
                 count += 1
         return count
