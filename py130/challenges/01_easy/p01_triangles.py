@@ -65,9 +65,8 @@ class Triangle:
     def _test_sides(self):
             
             # length must be greater than 0
-        for side in self._sides:
-            if side <= 0:
-                raise ValueError("Side length must be greater than 0")
+        if not all(side > 0 for side in self._sides):
+            raise ValueError("Sides must be longer than 0")
             
         # For every combination of side lengths, side 1 + side 2 > side 3
         for idx in range(len(self._sides)):
