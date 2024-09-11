@@ -1,2 +1,5 @@
 # Jupyter Notebook checkpoints
 *checkpoint.ipynb
+
+# Python 12(?) runtime cache
+__pycache__
