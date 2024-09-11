@@ -24,7 +24,7 @@ class DNA:
     def __init__(self, seq:str):
         self._sequence = seq
     
-    def hamming_distance(self, short_compare_seq:str):
+    def hamming_distance(self, compare_seq:str):
         '''
         ALG HIGH LEVEL
             - Get length of shorter string
@@ -39,14 +39,12 @@ class DNA:
             - return int
         '''
         # shorten strings as necessary
-        shorter_length = min(len(self._sequence), len(short_compare_seq))
-        short_seq = self._sequence[: shorter_length]
-        short_compare_seq = short_compare_seq[: shorter_length]
+        shorter_length = min(len(self._sequence), len(compare_seq))
         
         # compare strings
         count_of_differences = 0
-        for idx, char in enumerate(short_seq):
-            if char != short_compare_seq[idx]:
+        for idx in range(shorter_length):
+            if self._sequence[idx] != compare_seq[idx]:
                 count_of_differences += 1
         return count_of_differences
 
