@@ -1,15 +1,13 @@
-def make_adders(n):
-    for i in range(n):
-        def adder(x):
-            return i + x
+import re
 
-        return adder
+text = '''
+"The quick" bro'wn fox'
+Jum'ps 'over the yellow dog
+"I can't"
+'I won't'
+'''
 
-adders = make_adders(3)
-
-add1, add2, add3 = adders
-
-print(add1(10))  # Output: 11
-print(add2(10))  # Output: 12
-print(add3(10))  # Output: 13
-print(add3.__closure__)  # (<cell at 0x7f1a7540fdf0: int object at 0x7f1a75508130>,)
+single_quoted = r"'.+?'"
+double_quoted = r'".+?"'
+found = re.findall(single_quoted, text) + re.findall(double_quoted, text)
+print(found)
