@@ -47,11 +47,11 @@ class RomanNumeral:
                 - For each character (numbers place)
                     - convert it to a decimal value.
                         - 1 could equal 1, 10, 100, etc.
-                    - HELPER: CONVERT_INT 
+                    - HELPER: CONVERT_PLACE_TO_ROMAN
                     - Append the roman numerals to `numerals`
                 - join numerals and return a string value
                 
-                CONVERT_INT    
+                CONVERT_PLACE_TO_ROMAN
                 - convert character to integer
                 - if integer is equal to one of the numerals_combined keys:
                     - return the value of that key
@@ -74,5 +74,46 @@ class RomanNumeral:
 
             v3 high level
         '''
-        
-        pass
+        r_nums_core = {
+            1: 'I',
+            5: 'V',
+            10: 'X',
+            50: 'L',
+            100: 'C',
+            500: 'D',
+            1000: 'M',
+        }
+
+        r_nums_core_sorted = sorted(r_nums_core.keys(), reverse=True)
+
+        r_nums_derived = {
+            4: 'IV',
+            9: 'IX',
+            40: 'XL',
+            90: 'XC',
+            400: 'CD',
+            900: 'CM',
+        }
+
+        r_nums_combined = r_nums_core | r_nums_derived
+
+
+        def convert_digit_to_roman(digit, tens_place):
+            if digit > 9:
+                raise ValueError('`digit` must be between 0 and 9, inclusive.')
+            if not tens_place % 10 == 0:
+                raise ValueError(f"{tens_place.__name__} must be multiple of ten.")
+            decimal_value = digit * (tens_place or 1)
+            if decimal_value in r_nums_combined.keys():
+                return r_nums_combined[decimal_value]
+            for n in r_nums_core_sorted:
+                if decimal_value % n == 0:
+                    return r_nums_core[n] * decimal_value / n
+            raise ValueError('No solution was found')
+                
+        return convert_digit_to_roman(self._decimal_value, 0)
+    
+
+if __name__ == '__main__':
+    num = RomanNumeral(8)
+    print(num.to_roman())
