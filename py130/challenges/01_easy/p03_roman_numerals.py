@@ -24,6 +24,9 @@ class RomanNumeral:
     def __init__(self, decimal_value):
         self._decimal_value = decimal_value
     
+    def __str__(self):
+        return str(self._decimal_value)
+
     def to_roman(self):
         '''
         P
@@ -44,9 +47,11 @@ class RomanNumeral:
                 MAIN
                 - numerals = []  (use a list so it's easy to distinguish between appends)
                 - Convert to string and process each character?
+                - `length = number of 'digits'
                 - For each character (numbers place)
                     - convert it to a decimal value.
                         - 1 could equal 1, 10, 100, etc.
+                        - HELPER: DISSECT_NUMBER
                     - HELPER: CONVERT_PLACE_TO_ROMAN
                     - Append the roman numerals to `numerals`
                 - join numerals and return a string value
@@ -112,13 +117,18 @@ class RomanNumeral:
             decimal_value = digit * (tens_place or 1)
             if decimal_value in r_nums_combined.keys():
                 return r_nums_combined[decimal_value]
+            for n in r_nums_core_sorted:
+                if decimal_value % n == 0:
+                    return r_nums_core[n] * (decimal_value // n)
+
             raise ValueError('No solution was found')
-                
-        return convert_digit_to_roman(self._decimal_value, 0)
-        
+
+
+        return convert_digit_to_roman(self._decimal_value, 10)
+
     
 
 if __name__ == '__main__':
     for num in range(1,10):
         num = RomanNumeral(num)
-        print(num.to_roman())
+        print(f"{num} --> {num.to_roman()}")
