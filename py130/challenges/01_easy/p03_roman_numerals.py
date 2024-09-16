@@ -87,7 +87,12 @@ class RomanNumeral:
         r_nums_core_sorted = sorted(r_nums_core.keys(), reverse=True)
 
         r_nums_derived = {
+            2: 'II',
+            3: 'III',
             4: 'IV',
+            6: 'VI',
+            7: 'VII',
+            8: 'VIII',
             9: 'IX',
             40: 'XL',
             90: 'XC',
@@ -97,23 +102,23 @@ class RomanNumeral:
 
         r_nums_combined = r_nums_core | r_nums_derived
 
-
         def convert_digit_to_roman(digit, tens_place):
-            if digit > 9:
-                raise ValueError('`digit` must be between 0 and 9, inclusive.')
+            if not 0 <= digit <= 9:
+                raise ValueError('`digit` must be between +1 and +9, inclusive.')
+            if digit == 0:
+                raise ValueError('The romans had no digit for zero')
             if not tens_place % 10 == 0:
-                raise ValueError(f"{tens_place.__name__} must be multiple of ten.")
+                raise ValueError(f"{tens_place.__name__} must be a FACTOR of ten.")
             decimal_value = digit * (tens_place or 1)
             if decimal_value in r_nums_combined.keys():
                 return r_nums_combined[decimal_value]
-            for n in r_nums_core_sorted:
-                if decimal_value % n == 0:
-                    return r_nums_core[n] * decimal_value / n
             raise ValueError('No solution was found')
                 
         return convert_digit_to_roman(self._decimal_value, 0)
+        
     
 
 if __name__ == '__main__':
-    num = RomanNumeral(8)
-    print(num.to_roman())
+    for num in range(1,10):
+        num = RomanNumeral(num)
+        print(num.to_roman())
