@@ -37,9 +37,56 @@ D
             match
 
 A
-
+    v1 high level
+        - 
 
 '''
 
+class Word:
+    def __init__(self, word:str):
+        self._original = word
+        self._lowercase = word.lower()
+
+    def __str__(self):
+        return self._original
+    
+    @property
+    def original_case(self):
+        return str(self)
+
+    @property
+    def lowercase(self):
+        return self._lowercase
+    
+    @property
+    def sorted_letters(self):
+        letters = sorted(list(self.lowercase))
+        return ''.join(letters)
+
+
 class Anagram:
-    pass
+    def __init__(self, word:str):
+        self._word = Word(word)
+
+    def match(self, list_of_words):
+        '''
+        ALGO
+        v1 high level
+            INPUT = list of strings
+            OUTPUT = list of anagram strings
+        - create a list of Word objects, from the list of input strings
+        - for each word in the list (enumerate):
+            - ORDER MATTERS! if any words are duplicate of the original, remove them from the list
+                - compare lowercase values
+            - ORDER DOESN'T MATTER ... if `sorted_letters` of the original word DOESN'T equal that of the list word:
+                - remove that word from the list
+            - You should now have a list of anagram `Word` objects
+        - Convert the list of `Word` objs back into a list of string objects using the original string (original case, original order)
+        - return list
+
+
+        '''
+        list_of_words = [Word(word) for word in list_of_words]
+        raise ValueError('WIP')
+
+    
