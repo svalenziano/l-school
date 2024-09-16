@@ -13,10 +13,66 @@ Write some code that converts modern decimal numbers into their Roman number equ
  - M = 1000
 
  - Placing any smaller number in front of any larger number indicates subtraction
-    - For example, IV means 4, XL means 50, XC means 90, CD means 400
+    - For example, IV means 4, XL means 40, XC means 90, CD means 400
 
 Let's do some tests:
 2024 = MMXXIV
 
 '''
 
+class RomanNumeral:
+    def __init__(self, decimal_value):
+        self._decimal_value = decimal_value
+    
+    def to_roman(self):
+        '''
+        P
+        E
+        D
+        A
+            v1 high level:
+                - Given these dicts:
+                    - numerals_core:
+                        1: 'I',
+                        5: 'V',
+                        10: 'X',
+                    - numerals_derived:
+                        4: 'IV'
+                        9: 'IX',
+                        40: 'XL'
+                    - numerals_combined = numerals_core | numerals_derived
+                MAIN
+                - numerals = []  (use a list so it's easy to distinguish between appends)
+                - Convert to string and process each character?
+                - For each character (numbers place)
+                    - convert it to a decimal value.
+                        - 1 could equal 1, 10, 100, etc.
+                    - HELPER: CONVERT_INT 
+                    - Append the roman numerals to `numerals`
+                - join numerals and return a string value
+                
+                CONVERT_INT    
+                - convert character to integer
+                - if integer is equal to one of the numerals_combined keys:
+                    - return the value of that key
+                - elif the integer is a multiple of any of the numerals_core keys:
+                    - Divide to determine how many numerals should be used
+                        - ie, 30 = 3 * 'X'
+                    - Return the roman numerals, ie 'XX' or 'XXX'
+
+                
+
+            v2 high level:
+                - Given this dict:
+                    1: 'I',
+                    5: 'V',
+                    10: 'X',
+                    ...
+                - For each key:
+                    - Use Divmod to determine how many times the key (the decimal value) can go into the 
+                    oops, don't think this is gonna work
+
+            v3 high level
+        '''
+        
+        pass
