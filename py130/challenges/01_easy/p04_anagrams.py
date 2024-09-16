@@ -75,18 +75,21 @@ class Anagram:
             INPUT = list of strings
             OUTPUT = list of anagram strings
         - create a list of Word objects, from the list of input strings
-        - for each word in the list (enumerate):
-            - ORDER MATTERS! if any words are duplicate of the original, remove them from the list
-                - compare lowercase values
-            - ORDER DOESN'T MATTER ... if `sorted_letters` of the original word DOESN'T equal that of the list word:
-                - remove that word from the list
-            - You should now have a list of anagram `Word` objects
+        - create a new list:
+            - filter for words that aren't identical to the original (compare lowercase)
+            - filter for words that dont have the same `sorted_letters` property
+        - You should now have a list of anagram `Word` objects
         - Convert the list of `Word` objs back into a list of string objects using the original string (original case, original order)
         - return list
 
-
+        ALGO TESTING
+        [Word1, Word2, Word3, ...]
+        [Word1]
         '''
         list_of_words = [Word(word) for word in list_of_words]
-        raise ValueError('WIP')
+        return [word.original_case
+                for word in list_of_words
+                if word.lowercase != self._word.lowercase and
+                word.sorted_letters == self._word.sorted_letters]
 
     
