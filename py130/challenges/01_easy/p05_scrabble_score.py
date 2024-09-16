@@ -22,4 +22,24 @@ Sum the values of all the tiles used in each word. For instance, lets consider t
     2 points for G
     1 point for E
 
+P
+    - Strip whitespace before cacluating values
+    - Case insenstive
+    - falsy values = 0 score
+E
+D
+    - Dictionary of values
+'''
+values = {
+    ('A', 'E', 'I', 'O', 'U', 'L', 'N', 'R', 'S', 'T', ): 1,
+
+}
+'''
+A
+    - points = []
+    - for letter in word
+        - For key, value in dict:
+            - if letter in key:
+                - append `value` to points
+    - return sum of `points`
 '''
