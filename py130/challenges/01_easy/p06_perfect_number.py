@@ -17,7 +17,52 @@ Examples:
 
     
 PROMPT:  Write a program that can tell whether a number is perfect, abundant, or deficient.
+
+EXAMINING THE TEST SUITE:
+    - 'classify' classmethod
+    - Should raise ValueError "Input must be a positive integer"
+    - otherwise, return:
+        deficient
+        perfect
+        abundant
+
+EXAMPLES and TESTS
+DATA STRUCT
+ALGO
+    - coerce to integer, raise TypeError if fails
+    - ensure number is positive, raise ValueError otherwise
+    - get all positive divisors incl 1 but excluding the number itself
+    - sum positive divisors
+    - return classification
+
 '''
+from functools import reduce
 
 class PerfectNumber:
-    pass
+    @classmethod
+    def divisors(cls, number):
+        if number <= 0:
+            raise ValueError("Input must be a positive integer")
+        halfway = number // 2
+        divisors = [divisor
+                    for divisor in range(1, halfway + 2)
+                    if number % divisor == 0]
+        return divisors
+    
+    @classmethod
+    def classify(cls, number):
+        divisors = cls.divisors(number)
+        # refreshing my memory of callbacks and lambda
+        sum_of_divisors = reduce(lambda x, accum: x + accum, divisors)
+        if sum_of_divisors == number:
+            return 'perfect'
+        elif sum_of_divisors < number:
+            return 'deficient'
+        else:
+            return 'abundant'
+
+
+if __name__ == "__main__":
+    for num in [6, 28, 15, 24]:
+        # print(PerfectNumber.divisors(num))
+        print(PerfectNumber.classify(num))
