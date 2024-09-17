@@ -30,10 +30,7 @@ E
 D
     - Dictionary of values
 '''
-values = {
-    ('A', 'E', 'I', 'O', 'U', 'L', 'N', 'R', 'S', 'T', ): 1,
 
-}
 '''
 A
     - points = []
@@ -43,3 +40,45 @@ A
                 - append `value` to points
     - return sum of `points`
 '''
+
+class Scrabble:
+    scores = {
+    'AEIOULNRST': 1,
+    'DG': 2,
+    'BCMP': 3,
+    'FHVWY': 4,
+    'K': 5,
+    'JX': 8,
+    'QZ': 10,
+}
+    
+    @classmethod
+    def calculate_score(cls, tiles:str):
+        points = []
+        for tile in tiles:
+            found = False
+            for letters, score in Scrabble.scores.items():
+                if tile.upper() in letters:
+                    points.append(score)
+                    found = True
+            if not found:
+                raise ValueError(f"Tile value {tile} not found" +
+                                 f" in `scores`!")
+        return sum(points)
+    
+    
+    def __init__(self, tiles:str):
+        try:
+            tiles = tiles.strip()
+        except AttributeError:
+            tiles = ''
+        self._tiles = tiles
+    
+    def score(self):
+        return Scrabble.calculate_score(self._tiles)
+    
+
+if __name__ == '__main__':
+    test = Scrabble('aeiouX')
+    print(test.score())
+    print(Scrabble.calculate_score('test'))
