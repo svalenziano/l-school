@@ -2,19 +2,19 @@ import unittest
 from p07_octal import Octal
 
 class OctalTest(unittest.TestCase):
-    @unittest.skip
+    
     def test_octal_1_is_decimal_1(self):
         self.assertEqual(1, Octal("1").to_decimal())
 
-    @unittest.skip
+    
     def test_octal_10_is_decimal_8(self):
         self.assertEqual(8, Octal("10").to_decimal())
 
-    @unittest.skip
+    
     def test_octal_17_is_decimal_15(self):
         self.assertEqual(15, Octal("17").to_decimal())
 
-    @unittest.skip
+    
     def test_octal_11_is_decimal_9(self):
         self.assertEqual(9, Octal("11").to_decimal())
 
