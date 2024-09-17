@@ -44,10 +44,9 @@ class PerfectNumber:
         if number <= 0:
             raise ValueError("Input must be a positive integer")
         halfway = number // 2
-        divisors = [divisor
-                    for divisor in range(1, halfway + 2)
-                    if number % divisor == 0]
-        return divisors
+        for divisor in range(1, halfway + 2):
+            if number % divisor == 0:
+                yield divisor
     
     @classmethod
     def classify(cls, number):
