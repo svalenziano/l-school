@@ -24,14 +24,12 @@ class Octal:
     def to_decimal(self):
         if not Octal.is_valid(self._value):
             return 0
-        decimal_value = 0
-        reversed_value = self._value[::-1]
-        for idx, digit in enumerate(reversed_value):
-            decimal_value += int(digit) * (8 ^ idx)
-        return decimal_value
-        
-
-
+        reversed_value = self._value[::-1]  # reverse so you can parse from RTL
+        digit_values = [int(digit) * (8 ** idx)
+                        for idx, digit in enumerate(reversed_value)]
+        # digit_values.reverse(); print(f'{self._value} ==> {digit_values}')
+        return sum(digit_values)
+    
 
     @classmethod
     def is_valid(self, number_to_test):
@@ -41,3 +39,6 @@ class Octal:
                 return False
         return True
     
+if __name__ == "__main__":
+    for num in ['1', '10', '17', '11']:
+        Octal(num).to_decimal()
