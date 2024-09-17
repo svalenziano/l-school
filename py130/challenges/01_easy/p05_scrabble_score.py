@@ -51,9 +51,18 @@ class Scrabble:
     'JX': 8,
     'QZ': 10,
 }
+
+    @classmethod
+    def validate_tiles(cls, tiles:str):
+        try:
+            tiles = tiles.strip()
+        except AttributeError:
+            tiles = ''
+        return tiles
     
     @classmethod
     def calculate_score(cls, tiles:str):
+        tiles = Scrabble.validate_tiles(tiles)
         points = []
         for tile in tiles:
             found = False
@@ -68,10 +77,6 @@ class Scrabble:
     
     
     def __init__(self, tiles:str):
-        try:
-            tiles = tiles.strip()
-        except AttributeError:
-            tiles = ''
         self._tiles = tiles
     
     def score(self):
