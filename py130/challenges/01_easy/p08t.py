@@ -1,5 +1,5 @@
 import unittest
-from sum_of_multiples import SumOfMultiples
+from p08_sum_of_multiples import SumOfMultiples
 
 class SumTest(unittest.TestCase):
     @unittest.skip
