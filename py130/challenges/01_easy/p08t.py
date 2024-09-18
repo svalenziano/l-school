@@ -2,15 +2,12 @@ import unittest
 from p08_sum_of_multiples import SumOfMultiples
 
 class SumTest(unittest.TestCase):
-    @unittest.skip
     def test_sum_to_1(self):
         self.assertEqual(0, SumOfMultiples.sum_up_to(1))
 
-    @unittest.skip
     def test_sum_to_3(self):
         self.assertEqual(3, SumOfMultiples.sum_up_to(4))
 
-    @unittest.skip
     def test_sum_to_10(self):
         self.assertEqual(23, SumOfMultiples.sum_up_to(10))
 

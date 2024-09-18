@@ -24,19 +24,52 @@ D
 
 A
     v1 high level
+    - if caller is class:
+        - use (3, 5)
+    - if caller is instance:
+        - 
     - find all multiples of 'A' that are less than 'B'
     - return sum of those multiples
 
+    
+    
     v1 low level
-    - for each number inside set 'A'
-        - find multiples that are less than 'B' using GENERATOR
-    - return sum
+    - sum_up_to CLASSMETHOD
+        - if call
+        - for each number inside set 'A'
+            - find multiples that are less than 'B' using GENERATOR
+        - return sum
+    - to INSTANCE METHOD
+        - call sum_up_to CLASSMETHOD
+            - pass self._nums as `nums` argument
 
 '''
 
 class SumOfMultiples:
-    def __init__(self):
-        pass
+    DEFAULT_NUMS = (3, 5)
     
-    def sum_up_to(self):
-        pass
+    def __init__(self, nums=DEFAULT_NUMS):
+        self._nums = nums
+    
+    @classmethod    
+    def multiples_up_to(cls, number, upper_limit):
+        if number >= upper_limit:
+            return 0
+        multiple = number
+        while multiple < upper_limit:
+            yield multiple
+            multiple += number  # only consider multiples of 'number'
+    
+    @classmethod
+    def sum_up_to(cls, upper_limit=0):
+        multiples = [multiple
+                     for num in nums
+                     for multiple in cls.multiples_up_to(num, upper_limit)]
+        return sum(multiples)
+    
+    def to(self, upper_limit):
+        return SumOfMultiples.sum_up_to(self._nums, upper_limit)
+
+if __name__ == '__main__':
+    print(list(SumOfMultiples.multiples_up_to(3, 99)))
+    print(SumOfMultiples.sum_up_to(1))
