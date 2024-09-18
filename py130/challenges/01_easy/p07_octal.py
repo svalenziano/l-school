@@ -22,22 +22,18 @@ class Octal:
         self._value = value
 
     def to_decimal(self):
-        if not Octal.is_valid(self._value):
+        try:
+            invalid_octal_value = (int(char) for char in self._value 
+                                   if int(char) > 7)
+            if any(invalid_octal_value):
+                return 0
+            # reverse so you can parse from RTL
+            reversed_value = self._value[::-1]  
+            digit_values = [int(digit) * (8 ** idx)
+                            for idx, digit in enumerate(reversed_value)]
+            return sum(digit_values)
+        except (ValueError, AttributeError):
             return 0
-        reversed_value = self._value[::-1]  # reverse so you can parse from RTL
-        digit_values = [int(digit) * (8 ** idx)
-                        for idx, digit in enumerate(reversed_value)]
-        # digit_values.reverse(); print(f'{self._value} ==> {digit_values}')
-        return sum(digit_values)
-    
-
-    @classmethod
-    def is_valid(self, number_to_test):
-        number_to_test = str(number_to_test)
-        for digit in number_to_test:
-            if digit not in '01234567':
-                return False
-        return True
     
 if __name__ == "__main__":
     for num in ['1', '10', '17', '11']:
