@@ -31,8 +31,9 @@ A
     - find all multiples of 'A' that are less than 'B'
     - return sum of those multiples
 
-    
-    
+    HOW TO USE CLASSMETHOD AND (WHEN CALLED BY INSTANCE METHOD) PASS INSTANCE VARIABLES TO THE CLASSMETHOD?
+        - use optional argument!?!?
+
     v1 low level
     - sum_up_to CLASSMETHOD
         - if call
@@ -48,7 +49,7 @@ A
 class SumOfMultiples:
     DEFAULT_NUMS = (3, 5)
     
-    def __init__(self, nums=DEFAULT_NUMS):
+    def __init__(self, nums):
         self._nums = nums
     
     @classmethod    
@@ -61,15 +62,20 @@ class SumOfMultiples:
             multiple += number  # only consider multiples of 'number'
     
     @classmethod
-    def sum_up_to(cls, upper_limit=0):
+    def sum_up_to(cls, /, upper_limit, *, nums=DEFAULT_NUMS):
         multiples = [multiple
                      for num in nums
                      for multiple in cls.multiples_up_to(num, upper_limit)]
+        print(multiples)
         return sum(multiples)
     
     def to(self, upper_limit):
-        return SumOfMultiples.sum_up_to(self._nums, upper_limit)
+        return SumOfMultiples.sum_up_to(upper_limit, nums=self._nums)
 
 if __name__ == '__main__':
-    print(list(SumOfMultiples.multiples_up_to(3, 99)))
-    print(SumOfMultiples.sum_up_to(1))
+    # print(list(SumOfMultiples.multiples_up_to(3, 99)))
+    # while True:
+    #     upper_limit = int(input("Gimme an upper limit pls"))
+    #     print(SumOfMultiples.sum_up_to(upper_limit))
+    for upper_limit in [1, 4, 10, 100, 1000]:
+        print(SumOfMultiples.sum_up_to(upper_limit))
