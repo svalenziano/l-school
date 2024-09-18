@@ -49,7 +49,7 @@ A
 class SumOfMultiples:
     DEFAULT_NUMS = (3, 5)
     
-    def __init__(self, nums):
+    def __init__(self, *nums):
         self._nums = nums
     
     @classmethod    
@@ -63,10 +63,10 @@ class SumOfMultiples:
     
     @classmethod
     def sum_up_to(cls, /, upper_limit, *, nums=DEFAULT_NUMS):
-        multiples = [multiple
+        multiples = {multiple
                      for num in nums
-                     for multiple in cls.multiples_up_to(num, upper_limit)]
-        print(multiples)
+                     for multiple in cls.multiples_up_to(num, upper_limit)}
+        # print(multiples)
         return sum(multiples)
     
     def to(self, upper_limit):
