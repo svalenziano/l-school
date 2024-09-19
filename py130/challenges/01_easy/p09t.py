@@ -1,5 +1,5 @@
 import unittest
-from beer_song import BeerSong
+from p09_beer_song import BeerSong
 
 class BeerSongTest(unittest.TestCase):
     @unittest.skip
