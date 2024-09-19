@@ -50,7 +50,7 @@ class SumOfMultiples:
     DEFAULT_NUMS = (3, 5)
     
     def __init__(self, *nums):
-        self._nums = nums
+        self._nums = nums if nums else SumOfMultiples.DEFAULT_NUMS
     
     @classmethod    
     def multiples_up_to(cls, number, upper_limit):
