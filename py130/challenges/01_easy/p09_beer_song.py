@@ -9,6 +9,29 @@ REQS:
         - Example: "Line1\nLine2\n\nLine1\nLine2\n\n"
 '''
 class BeerSong:
+
+    MSG_X_BOTTLES = (
+            "{current} bottles of beer on the wall, {current} bottles of beer.\n"
+            "Take one down and pass it around, "
+            "{future} bottles of beer on the wall.\n"
+        )
+
+    MSG_2_BOTTLES = (
+        "2 bottles of beer on the wall, 2 bottles of beer.\n"
+        "Take one down and pass it around, 1 bottle of beer on the wall.\n"
+    )
+
+    MSG_1_BOTTLE = (
+        "1 bottle of beer on the wall, 1 bottle of beer.\n"
+        "Take it down and pass it around, "
+        "no more bottles of beer on the wall.\n"
+    )
+
+    MSG_0_BOTTLES = (
+        "No more bottles of beer on the wall, no more bottles of beer.\n"
+        "Go to the store and buy some more, 99 bottles of beer on the wall.\n"
+    )
+
     @classmethod
     def verse(cls, verse_number:int):
         '''
@@ -17,13 +40,22 @@ class BeerSong:
         ALGO:
             Use match-case statement!
             case 0:
-                return f-string
+                return string (no f-string needed)
             case 1:
-                f-string
+                return string (no f-string needed)
             case _:
-                f-string
+                substitute TKTK and KTKT, return string
         '''
-        pass
+        match verse_number:
+            case 0:
+                return cls.MSG_0_BOTTLES
+            case 1:
+                return cls.MSG_1_BOTTLE
+            case 2:
+                return cls.MSG_2_BOTTLES
+            case _:
+                return cls.MSG_X_BOTTLES.format(current=verse_number,
+                                                future=verse_number - 1)
 
     @classmethod
     def verses(cls, *verse_numbers:int):
@@ -36,7 +68,9 @@ class BeerSong:
             for each num in `verse_numbers`
                 return self.verse(num)
         '''
-        pass
+        verses = (cls.verse(num) for num in verse_numbers)
+        return '\n'.join(verses)
+
 
     @classmethod
     def lyrics(cls):
@@ -46,10 +80,23 @@ class BeerSong:
         ALGO:
             call `verses`, passing integers 0 thru 99 by unpacking a range object
         '''
+        return cls.verses(*range(99, -1, -1))
 
 
 if __name__ == '__main__':
-    x = '''The quick brown fox
-'''
-    y = "The quick brown fox\n"
-    print(x == y)
+#     x = '''The quick brown fox
+# '''
+#     y = "The quick brown fox\n"
+#     print(x == y)
+    
+    tests = [99, 98, 1, 0]
+
+    # for num in tests:
+    #     print(BeerSong.verse(num))
+
+    print(BeerSong.verses(*tests))
+
+    # print(BeerSong.lyrics())
+
+    
+    print(*'hello world!')

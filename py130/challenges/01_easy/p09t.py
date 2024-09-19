@@ -2,7 +2,7 @@ import unittest
 from p09_beer_song import BeerSong
 
 class BeerSongTest(unittest.TestCase):
-    @unittest.skip
+    
     def test_the_first_verse(self):
         expected = (
             "99 bottles of beer on the wall, 99 bottles of beer.\n"
@@ -10,7 +10,6 @@ class BeerSongTest(unittest.TestCase):
         )
         self.assertEqual(expected, BeerSong.verse(99))
 
-    @unittest.skip
     def test_another_verse(self):
         expected = (
             "3 bottles of beer on the wall, 3 bottles of beer.\n"
@@ -18,7 +17,6 @@ class BeerSongTest(unittest.TestCase):
         )
         self.assertEqual(expected, BeerSong.verse(3))
 
-    @unittest.skip
     def test_verse_2(self):
         expected = (
             "2 bottles of beer on the wall, 2 bottles of beer.\n"
@@ -33,7 +31,6 @@ class BeerSongTest(unittest.TestCase):
         )
         self.assertEqual(expected, BeerSong.verse(1))
 
-    @unittest.skip
     def test_verse_0(self):
         expected = (
             "No more bottles of beer on the wall, no more bottles of beer.\n"
@@ -41,7 +38,6 @@ class BeerSongTest(unittest.TestCase):
         )
         self.assertEqual(expected, BeerSong.verse(0))
 
-    @unittest.skip
     def test_a_couple_verses(self):
         expected = (
             "99 bottles of beer on the wall, 99 bottles of beer.\n"
@@ -52,7 +48,6 @@ class BeerSongTest(unittest.TestCase):
         )
         self.assertEqual(expected, BeerSong.verses(99, 98))
 
-    @unittest.skip
     def test_a_few_verses(self):
         expected = (
             "2 bottles of beer on the wall, 2 bottles of beer.\n"
