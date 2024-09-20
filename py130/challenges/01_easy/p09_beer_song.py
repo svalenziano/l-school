@@ -58,7 +58,7 @@ class BeerSong:
                                                 future=verse_number - 1)
 
     @classmethod
-    def verses(cls, *verse_numbers:int):
+    def verses(cls, start_verse, end_verse):
         '''
         INPUT = Integer(s): verse numbers
         OUTPUT = Multiline string
@@ -68,7 +68,7 @@ class BeerSong:
             for each num in `verse_numbers`
                 return self.verse(num)
         '''
-        verses = (cls.verse(num) for num in verse_numbers)
+        verses = (cls.verse(num) for num in range(start_verse, end_verse - 1, -1))
         return '\n'.join(verses)
 
 
@@ -80,7 +80,7 @@ class BeerSong:
         ALGO:
             call `verses`, passing integers 0 thru 99 by unpacking a range object
         '''
-        return cls.verses(*range(99, -1, -1))
+        return cls.verses(99, 0)
 
 
 if __name__ == '__main__':
@@ -94,7 +94,7 @@ if __name__ == '__main__':
     # for num in tests:
     #     print(BeerSong.verse(num))
 
-    print(BeerSong.verses(*tests))
+    print(BeerSong.verses(2, 0))
 
     # print(BeerSong.lyrics())
 

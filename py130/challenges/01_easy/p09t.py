@@ -61,7 +61,6 @@ class BeerSongTest(unittest.TestCase):
         )
         self.assertEqual(expected, BeerSong.verses(2, 0))
 
-    @unittest.skip
     def test_the_whole_song(self):
         expected = """\
 99 bottles of beer on the wall, 99 bottles of beer.
