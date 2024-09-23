@@ -15,16 +15,30 @@ Likewise, here are the 4-digit series:
 Finally, if you ask for a 6-digit series from a 5-digit string, you should throw an error.
 '''
 
+import tomllib
+
 class Series:
-    def __init__(self, num:str):
+    
+    with open("p10.toml", 'rb') as f:
+        MESSAGES = tomllib.load(f)
+    
+    def __init__(self, numeric_string:str):
         '''
         INPUT: Numeric string
         ALGO
             typecheck
         '''
-        pass
+        if not isinstance(numeric_string, str):
+            raise TypeError(self.MESSAGES['error_numeric_str'])
+        
+        try:
+            int(numeric_string)
+        except ValueError:
+            raise ValueError(self.MESSAGES['error_numeric_str'])
+        
+        self._numeric_string = numeric_string
 
-    def slices(self, length:int):
+    def slices(self, slice_length:int):
         '''
         INPUT: Integer = length of slice
         OUTPUT: List of list of integers
@@ -36,7 +50,16 @@ class Series:
             Check length and raise ValueError if appropriate
             Return nested comprehension
         '''
-        pass
+        nums = [int(digit) for digit in self._numeric_string]
+
+        if slice_length > len(nums):
+            raise ValueError(self.MESSAGES['error_over_length'])
+        
+        return [nums[start_idx: start_idx + slice_length]
+                for start_idx in range(len(nums) - slice_length + 1)]
+
 
 if __name__ == '__main__':
+    # Series('1234')
+    # Series('abcd')  # should 
     pass
