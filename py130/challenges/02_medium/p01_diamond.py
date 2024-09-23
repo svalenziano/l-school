@@ -18,25 +18,24 @@ P
         - 1st and last rows have one letter, all others have two, separated by spaces
         
 E
-    - Row 0 = one letter
-    - Row 1 = letter, space, letter
-    - Row 2 = letter, 3 spaces, letter
-    - Row 3 = letter. 5 spaces, letter
+    - Row 0 = one letter                width = 1   (1 + 2*0)  (1 + 2*row_num)
+    - Row 1 = letter, space, letter     width = 3   (1 + 2*1)
+    - Row 2 = letter, 3 spaces, letter  width = 5   (1 + 2*2)
+    - Row 3 = letter. 5 spaces, letter  width = 7   (1 + 2*3)  (1 + 2 * (len()-1))
 D
 A
     v1 high level
     - Using `ord()` Build sequence of letters from A-? where ? is the argument letter
-    - Determine the padding amount:
-        - if the sequence length is 1, it's 1
-        - else:
-            - it's sequence length plus 2 (one letter at beginning and end of row)
-    - Use `enumerate` to associate a number with each letter, starting with 0
+    - comprehension: Create a list of center_widths
+        - center padding = 1 + 2 * row_num
+    - Width = max center padding + 2 (1 for each letter)
     - Create an empty `result` list to hold the rows
-    - For each letter:
+    - zip the letters with the center width
+    - For letter, center_padding in zip
         - If letter is A:
             - create a row with just 'A', padded appropriately using `str.cjust()`, with newline
         - Else:
-            - create a row with 2 letters middle spaced (using idx provided by enumerate) and the appropriate padding, with newline
+            - create an f-string with center padding
     - Copy the `result` list to a reversed list
     - Pop & discard the first element (so that the middle row isn't duplicated)
     - While the list still has elements
@@ -54,7 +53,8 @@ class Diamond:
     @classmethod
     def make_diamond(self, max_letter:str):
         letters = Diamond.letter_range(max_letter)
-        line_length = Diamond.return_padded_length(letters)
+        
+        # line_length = Diamond.return_padded_length(letters)
         result = []
         for middle_space, letter in enumerate(letters):
             if letter == 'A':
@@ -77,19 +77,13 @@ class Diamond:
     
     @classmethod
     def return_padded_length(cls, letter_range:str):
-        f'''
-        Expected input: string output from the {cls.letter_range} method
-        '''
-        QTY_OF_BEGINNING_AND_END_CHARS = 2
-        if letter_range == 'A':
-            return 1
-        else:
-            return len(letter_range) + QTY_OF_BEGINNING_AND_END_CHARS 
+        return len(letter_range) + (len(letter_range) - 1)
 
     
 if __name__ == '__main__':
     for letter in ('ABCDE'):
-        # letter_range = Diamond.letter_range(letter)
-        # print(letter_range)
-        # print(Diamond.return_padded_length(letter_range))
-        print(Diamond.make_diamond(letter))
+        letter_range = Diamond.letter_range(letter)
+        print(letter_range)
+        pad = Diamond.return_padded_length(letter_range)
+        for row in Diamond.make_diamond(letter):
+            print(row.center(pad))
