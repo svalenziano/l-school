@@ -3,12 +3,10 @@ from p01_diamond import Diamond
 
 class DiamondTest(unittest.TestCase):
 
-    @unittest.skip
     def test_letter_a(self):
         answer = Diamond.make_diamond('A')
         self.assertEqual("A\n", answer)
 
-    @unittest.skip
     def test_letter_b(self):
         answer = Diamond.make_diamond('B')
         expected = " A \nB B\n A \n"

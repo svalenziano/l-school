@@ -53,19 +53,20 @@ class Diamond:
     @classmethod
     def make_diamond(self, max_letter:str):
         letters = Diamond.letter_range(max_letter)
-        
-        # line_length = Diamond.return_padded_length(letters)
-        result = []
-        for middle_space, letter in enumerate(letters):
-            if letter == 'A':
-                result.append('A\n'.center(line_length))
-            else:
-                string = f"{letter}{' ' * middle_space}{letter}"
-                result.append(string.center(line_length))
-        return result
-        
-            
-
+        center_widths = [1 + 2 * row_num
+                         for row_num in range(len(letters))]
+        max_width = max(center_widths) + 2
+        result = ("A" if char == 'A' else f"{char}{' ' * ctr}{char}"
+                  for char, ctr
+                  in zip(letters, center_widths))
+        # Center justify the strings
+        result = [string.center(max_width) + '\n'
+                  for string in result]
+        other_half = list(reversed(result))
+        other_half.pop(0)    # remove the center row
+        result += other_half
+        return ''.join(result)
+    
     @classmethod
     def letter_range(cls, max_letter:str):
         min = ord('A')
@@ -74,16 +75,15 @@ class Diamond:
         characters = ''.join(chr(code_point)
                         for code_point in ascii_code_points)
         return characters
-    
-    @classmethod
-    def return_padded_length(cls, letter_range:str):
-        return len(letter_range) + (len(letter_range) - 1)
 
     
 if __name__ == '__main__':
     for letter in ('ABCDE'):
-        letter_range = Diamond.letter_range(letter)
-        print(letter_range)
-        pad = Diamond.return_padded_length(letter_range)
-        for row in Diamond.make_diamond(letter):
-            print(row.center(pad))
+        # letter_range = Diamond.letter_range(letter)
+        # print(letter_range)
+        # pad = Diamond.return_padded_length(letter_range)
+        # for row in Diamond.make_diamond(letter):
+        #     print(row.center(pad), end='')
+        answer = Diamond.make_diamond(letter)
+        # print(answer)
+        print(repr(answer))
