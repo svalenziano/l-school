@@ -20,8 +20,8 @@ P
 E
     - Row 0 = one letter
     - Row 1 = letter, space, letter
-    - Row 2 = letter, two spaces, letter
-    - Row 3 = letter. three spaces, letter
+    - Row 2 = letter, 3 spaces, letter
+    - Row 3 = letter. 5 spaces, letter
 D
 A
     v1 high level
@@ -51,6 +51,45 @@ A
 
 class Diamond:
     
+    @classmethod
     def make_diamond(self, max_letter:str):
-        self._max_letter = max_letter
+        letters = Diamond.letter_range(max_letter)
+        line_length = Diamond.return_padded_length(letters)
+        result = []
+        for middle_space, letter in enumerate(letters):
+            if letter == 'A':
+                result.append('A\n'.center(line_length))
+            else:
+                string = f"{letter}{' ' * middle_space}{letter}"
+                result.append(string.center(line_length))
+        return result
+        
+            
+
+    @classmethod
+    def letter_range(cls, max_letter:str):
+        min = ord('A')
+        max = ord(max_letter) + 1
+        ascii_code_points = range(min, max)
+        characters = ''.join(chr(code_point)
+                        for code_point in ascii_code_points)
+        return characters
     
+    @classmethod
+    def return_padded_length(cls, letter_range:str):
+        f'''
+        Expected input: string output from the {cls.letter_range} method
+        '''
+        QTY_OF_BEGINNING_AND_END_CHARS = 2
+        if letter_range == 'A':
+            return 1
+        else:
+            return len(letter_range) + QTY_OF_BEGINNING_AND_END_CHARS 
+
+    
+if __name__ == '__main__':
+    for letter in ('ABCDE'):
+        # letter_range = Diamond.letter_range(letter)
+        # print(letter_range)
+        # print(Diamond.return_padded_length(letter_range))
+        print(Diamond.make_diamond(letter))
