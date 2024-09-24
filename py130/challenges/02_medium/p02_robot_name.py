@@ -9,5 +9,42 @@ The names must be random; they should not follow a predictable sequence. Random 
 '''
 
 class Robot:
+    
+    robots = []
+    
     def __init__(self):
+        '''
+        ALGO
+        - assign name to ''
+        - Create random name
+            - Use reset to create a new name 
+            - check to see if any of the existing robots have the same name
+            - if yes
+                - reset the name
+        - Add robot to list of robots
+        '''
+        pass
+
+    @property
+    def name(self):
+        '''
+        ALGO
+        - simply return the name instance var
+        '''
+        pass
+
+
+    def reset(self):
+        '''
+        REQS:
+        - cannot be identical to any existing robots, or to the current name
+        ALGO:
+        - Create a list of existing names, including self._name (robot's current name)
+        - Generate a random name
+            - While the random name is in the list of existing names:
+                - Generate a new name
+        '''
+        def generate_name():
+            pass
+        
         pass
