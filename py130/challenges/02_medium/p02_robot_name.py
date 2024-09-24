@@ -7,10 +7,13 @@ Every once in a while, we need to reset a robot to its factory settings, which m
 
 The names must be random; they should not follow a predictable sequence. Random names means there is a risk of collisions. Your solution should not allow using the same name twice.
 '''
+import random
 
 class Robot:
     
-    robots = []
+    _instances = []
+    LETTERS = [chr(i) for i in range(ord('A'), ord('Z') + 1)]
+
     
     def __init__(self):
         '''
@@ -23,15 +26,13 @@ class Robot:
                 - reset the name
         - Add robot to list of robots
         '''
-        pass
+        self._name = ''
+        self.reset()
+        Robot._instances.append(self)
 
     @property
     def name(self):
-        '''
-        ALGO
-        - simply return the name instance var
-        '''
-        pass
+        return self._name
 
 
     def reset(self):
@@ -45,6 +46,28 @@ class Robot:
                 - Generate a new name
         '''
         def generate_name():
-            pass
+            def alpha():
+                return random.choice(Robot.LETTERS)
+            
+            def digit():
+                return random.randint(0, 9)
+
+            name = f"{alpha()}{alpha()}{digit()}{digit()}{digit()}"
+            return name
         
-        pass
+        existing_names = [robot.name for robot in Robot._instances]
+        existing_names += self._name
+
+        new_name = generate_name()
+        while new_name in existing_names:
+            new_name = generate_name()
+        self._name = new_name    
+    
+if __name__ == "__main__":
+    for i in range(10):
+        Robot()
+    for robot in Robot._instances:
+        print(robot.name)
+        robot.reset()
+        print(robot.name)
+        print()
