@@ -12,7 +12,6 @@ class DiamondTest(unittest.TestCase):
         expected = " A \nB B\n A \n"
         self.assertEqual(expected, answer)
 
-    @unittest.skip
     def test_letter_c(self):
         answer = Diamond.make_diamond('C')
         expected = "  A  \n" \
@@ -22,7 +21,6 @@ class DiamondTest(unittest.TestCase):
                    "  A  \n"
         self.assertEqual(expected, answer)
 
-    @unittest.skip
     def test_letter_e(self):
         answer = Diamond.make_diamond('E')
         expected = "    A    \n" \
@@ -38,3 +36,4 @@ class DiamondTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+

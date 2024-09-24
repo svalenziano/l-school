@@ -53,17 +53,21 @@ class Diamond:
     @classmethod
     def make_diamond(self, max_letter:str):
         letters = Diamond.letter_range(max_letter)
-        center_widths = [1 + 2 * row_num
+        # Determine center-spacing for each row
+        center_spaces = [-1 + 2 * row_num
                          for row_num in range(len(letters))]
-        max_width = max(center_widths) + 2
+        max_width = max(center_spaces) + 2
+        # Create half-diamond
         result = ("A" if char == 'A' else f"{char}{' ' * ctr}{char}"
                   for char, ctr
-                  in zip(letters, center_widths))
+                  in zip(letters, center_spaces))
         # Center justify the strings
         result = [string.center(max_width) + '\n'
                   for string in result]
+        # Create the other half of the diamond
         other_half = list(reversed(result))
         other_half.pop(0)    # remove the center row
+        # Combine
         result += other_half
         return ''.join(result)
     
