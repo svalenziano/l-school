@@ -49,36 +49,31 @@ A
 '''
 
 class Diamond:
-    
     @classmethod
-    def make_diamond(self, max_letter:str):
-        letters = Diamond.letter_range(max_letter)
-        # Determine center-spacing for each row
-        center_spaces = [-1 + 2 * row_num
-                         for row_num in range(len(letters))]
-        max_width = max(center_spaces) + 2
-        # Create half-diamond
-        result = ("A" if char == 'A' else f"{char}{' ' * ctr}{char}"
-                  for char, ctr
-                  in zip(letters, center_spaces))
-        # Center justify the strings
-        result = [string.center(max_width) + '\n'
-                  for string in result]
-        # Create the other half of the diamond
-        other_half = list(reversed(result))
-        other_half.pop(0)    # remove the center row
-        # Combine
-        result += other_half
-        return ''.join(result)
-    
+    def make_diamond(cls, letter):
+        upper_range = list(chr(i) for i in range(65, ord(letter) + 1))
+        lower_range = list(chr(i) for i in range(65, ord(letter)))[::-1]
+        full_range = upper_range + lower_range
+
+        diamond_width = cls._max_width(letter)
+
+        return '\n'.join([cls._make_row(let).center(diamond_width) for let in full_range]) + '\n'
+
     @classmethod
-    def letter_range(cls, max_letter:str):
-        min = ord('A')
-        max = ord(max_letter) + 1
-        ascii_code_points = range(min, max)
-        characters = ''.join(chr(code_point)
-                        for code_point in ascii_code_points)
-        return characters
+    def _make_row(cls, letter):
+        if letter == 'A':
+            return "A"
+        return letter + cls._determine_spaces(letter) + letter
+
+    @classmethod
+    def _determine_spaces(cls, letter):
+        return ' ' * (2 * (ord(letter) - ord('A')) - 1)
+
+    @classmethod
+    def _max_width(cls, letter):
+        if letter == 'A':
+            return 1
+        return 2 * (ord(letter) - ord('A')) + 1
 
     
 if __name__ == '__main__':
