@@ -33,7 +33,13 @@ class Clock:
     def convert_mins_to_hrs_mins(self, mins):
         
         hrs, mins = divmod(mins, Clock.MINS_IN_HR)
-        return int(hrs), int(mins)
+        _, hrs = divmod(hrs, Clock.HRS_IN_DAY)
+
+        return hrs, mins
+    
+    @classmethod
+    def convert_hrs_mins_to_mins(self, hrs:int, mins:int):
+        return hrs * Clock.MINS_IN_HR + mins
 
     def __add__(self, mins_to_add:int):
         '''
@@ -41,33 +47,35 @@ class Clock:
         REQS:
             - Wrap around at midnight, both forwards and backwards
             - Handle adding more than one day's worth of minutes
+        ALGO:
+            - Convert current time to mins
+            - Add
+            - Convert back to hrs, mins
+        
         '''
         if not isinstance(mins_to_add, int):
             raise TypeError("ERROR: Minutes argument must be integer.")
         
-        hrs_to_add, mins_to_add = divmod(mins_to_add, Clock.MINS_IN_HR)
-        
-        mins = self._mins + mins_to_add
-        hrs = self._hrs + hrs_to_add
-
-        hrs_to_add, mins = divmod(mins_to_add, Clock.MINS_IN_HR)
-        _, hrs_to_add = divmod(hrs, Clock.HRS_IN_DAY)
+        mins = Clock.convert_hrs_mins_to_mins(self._hrs, self._mins)
+        mins += mins_to_add
+        hrs, mins = Clock.convert_mins_to_hrs_mins(mins)
 
         return Clock.at(hrs, mins)
 
-    def __sub__(self, minutes:int):
+    def __sub__(self, mins_to_subtract:int):
         '''
         return new clock object
         REQS:
             - same as __add__
+        ALGO:
+            - use __add__ method to add negative number
         '''
-        pass
+        return self + (-1 * mins_to_subtract)
 
     def __eq__(self, other_clock:Clock):
-        '''
-        
-        '''
-        pass
+        if not isinstance(other_clock, Clock):
+            raise TypeError("ERROR: Can only test for equality between Clock objects")    
+        return str(self) == str(other_clock)
 
 
     
