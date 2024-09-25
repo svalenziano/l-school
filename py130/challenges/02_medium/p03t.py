@@ -2,23 +2,28 @@ import unittest
 from p03_clock import Clock
 
 class ClockTest(unittest.TestCase):
-    @unittest.skip
+    
+    def test_sv_init(self):
+        self.assertEqual('08:00', str(Clock.at(8)))
+        self.assertEqual('09:30', str(Clock.at(8, 90)))
+        self.assertEqual('12:01', str(Clock.at(11, 61)))
+    
     def test_on_the_hour(self):
         self.assertEqual('08:00', str(Clock.at(8)))
         self.assertEqual('09:00', str(Clock.at(9)))
-    @unittest.skip
+
     def test_past_the_hour(self):
         self.assertEqual('11:09', str(Clock.at(11, 9)))
-    @unittest.skip
+
     def test_add_a_few_minutes(self):
         clock = Clock.at(10) + 3
         self.assertEqual('10:03', str(clock))
-    @unittest.skip
+
     def test_adding_does_not_mutate(self):
         old_clock = Clock.at(10)
         new_clock = old_clock + 3
         self.assertIsNot(new_clock, old_clock)
-    @unittest.skip
+
     def test_subtract_fifty_minutes(self):
         clock = Clock.at(0) - 50
         self.assertEqual('23:10', str(clock))
