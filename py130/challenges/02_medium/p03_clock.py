@@ -14,16 +14,17 @@ class Clock:
     MINS_IN_HR = 60
     HRS_IN_DAY = 24
 
+    def __init__(self, hrs, mins):
+        self._hrs = hrs
+        self._mins = mins
+        
+
     @classmethod
     def at(cls, hrs, mins=0):
-        '''
-        returns clock object
-        '''
         extra_hrs, mins = cls.convert_mins_to_hrs_mins(mins)
 
-        clock = Clock()
-        clock._hrs = hrs + extra_hrs
-        clock._mins = mins
+        hrs = hrs + extra_hrs
+        clock = Clock(hrs, mins)
         return clock
 
     def __str__(self):
@@ -42,17 +43,6 @@ class Clock:
         return hrs * Clock.MINS_IN_HR + mins
 
     def __add__(self, mins_to_add:int):
-        '''
-        OUTPUT: Return new clock object
-        REQS:
-            - Wrap around at midnight, both forwards and backwards
-            - Handle adding more than one day's worth of minutes
-        ALGO:
-            - Convert current time to mins
-            - Add
-            - Convert back to hrs, mins
-        
-        '''
         if not isinstance(mins_to_add, int):
             raise TypeError("ERROR: Minutes argument must be integer.")
         
@@ -63,13 +53,6 @@ class Clock:
         return Clock.at(hrs, mins)
 
     def __sub__(self, mins_to_subtract:int):
-        '''
-        return new clock object
-        REQS:
-            - same as __add__
-        ALGO:
-            - use __add__ method to add negative number
-        '''
         return self + (-1 * mins_to_subtract)
 
     def __eq__(self, other_clock:Clock):
