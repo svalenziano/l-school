@@ -25,7 +25,8 @@ from datetime import date, timedelta
 
 class Meetup:
     def __init__(self, year, month):
-        pass
+        self._year = year
+        self._month = month
     
     def day(self, day, nth):
         '''
@@ -38,7 +39,7 @@ class Meetup:
                 - fifth
                 - last
                 - teenth
-        OUTPUT: 
+        OUTPUT: datetime.date object
             - If a suitable date can be found:
                 - date object, representing the day that fits all requirements:
                     - Year (self._year)
@@ -49,20 +50,22 @@ class Meetup:
                 - None
         ALGO:
             - If 'nth' is 'teenth'
-                - TKTK
+                - Set current day to the 13th of the month
+                - Check to see if it matches the desired day of the week
+                - HELPER = Increment by one until the desired day of the week is found
             - If 'nth' is 'last':
-                - TKTK
+                - Set current day to the last day of the month
+                - Check to see if it matches the desired day of the week
+                - HELPER = Increment by negative one until the desired day of the week is found
             - Else:
                 - Convert nth day ('first', 'second', ...) to integer (1-4)
                 - Find the first `day of the week` in that month
                     - start from the first day of the month
-                    - increment days until the correct day is found
+                    - HELPER = increment days until the correct day is found
                 - If nth == 1:
                     - return the day
                 - Else:
-                    - create a time delta using the difference in days * 7 days/wk
+                    - create a time delta using (nth - 1) * 7 days/wk
                     - return the current day + timedelta
-                    
-
         '''
         pass
