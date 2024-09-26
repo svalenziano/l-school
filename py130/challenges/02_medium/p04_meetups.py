@@ -101,15 +101,21 @@ class Meetup:
                     - create a time delta using (nth - 1) * 7 days/wk
                     - return the current day + timedelta
         '''
-        def increment_to_weekday():
+        def increment_to_weekday(current_day:date, 
+                                 isoweekday:int, 
+                                 increment:int):
             '''
             INPUT: 
                 - Current day (date object)
                 - Desired ISOWEEKDAY
                 - Increment amount, usually +1 or -1
             OUTPUT:
-                - 
+                - datetime object representing the correct weekday
+            ALGO:
+                - Increment the current date until it matches the desired weekday
+                - return the current date
             '''
+
             pass
         
         weekday_iso = Meetup.convert_weekday(day_of_wk)
@@ -122,11 +128,12 @@ class Meetup:
             test_date = date(self._year, self._month, 1)
             while test_date.isoweekday() != weekday_iso:
                 test_date += timedelta(days=1)
-                # If we overflow to the next month
-                if test_date.month != self._month:
-                    return None
             if nth == 1:
                 return test_date
             else:
-                diff = timedelta((nth - 1) * Meetup.DAYS_IN_WK)
-                return test_date + diff
+                difference = timedelta((nth - 1) * Meetup.DAYS_IN_WK)
+                test_date += difference
+                # If we overflow to the next month
+                if test_date.month != self._month:
+                    return None
+                return test_date
