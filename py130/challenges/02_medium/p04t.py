@@ -4,122 +4,138 @@ from p04_meetups import Meetup
 
 class MeetupTest(unittest.TestCase):
 
-    @unittest.skip
-    def test_second_tuesday_of_december_2013(self):
-        meetup = Meetup(2013, 12)
-        self.assertEqual(date(2013, 12, 10), meetup.day('Tuesday', 'second'))
+    def test_sv_map_nth(self):
+        self.assertEqual(2, Meetup.map_nth('second'))
+        self.assertEqual(3, Meetup.map_nth('third'))
+        for value in ['last', 'teenth', 'tktk']:
+            with self.assertRaises(ValueError):
+                Meetup.map_nth(value)
 
-    @unittest.skip
-    def test_second_wednesday_of_january_2014(self):
-        meetup = Meetup(2014, 1)
-        self.assertEqual(date(2014, 1, 8), meetup.day('Wednesday', 'second'))
+    def test_sv_convert_weekday(self):
+        isoweekdays = {
+            'Monday': 1 ,
+            'Tuesday': 2 ,
+            'Wednesday': 3 ,
+            'Thursday': 4 ,
+            'Friday': 5 ,
+            'Saturday': 6 ,
+            'Sunday': 7 ,
+        }
+        for day, num in isoweekdays.items():
+            self.assertEqual(num, Meetup.convert_weekday(day))
+            self.assertEqual(day, Meetup.convert_weekday(num))
+            self.assertEqual('Thursday', Meetup.convert_weekday(4))
+            self.assertEqual(4, Meetup.convert_weekday('Thursday'))
 
-    @unittest.skip
-    def test_second_thursday_of_february_2014(self):
-        meetup = Meetup(2014, 2)
-        self.assertEqual(date(2014, 2, 13), meetup.day('Thursday', 'second'))
+    # def test_second_tuesday_of_december_2013(self):
+    #     meetup = Meetup(2013, 12)
+    #     self.assertEqual(date(2013, 12, 10), meetup.day('Tuesday', 'second'))
 
-    @unittest.skip
-    def test_second_friday_of_march_2014(self):
-        meetup = Meetup(2014, 3)
-        self.assertEqual(date(2014, 3, 14), meetup.day('Friday', 'second'))
+    # def test_second_wednesday_of_january_2014(self):
+    #     meetup = Meetup(2014, 1)
+    #     self.assertEqual(date(2014, 1, 8), meetup.day('Wednesday', 'second'))
 
-    @unittest.skip
-    def test_second_saturday_of_april_2014(self):
-        meetup = Meetup(2014, 4)
-        self.assertEqual(date(2014, 4, 12), meetup.day('Saturday', 'second'))
+    # def test_second_thursday_of_february_2014(self):
+    #     meetup = Meetup(2014, 2)
+    #     self.assertEqual(date(2014, 2, 13), meetup.day('Thursday', 'second'))
 
-    @unittest.skip
-    def test_second_sunday_of_may_2014(self):
-        meetup = Meetup(2014, 5)
-        self.assertEqual(date(2014, 5, 11), meetup.day('Sunday', 'second'))
+    # def test_second_friday_of_march_2014(self):
+    #     meetup = Meetup(2014, 3)
+    #     self.assertEqual(date(2014, 3, 14), meetup.day('Friday', 'second'))
 
-    @unittest.skip
-    def test_third_monday_of_june_2014(self):
-        meetup = Meetup(2014, 6)
-        self.assertEqual(date(2014, 6, 16), meetup.day('Monday', 'third'))
+    # def test_second_saturday_of_april_2014(self):
+    #     meetup = Meetup(2014, 4)
+    #     self.assertEqual(date(2014, 4, 12), meetup.day('Saturday', 'second'))
 
-    @unittest.skip
-    def test_third_tuesday_of_july_2014(self):
-        meetup = Meetup(2014, 7)
-        self.assertEqual(date(2014, 7, 15), meetup.day('Tuesday', 'third'))
 
-    @unittest.skip
-    def test_third_wednesday_of_august_2014(self):
-        meetup = Meetup(2014, 8)
-        self.assertEqual(date(2014, 8, 20), meetup.day('Wednesday', 'third'))
+    # def test_second_sunday_of_may_2014(self):
+    #     meetup = Meetup(2014, 5)
+    #     self.assertEqual(date(2014, 5, 11), meetup.day('Sunday', 'second'))
 
-    @unittest.skip
-    def test_third_thursday_of_september_2014(self):
-        meetup = Meetup(2014, 9)
-        self.assertEqual(date(2014, 9, 18), meetup.day('Thursday', 'third'))
 
-    @unittest.skip
-    def test_third_friday_of_october_2014(self):
-        meetup = Meetup(2014, 10)
-        self.assertEqual(date(2014, 10, 17), meetup.day('Friday', 'third'))
+    # def test_third_monday_of_june_2014(self):
+    #     meetup = Meetup(2014, 6)
+    #     self.assertEqual(date(2014, 6, 16), meetup.day('Monday', 'third'))
 
-    @unittest.skip
-    def test_third_saturday_of_november_2014(self):
-        meetup = Meetup(2014, 11)
-        self.assertEqual(date(2014, 11, 15), meetup.day('Saturday', 'third'))
 
-    @unittest.skip
-    def test_third_sunday_of_december_2014(self):
-        meetup = Meetup(2014, 12)
-        self.assertEqual(date(2014, 12, 21), meetup.day('Sunday', 'third'))
+    # def test_third_tuesday_of_july_2014(self):
+    #     meetup = Meetup(2014, 7)
+    #     self.assertEqual(date(2014, 7, 15), meetup.day('Tuesday', 'third'))
 
-    @unittest.skip
-    def test_fourth_monday_of_january_2015(self):
-        meetup = Meetup(2015, 1)
-        self.assertEqual(date(2015, 1, 26), meetup.day('Monday', 'fourth'))
 
-    @unittest.skip
-    def test_fourth_tuesday_of_february_2015(self):
-        meetup = Meetup(2015, 2)
-        self.assertEqual(date(2015, 2, 24), meetup.day('Tuesday', 'fourth'))
+    # def test_third_wednesday_of_august_2014(self):
+    #     meetup = Meetup(2014, 8)
+    #     self.assertEqual(date(2014, 8, 20), meetup.day('Wednesday', 'third'))
 
-    @unittest.skip
-    def test_fourth_wednesday_of_march_2015(self):
-        meetup = Meetup(2015, 3)
-        self.assertEqual(date(2015, 3, 25), meetup.day('Wednesday', 'fourth'))
 
-    @unittest.skip
-    def test_fourth_thursday_of_april_2015(self):
-        meetup = Meetup(2015, 4)
-        self.assertEqual(date(2015, 4, 23), meetup.day('Thursday', 'fourth'))
+    # def test_third_thursday_of_september_2014(self):
+    #     meetup = Meetup(2014, 9)
+    #     self.assertEqual(date(2014, 9, 18), meetup.day('Thursday', 'third'))
 
-    @unittest.skip
-    def test_fourth_friday_of_may_2015(self):
-        meetup = Meetup(2015, 5)
-        self.assertEqual(date(2015, 5, 22), meetup.day('Friday', 'fourth'))
 
-    @unittest.skip
-    def test_fourth_saturday_of_june_2015(self):
-        meetup = Meetup(2015, 6)
-        self.assertEqual(date(2015, 6, 27), meetup.day('Saturday', 'fourth'))
+    # def test_third_friday_of_october_2014(self):
+    #     meetup = Meetup(2014, 10)
+    #     self.assertEqual(date(2014, 10, 17), meetup.day('Friday', 'third'))
 
-    @unittest.skip
-    def test_fourth_sunday_of_july_2015(self):
-        meetup = Meetup(2015, 7)
-        self.assertEqual(date(2015, 7, 26), meetup.day('Sunday', 'fourth'))
 
-    @unittest.skip
-    def test_fifth_monday_of_august_2015(self):
-        meetup = Meetup(2015, 8)
-        self.assertEqual(date(2015, 8, 31), meetup.day('Monday', 'fifth'))
+    # def test_third_saturday_of_november_2014(self):
+    #     meetup = Meetup(2014, 11)
+    #     self.assertEqual(date(2014, 11, 15), meetup.day('Saturday', 'third'))
 
-    @unittest.skip
-    def test_fifth_tuesday_of_september_2015(self):
-        meetup = Meetup(2015, 9)
-        self.assertEqual(date(2015, 9, 29), meetup.day('Tuesday', 'fifth'))
 
-    @unittest.skip
+    # def test_third_sunday_of_december_2014(self):
+    #     meetup = Meetup(2014, 12)
+    #     self.assertEqual(date(2014, 12, 21), meetup.day('Sunday', 'third'))
+
+
+    # def test_fourth_monday_of_january_2015(self):
+    #     meetup = Meetup(2015, 1)
+    #     self.assertEqual(date(2015, 1, 26), meetup.day('Monday', 'fourth'))
+
+
+    # def test_fourth_tuesday_of_february_2015(self):
+    #     meetup = Meetup(2015, 2)
+    #     self.assertEqual(date(2015, 2, 24), meetup.day('Tuesday', 'fourth'))
+
+
+    # def test_fourth_wednesday_of_march_2015(self):
+    #     meetup = Meetup(2015, 3)
+    #     self.assertEqual(date(2015, 3, 25), meetup.day('Wednesday', 'fourth'))
+
+
+    # def test_fourth_thursday_of_april_2015(self):
+    #     meetup = Meetup(2015, 4)
+    #     self.assertEqual(date(2015, 4, 23), meetup.day('Thursday', 'fourth'))
+
+
+    # def test_fourth_friday_of_may_2015(self):
+    #     meetup = Meetup(2015, 5)
+    #     self.assertEqual(date(2015, 5, 22), meetup.day('Friday', 'fourth'))
+
+
+    # def test_fourth_saturday_of_june_2015(self):
+    #     meetup = Meetup(2015, 6)
+    #     self.assertEqual(date(2015, 6, 27), meetup.day('Saturday', 'fourth'))
+
+
+    # def test_fourth_sunday_of_july_2015(self):
+    #     meetup = Meetup(2015, 7)
+    #     self.assertEqual(date(2015, 7, 26), meetup.day('Sunday', 'fourth'))
+
+
+    # def test_fifth_monday_of_august_2015(self):
+    #     meetup = Meetup(2015, 8)
+    #     self.assertEqual(date(2015, 8, 31), meetup.day('Monday', 'fifth'))
+
+
+    # def test_fifth_tuesday_of_september_2015(self):
+    #     meetup = Meetup(2015, 9)
+    #     self.assertEqual(date(2015, 9, 29), meetup.day('Tuesday', 'fifth'))
+
     def test_fifth_wednesday_of_october_2015(self):
         meetup = Meetup(2015, 10)
         self.assertIsNone(meetup.day('Wednesday', 'fifth'))
 
-    @unittest.skip
     def test_fifth_thursday_of_november_2015(self):
         meetup = Meetup(2015, 11)
         self.assertIsNone(meetup.day('Thursday', 'fifth'))
