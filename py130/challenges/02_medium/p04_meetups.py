@@ -22,6 +22,7 @@ date.weekday()
     7 Sun
 '''
 from datetime import date, timedelta
+from calendar import monthrange
 
 class Meetup:
 
@@ -60,6 +61,15 @@ class Meetup:
             return list(isoweekdays.keys())[weekday - 1]
         else:
             return isoweekdays[weekday]
+
+    @property
+    def thirteenth_of_the_month(self):
+        return date(self._year, self._month, 13)
+    
+    @property
+    def last_day_of_the_month(self):
+        _, last_day = monthrange(self._year, self._month)
+        return date(self._year, self._month, last_day)
 
     def day(self, day_of_wk, nth):
         '''
@@ -101,8 +111,10 @@ class Meetup:
                     - create a time delta using (nth - 1) * 7 days/wk
                     - return the current day + timedelta
         '''
+        
+
         def increment_to_weekday(current_day:date, 
-                                 isoweekday:int, 
+                                 desired_isoweekday:int, 
                                  increment:int):
             '''
             INPUT: 
@@ -113,21 +125,25 @@ class Meetup:
                 - datetime object representing the correct weekday
             ALGO:
                 - Increment the current date until it matches the desired weekday
-                - return the current date
+                - return the current date  
             '''
-
-            pass
+            while current_day.isoweekday() != desired_isoweekday:
+                current_day += timedelta(days=increment)
+            return current_day
         
         weekday_iso = Meetup.convert_weekday(day_of_wk)
         if nth == 'teenth':
-            pass
+            test_date = self.thirteenth_of_the_month
+            test_date = increment_to_weekday(test_date, weekday_iso, 1)
+            return test_date
         if nth == 'last':
-            pass
+            test_date = self.last_day_of_the_month
+            test_date = increment_to_weekday(test_date, weekday_iso, -1)
+            return test_date
         else:
             nth = Meetup.map_nth(nth)
             test_date = date(self._year, self._month, 1)
-            while test_date.isoweekday() != weekday_iso:
-                test_date += timedelta(days=1)
+            test_date = increment_to_weekday(test_date, weekday_iso, 1)
             if nth == 1:
                 return test_date
             else:
