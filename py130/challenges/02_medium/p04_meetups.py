@@ -11,4 +11,58 @@ In this program, we'll construct objects that represent a meetup date. Each obje
 The descriptors that may be given are strings: 'first', 'second', 'third', 'fourth', 'fifth', 'last', and 'teenth'. The case of the strings is not important; that is, 'first' and 'fIrSt' are equivalent. Note that "teenth" is a made up word. There was a meetup whose members realized that there are exactly 7 days that end in '-teenth'. Therefore, it's guaranteed that each day of the week (Monday, Tuesday, ...) will have exactly one date that is the "teenth" of that day in every month. That is, every month has exactly one "teenth" Monday, one "teenth" Tuesday, etc. The fifth day of the month may not happen every month, but some meetup groups like that irregularity.
 
 The days of the week are given by the strings 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', and 'Sunday'. Again, the case of the strings is not important.
+
+date.weekday()
+    1 Monday
+    2 Tues
+    3 Wed
+    4 Thurs
+    5 Fri
+    6 Sat
+    7 Sun
 '''
+from datetime import date, timedelta
+
+class Meetup:
+    def __init__(self, year, month):
+        pass
+    
+    def day(self, day, nth):
+        '''
+        INPUT: day of week, nth day (of that day) of that month
+            - Nth day of month
+                - first
+                - second
+                - third
+                - fourth
+                - fifth
+                - last
+                - teenth
+        OUTPUT: 
+            - If a suitable date can be found:
+                - date object, representing the day that fits all requirements:
+                    - Year (self._year)
+                    - Month (self._year)
+                    - Day of week
+                    - Nth 'Day of week' of that month
+            - Else:
+                - None
+        ALGO:
+            - If 'nth' is 'teenth'
+                - TKTK
+            - If 'nth' is 'last':
+                - TKTK
+            - Else:
+                - Convert nth day ('first', 'second', ...) to integer (1-4)
+                - Find the first `day of the week` in that month
+                    - start from the first day of the month
+                    - increment days until the correct day is found
+                - If nth == 1:
+                    - return the day
+                - Else:
+                    - create a time delta using the difference in days * 7 days/wk
+                    - return the current day + timedelta
+                    
+
+        '''
+        pass
