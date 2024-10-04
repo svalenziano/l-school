@@ -1,29 +1,25 @@
-# SETUP
-from datetime import datetime
-import os.path
+from functools import partial
 
-datestamp = datetime.now()
-datestamp = datestamp.isoformat(timespec='seconds')
-lines = '\n'.join(['Fare', 'Thee', 'Well', datestamp, ''])
+def counter(string_to_parse, letter_to_count):
+    return string_to_parse.count(letter_to_count)
 
-# 👇 THIS IS THE IMPORTANT STUFF 
-directory = os.path.dirname(__file__)      # Get directory without filename
-path = os.path.join(directory, 'temp.txt') # Append desired text file filename
+a, e, space = (partial(counter, letter_to_count=char) for char in 'ae ')
 
-try:
-    with open(path, 'r', encoding='utf-8') as f:
-        # Doing it the easy way
-        lines = f.readlines()
-        other_count = lines.count('Fare')
-        print(f"The other count is: {other_count}.")
+string = 'the quick brown fox jumps over the lazy dog'
+    
+print(a(string))
+print(e(string))
+print(space(string))
 
-        # Doing it the hard way
-        count = 0
-        x = None
-        while x != '':
-            while x != 'Fare':
-                x = f.readline()
-            count += 1
-        print(f"End of file reached, count = {count}.")
-except IOError as e:
-    print(f"{e.__class__.__name__}: {e}")
+short = 'hello world!'
+long = ("Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+        "sed do eiusmod tempor incididunt ut labore et dolore magna "
+        "aliqua. Ut enim ad minim veniam, quis nostrud exercitation "
+        "ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis "
+        "aute irure dolor in reprehenderit in voluptate velit esse cillum "
+        "dolore eu fugiat nulla pariatur. Excepteur sint occaecat "
+        "cupidatat non proident, sunt in culpa qui officia deserunt "
+        "mollit anim id est laborum.")
+
+if space(short):
+    print(space(long))
