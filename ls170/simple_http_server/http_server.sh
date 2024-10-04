@@ -1,16 +1,16 @@
 #!/bin/bash
 
 function server () {
-    while true
-    do
-        read message path version
-        if [[ $method = "GET" ]]
-        then
-            echo "HTTP/1.1 200 OK"
-        else
-            echo "HTTP/1.1 400 Bad Request: $method"
-        fi
-    done
+  while true
+  do
+    read method path version
+    if [[ $method = 'GET' ]]
+    then
+      echo 'HTTP/1.1 200 OK'
+    else
+      echo 'HTTP/1.1 400 Bad Request'
+    fi
+  done
 }
 
 coproc SERVER_PROCESS { server; }
