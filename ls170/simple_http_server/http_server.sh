@@ -6,9 +6,14 @@ function server () {
     read method path version
     if [[ $method = 'GET' ]]
     then
-      echo 'HTTP/1.1 200 OK'
+      if [[ -f "./www/$path" ]]
+      then
+        echo -ne 'HTTP/1.1 200 OK\r\n\r\n'; cat "./www/$path"
+      else
+        echo -ne "HTTP/1.1 404 Not Found: ./www/$path \r\n\r\n"
+      fi
     else
-      echo 'HTTP/1.1 400 Bad Request'
+      echo -ne 'HTTP/1.1 400 Bad Request\r\n\r\n'
     fi
   done
 }
