@@ -18,10 +18,6 @@ while True:
         client_socket.close()
         continue
     
-    
-
-    roll = random.randint(1, 6)
-
     request_line = request.splitlines()[0]
     http_method, path, http_version, *extras = request_line.split(" ")
     path, params  = path.split('?')
@@ -30,12 +26,16 @@ while True:
     for param in params:
         key, value = param.split('=')
         params_dict[key] = value
+
+    number_of_rolls = int(params_dict['rolls'])
+    sides = int(params_dict['sides'])
     '''
-    Create an empty dict
-    For i in params:
-        - Create a key, value pair
-        - Append that pair to the dict
+    for each roll
+        append roll as string with newline \n
     '''
+    rolls = ''
+    for num in range(number_of_rolls):
+        rolls += f"Roll: {random.randint(1, sides)}\n"
 
 
     response = ("HTTP/1.1 200 OK\r\n"
@@ -45,7 +45,7 @@ while True:
                 f"HTTP Method: {http_method}\n"
                 f"Path: {path}\n"
                 f"Parameters: {params_dict}\n"
-                f"{roll}\n")
+                f"{rolls}")
 
     client_socket.sendall(response.encode())
     client_socket.close()
