@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h2>{{ title }}</h2>
+<ul class="pure-menu-list">
+{% for item in contents %}
+    <li class="pure-menu-item">
+        <a href="#" class="pure-menu-link">{{ item }}</a>
+    </li>
+{% endfor %}
+</ul>
+
+{% endblock content %}

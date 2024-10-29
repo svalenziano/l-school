@@ -7,7 +7,7 @@ with open('book_viewer/data/toc.txt', 'r', encoding='utf-8') as f:
 
 @app.route("/")
 def index():
-    return render_template('index.html', contents=toc)
+    return render_template('home.html', contents=toc, title="Table of Contents")
 
 @app.route('/chapters/1')
 def chap1():
