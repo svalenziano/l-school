@@ -13,8 +13,8 @@ server_socket.bind((host, port))
 server_socket.listen()
 print(f"Server is running on {host}:{port}")
 
-# Listen for new connections
 while True:
+    # Listen for new connections
     client_socket, addr = server_socket.accept()
     print(f"Connection from {addr}")
 
