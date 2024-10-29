@@ -1,22 +1,3 @@
-[tool.poetry]
-name = "book viewer"
-version = "0.1.0"
-description = ""
-authors = ["Steven <senorvalenz@gmail.com>"]
-readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.11"
-
-
-
-[tool.pdm]
-distribution = true
-[tool.pdm.build]
-includes = []
-[build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
 
 [project]
 authors = [
@@ -33,3 +14,15 @@ version = "0.1.0"
 description = ""
 readme = "README.md"
 license = {text = "MIT"}
+
+
+
+
+[tool.pdm]
+distribution = true
+[tool.pdm.build]
+includes = []
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
