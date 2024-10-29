@@ -2,63 +2,51 @@ import socket
 import random
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-port = 9666
-while True:
-    try:
-        server_socket.bind(('localhost', port))
-    except OSError:
-        print(f"Port {port} failed, trying port {port + 1}")
-        port += 1
-    break
+server_socket.bind(('localhost', 3003))
 server_socket.listen()
 
-print(f"Server is running on localhost:{port}")
+print("Server is running on localhost:3003")
 
 while True:
     client_socket, addr = server_socket.accept()
     print(f"Connection from {addr}")
 
-    request = client_socket.recv(1024).decode()
-    if not request or 'favicon.ico' in request:
+    request_line = client_socket.recv(1024).decode()
+    if not request_line or 'favicon.ico' in request_line:
         client_socket.close()
         continue
 
-    request_line = request.splitlines()[0]
-    http_method, path, _ = request_line.split(" ")
+    path_and_params = request_line.splitlines()[0]
+    http_method, path_and_params, _ = path_and_params.split(" ")
+    if "?" in path_and_params:
+        path, params = path_and_params.split("?")
+    else:
+        path = path_and_params
+        params = "number=0"
+
+    params = params.split("&")
     params_dict = {}
-    
-    if '?' in path:
-        path, query_string = path.split("?")
+    for param in params:
+        key, value = param.split("=")
+        params_dict[key] = value
 
-        params = query_string.split("&")
-        for param in params:
-            key, value = param.split("=")
-            params_dict[key] = value
-
-    # Update dict values
-    params_dict.setdefault('counter', 1)
-    counter = params_dict['counter']
-    if 'operation' in params_dict:
-        if params_dict['operation'] == 'add_1':
-            counter = int(counter) + 1
-        elif params_dict['operation'] == 'sub_1':
-            counter = int(counter) - 1
-
+    number = int(params_dict.get('number', 0))
 
     response = (
+        "HTTP/1.1 200 OK\r\n"
+        "Content-Type: text/html\r\n"
+        "\r\n"
         "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n"
         "<html><head><title>Counter</title></head><body>"
         f"<h1>HTTP Request Information:</h1>"
-        f"<p><strong>Request Line:</strong> {request_line}</p>"
+        f"<p><strong>Request Line:</strong> {path_and_params}</p>"
         f"<p><strong>HTTP Method:</strong> {http_method}</p>"
         f"<p><strong>Path:</strong> {path}</p>"
         f"<p><strong>Parameters:</strong> {params_dict}</p>"
         "<h2>Counter:</h2>"
-        f"<p color='red'>The current number is: {counter}</p>"
-        "<p>"
-        f"""<a href="?counter={counter}&operation=sub_1">[-1]</a> """
-        f"""<a href="?counter={counter}&operation=add_1">[+1]</a>"""
-        "</p>"
+        f'<p style="color: red;">The current number is: {number}</p>'
+        f"<a href='?number={number + 1}'>Add one</a>&nbsp;&nbsp;"
+        f"<a href='?number={number - 1}'>Subtract one</a>"
         "</body></html>"
     )
 
