@@ -11,29 +11,28 @@ while True:
     client_socket, addr = server_socket.accept()
     print(f"Connection from {addr}")
 
-    request_line = client_socket.recv(1024).decode()
-    if not request_line or 'favicon.ico' in request_line:
+    request = client_socket.recv(1024).decode()
+    if not request or 'favicon.ico' in request:
         client_socket.close()
         continue
 
-    path_and_params = request_line.splitlines()[0]
-    http_method, path_and_params, _ = path_and_params.split(" ")
-    path, params = path_and_params.split("?")
-
-    params = params.split("&")
+    request_line = request.splitlines()[0]
+    http_method, path, _ = request_line.split(" ")
     params_dict = {}
-    for param in params:
-        key, value = param.split("=")
-        params_dict[key] = value
+    
+    if '?' in path:
+        path, query_string = path.split("?")
+
+        params = query_string.split("&")
+        for param in params:
+            key, value = param.split("=")
+            params_dict[key] = value
 
     response = (
-        "HTTP/1.1 200 OK\r\n"
-        "Content-Type: text/html\r\n"
-        "\r\n"
         "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n"
         "<html><head><title>Counter</title></head><body>"
         f"<h1>HTTP Request Information:</h1>"
-        f"<p><strong>Request Line:</strong> {path_and_params}</p>"
+        f"<p><strong>Request Line:</strong> {request_line}</p>"
         f"<p><strong>HTTP Method:</strong> {http_method}</p>"
         f"<p><strong>Path:</strong> {path}</p>"
         f"<p><strong>Parameters:</strong> {params_dict}</p>"
