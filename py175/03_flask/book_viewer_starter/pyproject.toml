@@ -2,13 +2,34 @@
 name = "book viewer"
 version = "0.1.0"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = ["Steven <senorvalenz@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
 
 
+
+[tool.pdm]
+distribution = true
+[tool.pdm.build]
+includes = []
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project]
+authors = [
+    {name = "Steven", email = "<senorvalenz@gmail.com>"},
+    {name = "SValenziano", email = "senorvalenz@gmail.com"},
+    {name = "Steven", email = "senorvalenz@gmail.com"},
+]
+requires-python = "<4.0,>=3.11"
+dependencies = [
+    "flask>=3.0.3",
+]
+name = "book-viewer"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+license = {text = "MIT"}
