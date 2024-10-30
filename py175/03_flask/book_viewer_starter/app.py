@@ -19,5 +19,9 @@ def chap1():
                            contents=toc,
                            title='Chapter 1',)
 
+@app.route("/show/<name>/<content>")
+def show(name, content):
+    return render_template('test.html', test=name, content=content)
+
 if __name__ == "__main__":
     app.run(debug=True, port=5003)
