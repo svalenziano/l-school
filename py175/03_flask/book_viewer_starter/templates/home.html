@@ -6,7 +6,7 @@
 <ul class="pure-menu-list">
 {% for item in contents %}
     <li class="pure-menu-item">
-        <a href="#" class="pure-menu-link">{{ item }}</a>
+        <a href="/chapters/{{ loop.index }}" class="pure-menu-link">{{ item }}</a>
     </li>
 {% endfor %}
 </ul>

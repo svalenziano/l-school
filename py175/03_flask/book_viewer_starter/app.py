@@ -9,15 +9,15 @@ with open('book_viewer/data/toc.txt', 'r', encoding='utf-8') as f:
 def index():
     return render_template('home.html', contents=toc, title="Table of Contents")
 
-@app.route('/chapters/1')
-def chap1():
-    with open('book_viewer/data/chp1.txt', 'r') as f:
+@app.route('/chapters/<num>')
+def chap(num):
+    with open(f'book_viewer/data/chp{num}.txt', 'r') as f:
         chapter = f.readlines()
 
     return render_template('chapters.html', 
                            chapter=chapter,
                            contents=toc,
-                           title='Chapter 1',)
+                           title=f'Chapter {num}',)
 
 @app.route("/show/<name>/<content>")
 def show(name, content):
