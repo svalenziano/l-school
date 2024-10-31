@@ -17,14 +17,26 @@ def read_chapter_lst(chapter_num:int):
         chapter = f.readlines()
         return chapter
     
+def split_into_paragraphs(text:str):
+    '''
+    Splits text at double newlines
+    '''
+    return text.split('\n\n')
+    
 def chapters_matching(query:str):
     results = []
     for chap_num, chapter_name in enumerate(lst_of_chapter_names, 1):
         chapter_text = read_chapter_str(chap_num)
-        print(query)
         if query in chapter_text:
-            results.append({'chapter_num': chap_num, 
-                            'chapter_name': chapter_name})
+            chapter_results = {'chapter_num': chap_num, 
+                                'chapter_name': chapter_name,
+                                'paragraphs': [] }
+            for p_num, p_text in enumerate(split_into_paragraphs(chapter_text)):
+                if query in p_text:
+                    chapter_results['paragraphs'].append({'p_num': p_num,
+                                                          'p_text': p_text})
+                    print(p_text[0:50])
+            results.append(chapter_results)
     return results
 
 

@@ -12,10 +12,14 @@
   
   {% if results %}
         <h3>Search results for "{{ query }}":</h3>
-        {% for result in results %}
+        {% for chapter in results %}
         <ul>
-            <li><a href="/chapter/{{ result.chapter_num }}">
-                {{ result.chapter_num }}. {{ result.chapter_name }}</a></li>
+            <li>{{ chapter.chapter_num }}. {{ chapter.chapter_name }}</li>
+            <ul>
+            {% for paragraph in chapter.paragraphs %}
+                    <li><a href="{{ url_for('chapters', num=paragraph.p_num) }}">{{ paragraph.p_text }}</a></li>
+            {% endfor %}
+            </ul>
         </ul>
         {% endfor %}
     {% else %}
