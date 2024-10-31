@@ -7,16 +7,20 @@ app = Flask(__name__)
 with open('book_viewer/data/toc.txt', 'r', encoding='utf-8') as f:
     lst_of_chapter_names = f.readlines()
 
-def read_chapter(chapter_num:int):
+def read_chapter_str(chapter_num:int):
     with open(f'book_viewer/data/chp{chapter_num}.txt', 'r') as f:
         chapter = f.read()
-        # print(chapter[0:2000])
+        return chapter
+
+def read_chapter_lst(chapter_num:int):
+    with open(f'book_viewer/data/chp{chapter_num}.txt', 'r') as f:
+        chapter = f.readlines()
         return chapter
     
 def chapters_matching(query:str):
     results = []
     for chap_num, chapter_name in enumerate(lst_of_chapter_names, 1):
-        chapter_text = read_chapter(chap_num)
+        chapter_text = read_chapter_str(chap_num)
         print(query)
         if query in chapter_text:
             results.append({'chapter_num': chap_num, 
@@ -33,7 +37,7 @@ def index():
 @app.route('/chapter/<num>')
 def chapters(num):
     
-    chapter = read_chapter(num)
+    chapter = read_chapter_str(num)
     return render_template('chapters.html', 
                            chapter=chapter,
                            contents=lst_of_chapter_names,
@@ -66,7 +70,9 @@ app.jinja_env.filters['slugify'] = slugify
 
 def in_paragraphs(ugly_text:str):
     paragraphs = ugly_text.split('\n\n')
-    text = [f"<p>{paragraph}</p>" for paragraph in paragraphs]
+    text = [f"<p id='{idx}'>{paragraph}</p>" 
+            for idx, paragraph 
+            in enumerate(paragraphs, 1)]
     return ''.join(text)
     # print(text)
 
