@@ -17,7 +17,7 @@
             <li>{{ chapter.chapter_num }}. {{ chapter.chapter_name }}</li>
             <ul>
             {% for paragraph in chapter.paragraphs %}
-                    <li><a href="{{ url_for('chapters', num=chapter.chapter_num) }}#{{ paragraph.p_num }}">{{ paragraph.p_text }}</a></li>
+                    <li><a href="{{ url_for('chapters', num=chapter.chapter_num) }}#{{ paragraph.p_num }}">{{ paragraph.p_text|safe }}</a></li>
             {% endfor %}
             </ul>
         </ul>

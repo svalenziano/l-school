@@ -22,7 +22,13 @@ def split_into_paragraphs(text:str):
     Splits text at double newlines
     '''
     return text.split('\n\n')
-    
+
+def bold_query(text:str, query_to_bold:str):
+    '''
+    Return value: text with strong tagsadded around `query_to_bold`
+    '''
+    return text.replace(query_to_bold, f'<strong>{query_to_bold}</strong>')
+
 def chapters_matching(query:str):
     results = []
     for chap_num, chapter_name in enumerate(lst_of_chapter_names, 1):
@@ -34,7 +40,7 @@ def chapters_matching(query:str):
             for p_num, p_text in enumerate(split_into_paragraphs(chapter_text)):
                 if query in p_text:
                     chapter_results['paragraphs'].append({'p_num': p_num,
-                                                          'p_text': p_text})
+                                        'p_text': bold_query(p_text, query)})
                     print(p_text[0:50])
             results.append(chapter_results)
     return results
