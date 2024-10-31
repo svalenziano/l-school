@@ -1,4 +1,6 @@
 from flask import Flask, render_template
+import re
+import sys
 
 app = Flask(__name__)
 
@@ -14,17 +16,34 @@ def index():
 @app.route('/disp-chap/<num>')
 def chapters(num):
     with open(f'book_viewer/data/chp{num}.txt', 'r') as f:
-        chapter = f.readlines()
+        chapter = f.read()
+        # print(chapter[0:2000])
 
     return render_template('chapters.html', 
                            chapter=chapter,
                            contents=lst_of_chapter_names,
                            title=f'Chapter {num}',
                            chap_name=lst_of_chapter_names[int(num) - 1])
+# JINJA FILTERS!
+def slugify(text:str):
+    text = text.replace(' ', '-').lower()
+    whitespace = re.compile(r'\s')
+    return whitespace.sub('', text)
 
-@app.route("/show/<name>/<content>")
-def show(name, content):
-    return render_template('test.html', test=name, content=content)
+app.jinja_env.filters['slugify'] = slugify
+
+def in_paragraphs(ugly_text:str):
+    paragraphs = ugly_text.split('\n\n')
+    text = [f"<p>{paragraph}</p>" for paragraph in paragraphs]
+    return ''.join(text)
+    # print(text)
+
+app.jinja_env.filters['in_paragraphs'] = in_paragraphs
+
+@app.route("/test")
+def test():
+    return type(app.jinja_env)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5003)
+
