@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request
 import re
 import sys
 
@@ -6,6 +6,39 @@ app = Flask(__name__)
 
 with open('book_viewer/data/toc.txt', 'r', encoding='utf-8') as f:
     lst_of_chapter_names = f.readlines()
+
+def read_chapter(chapter_num:int):
+    with open(f'book_viewer/data/chp{chapter_num}.txt', 'r') as f:
+        chapter = f.read()
+        # print(chapter[0:2000])
+        return chapter
+    
+def chapters_matching(query:str):
+    '''
+    Input: query string
+    Output: list of matching chapter names (chapters which have the desired text)
+
+    Algo:
+        v1
+        - Make dict:
+            - chapter name = line from `toc.txt`
+            - chapter number = integer starting with one
+            - chapter text = 
+        v2
+        - empty list to hold search results
+        - for each chapter (enumerate starting with 1, ie chap1.txt):
+            - open the chapter text using the index (chp1.txt)
+            - if search string is in the chapter text
+                - append tuple to list (chap number, chap name)
+    '''
+    results = []
+    for chap_num, chapter_name in enumerate(lst_of_chapter_names, 1):
+        chapter_text = read_chapter(chap_num)
+        print(query)
+        if query in chapter_text:
+            results.append( (chap_num, chapter_name) )
+    return results
+
 
 @app.route("/")
 def index():
@@ -15,28 +48,28 @@ def index():
 
 @app.route('/chapter/<num>')
 def chapters(num):
-    with open(f'book_viewer/data/chp{num}.txt', 'r') as f:
-        chapter = f.read()
-        # print(chapter[0:2000])
-
+    
+    chapter = read_chapter(num)
     return render_template('chapters.html', 
                            chapter=chapter,
                            contents=lst_of_chapter_names,
                            title=f'Chapter {num}',
                            chap_name=lst_of_chapter_names[int(num) - 1])
 
-
-
 @app.route('/gimme/<num>')
 def redir_chapter(num):
     return redirect(url_for('chapters', num=num))
-
-
 
 @app.errorhandler(404)
 def page_not_found(error):
     return redirect( url_for('index') ,)
 
+@app.route('/search')
+def search():
+    query = request.args.get('query', '')
+    results = chapters_matching(query)
+
+    return render_template('search.html', query=query, results=results)
 
 
 # JINJA FILTERS!

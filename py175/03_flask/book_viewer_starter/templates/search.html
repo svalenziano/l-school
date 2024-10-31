@@ -8,13 +8,18 @@
     <button type="submit">Search</button>
   </form>
   
-  {% set results=[(1, 'Chap 1'), (2, 'Chap 2')] %}
-
+  {% if query %}
+  
   {% if results %}
-    {% for result in results %}
-    <ul>
-        <li><a href="/chapter/{{ result[0] }}">{{ result[1] }}</a></li>
-    </ul>
-    {% endfor %}
+        <h3>Search results for "{{ query }}":</h3>
+        {% for result in results %}
+        <ul>
+            <li><a href="/chapter/{{ result[0] }}">{{ result[0] }}. {{ result[1] }}</a></li>
+        </ul>
+        {% endfor %}
+    {% else %}
+        <p>No results for "{{ query }}" ☹️.</p>
+
+    {% endif %}
   {% endif %}
 {% endblock %}
