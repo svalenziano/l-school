@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
 import re
 import sys
 
@@ -13,7 +13,7 @@ def index():
                            contents=lst_of_chapter_names, 
                            title="Table of Contents")
 
-@app.route('/disp-chap/<num>')
+@app.route('/chapter/<num>')
 def chapters(num):
     with open(f'book_viewer/data/chp{num}.txt', 'r') as f:
         chapter = f.read()
@@ -24,6 +24,21 @@ def chapters(num):
                            contents=lst_of_chapter_names,
                            title=f'Chapter {num}',
                            chap_name=lst_of_chapter_names[int(num) - 1])
+
+
+
+@app.route('/gimme/<num>')
+def redir_chapter(num):
+    return redirect(url_for('chapters', num=num))
+
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return redirect( url_for('index') ,)
+
+
+
 # JINJA FILTERS!
 def slugify(text:str):
     text = text.replace(' ', '-').lower()
