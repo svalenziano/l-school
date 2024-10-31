@@ -14,29 +14,13 @@ def read_chapter(chapter_num:int):
         return chapter
     
 def chapters_matching(query:str):
-    '''
-    Input: query string
-    Output: list of matching chapter names (chapters which have the desired text)
-
-    Algo:
-        v1
-        - Make dict:
-            - chapter name = line from `toc.txt`
-            - chapter number = integer starting with one
-            - chapter text = 
-        v2
-        - empty list to hold search results
-        - for each chapter (enumerate starting with 1, ie chap1.txt):
-            - open the chapter text using the index (chp1.txt)
-            - if search string is in the chapter text
-                - append tuple to list (chap number, chap name)
-    '''
     results = []
     for chap_num, chapter_name in enumerate(lst_of_chapter_names, 1):
         chapter_text = read_chapter(chap_num)
         print(query)
         if query in chapter_text:
-            results.append( (chap_num, chapter_name) )
+            results.append({'chapter_num': chap_num, 
+                            'chapter_name': chapter_name})
     return results
 
 

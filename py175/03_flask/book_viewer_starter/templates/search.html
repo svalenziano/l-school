@@ -14,7 +14,8 @@
         <h3>Search results for "{{ query }}":</h3>
         {% for result in results %}
         <ul>
-            <li><a href="/chapter/{{ result[0] }}">{{ result[0] }}. {{ result[1] }}</a></li>
+            <li><a href="/chapter/{{ result.chapter_num }}">
+                {{ result.chapter_num }}. {{ result.chapter_name }}</a></li>
         </ul>
         {% endfor %}
     {% else %}
