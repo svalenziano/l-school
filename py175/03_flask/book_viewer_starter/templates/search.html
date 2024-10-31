@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <h2 class="content-subhead">Search</h2>
+
+  <form action="/search" method="get">
+    <input name="query" value="{{ query }}" />
+    <button type="submit">Search</button>
+  </form>
+  
+  {% set results=[(1, 'Chap 1'), (2, 'Chap 2')] %}
+
+  {% if results %}
+    {% for result in results %}
+    <ul>
+        <li><a href="/chapter/{{ result[0] }}">{{ result[1] }}</a></li>
+    </ul>
+    {% endfor %}
+  {% endif %}
+{% endblock %}
