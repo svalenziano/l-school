@@ -40,7 +40,7 @@ def chapters_matching(query:str):
             for p_num, p_text in enumerate(split_into_paragraphs(chapter_text)):
                 if query in p_text:
                     chapter_results['paragraphs'].append({'p_num': p_num,
-                                        'p_text': bold_query(p_text, query)})
+                                                          'p_text': p_text})
                     print(p_text[0:50])
             results.append(chapter_results)
     return results
@@ -96,9 +96,19 @@ def in_paragraphs(ugly_text:str):
 
 app.jinja_env.filters['in_paragraphs'] = in_paragraphs
 
+def bold_query_filter(text:str, query_to_bold:str):
+    '''
+    Return value: text with strong tagsadded around `query_to_bold`
+    '''
+    return text.replace(query_to_bold, f'<strong>{query_to_bold}</strong>')
+
+app.jinja_env.filters['bold_query'] = bold_query_filter
+
 @app.route("/test")
 def test():
     return type(app.jinja_env)
+
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5003)
