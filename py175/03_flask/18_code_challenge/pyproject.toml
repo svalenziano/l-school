@@ -1,0 +1,19 @@
+[project]
+name = "18_code_challenge"
+version = "0.1.0"
+description = "Launch School PY175-3-18 Code Challenge \"Users and Interests\""
+authors = [
+    {name = "SValenziano", email = "senorvalenz@gmail.com"},
+]
+dependencies = []
+requires-python = ">=3.12"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[tool.pdm]
+distribution = true
