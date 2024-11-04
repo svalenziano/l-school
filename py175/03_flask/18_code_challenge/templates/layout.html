@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <h1><a href="{{ url_for('index') }}">Userbot 3000</a></h1>
+    </head>
+
+    <body>
+        {% block body %}Body goes here{% endblock %}
+    </body>
+
+    <footer>
+    <p>There are {{ g.user_qty }} users with {{ g.interests_qty }} interests. </p>
+    </footer>
+</html>

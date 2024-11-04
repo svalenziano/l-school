@@ -1,0 +1,22 @@
+jamy:
+  email: jamy.rustenburg@gmail.com
+  interests:
+    - woodworking
+    - cooking
+    - reading
+nora:
+  email: nora.alnes@yahoo.com
+  interests:
+    - cycling
+    - basketball
+    - economics
+hiroko:
+  email: hiroko.ohara@hotmail.com
+  interests: []
+steven:
+  email: steven@fake.com
+  interests:
+    - bicycles
+    - cooking
+    - building stuff
+    - too many interests?!?

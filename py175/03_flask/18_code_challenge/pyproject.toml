@@ -5,7 +5,10 @@ description = "Launch School PY175-3-18 Code Challenge \"Users and Interests\""
 authors = [
     {name = "SValenziano", email = "senorvalenz@gmail.com"},
 ]
-dependencies = []
+dependencies = [
+    "flask>=3.0.3",
+    "pyyaml>=6.0.2",
+]
 requires-python = ">=3.12"
 readme = "README.md"
 license = {text = "MIT"}

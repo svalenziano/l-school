@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<h2>{{ username }}</h2>
+<p><strong>Email:</strong> {{ email }}</p>
+<p><strong>Interests:</strong></p>
+    {% if interests %}
+        <ul>
+        {% for interest in interests %}
+        <li>{{ interest }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>None!  How boring 🥱.</p>
+    {% endif %}
+
+<div style="background-color: rgb(230, 230, 230);">
+    <strong>Other Users</strong>
+    {% include 'username_list.html' %}
+</div>
+{% endblock %}
