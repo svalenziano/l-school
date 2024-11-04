@@ -1,7 +1,8 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-  {% if lists %}
+    <a class="add" href="/lists/new">New List</a>
+    {% if lists %}
     <ul id="lists">
       {% for lst in lists %}
         <li>
@@ -16,6 +17,7 @@
     <p id="no_list">You don't have any todo lists. Why not create one?</p>
   {% endif %}
 {% endblock %}
+
 
 {% block header_links %}
   <a class="add" href="/lists/new">New List</a>

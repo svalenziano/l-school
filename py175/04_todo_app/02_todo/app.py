@@ -1,10 +1,13 @@
+from uuid import uuid4
+
 from flask import (
     Flask, 
     render_template, 
     g, 
     url_for, 
     request, 
-    session
+    session,
+    flash,
 )
 
 app = Flask(__name__)
@@ -32,10 +35,37 @@ def lists():
 
 @app.post('/lists')
 def lists_post():
-    new_list = request.form['list_title']
-    session['lists'].append({'title': new_list, 'todos': []})
-    session.modified = True
-    return app.redirect('lists')
+    new_list_title = request.form['list_title'].strip()
+
+    # Check to see if new title is not too short or too long
+    min_len = 1
+    max_len = 50
+
+    # If it's valid, create a new list
+    if any(new_list_title == lst['title'] for lst in session['lists']):
+        flash('List name already exists!  Please choose a unique name.', 
+              'error')
+        return render_template('new_list.html', default_value=new_list_title)
+    
+    if min_len <= len(new_list_title) <= max_len:    
+        session['lists'].append({
+            'id': str(uuid4()),
+            'title': new_list_title, 
+            'todos': []
+        })
+        flash('List created!', category='success')
+        session.modified = True
+        return app.redirect(url_for('lists'))
+    
+    # Otherwise, provide error msg
+    else:
+        flash((f'☹️ Name must be between {min_len} ' +
+               f'and {max_len} characters long'), 
+               category='error')
+    # session.modified = True
+    return render_template('new_list.html', default_value=new_list_title)
+
+
 
 @app.route('/lists/new')
 def new_list():
