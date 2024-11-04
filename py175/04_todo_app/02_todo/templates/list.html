@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+
+
+{% block header_links %}
+<p>{{ list name }}</p>
+{% endblock %}
+
+
+
+{% block content %}
+<ul>
+    {% for todo in todos %}
+    <li>{{ todo }}</li>
+    {% endfor %}
+</ul>
+{% endblock content %}
