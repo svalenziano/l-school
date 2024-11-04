@@ -34,13 +34,22 @@ ROUTES
 def index():
     return app.redirect(url_for('users'))
 
-@app.route('/users')
+@app.route('/user/')
+@app.route('/users/')
 def users():
     return render_template('users.html', 
                            usernames=g.username_list)
 
 @app.route('/user/<username>')
 def user(username):
+    
+    # IF USER IS INVALID
+    user_is_valid = bool(g.users_dict.get(username))
+
+    if not user_is_valid:
+        return app.redirect('/users')
+    
+    # IF USER IS VALID
     email = g.users_dict[username].get('email')
     
     # Don't show current user in list of users
@@ -49,10 +58,10 @@ def user(username):
 
     interests = g.users_dict[username]['interests']
     return render_template('user.html', 
-                           username=username, 
-                           usernames=usernames,
-                           email=email,
-                           interests=interests)
+                        username=username, 
+                        usernames=usernames,
+                        email=email,
+                        interests=interests)
 
 if __name__ == '__main__':
     app.run(debug='true', port='5003')

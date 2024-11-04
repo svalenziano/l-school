@@ -9,6 +9,6 @@
     </body>
 
     <footer>
-    <p>There are {{ g.user_qty }} users with {{ g.interests_qty }} interests. </p>
+    <p>There are <a href="{{ url_for('users') }}">{{ g.user_qty }} users</a> with {{ g.interests_qty }} interests. </p>
     </footer>
 </html>
