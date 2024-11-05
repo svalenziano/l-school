@@ -1,4 +1,5 @@
 from uuid import uuid4
+from utils import title_len_valid, title_unique
 
 from flask import (
     Flask, 
@@ -9,6 +10,11 @@ from flask import (
     session,
     flash,
 )
+
+# CONSTANTS
+MIN_TITLE_LENGTH = 1
+MAX_TITLE_LENGTH = 50
+
 
 app = Flask(__name__)
 app.secret_key='secret1'  # WARNING, INSECURE!
@@ -36,35 +42,26 @@ def lists():
 @app.post('/lists')
 def lists_post():
     new_list_title = request.form['list_title'].strip()
-
-    # Check to see if new title is not too short or too long
-    min_len = 1
-    max_len = 50
-
-    # If it's valid, create a new list
-    if any(new_list_title == lst['title'] for lst in session['lists']):
-        flash('List name already exists!  Please choose a unique name.', 
-              'error')
-        return render_template('new_list.html', default_value=new_list_title)
+    lists = session.get('lists')
     
-    if min_len <= len(new_list_title) <= max_len:    
-        session['lists'].append({
-            'id': str(uuid4()),
-            'title': new_list_title, 
-            'todos': []
-        })
-        flash('List created!', category='success')
-        session.modified = True
-        return app.redirect(url_for('lists'))
-    
-    # Otherwise, provide error msg
-    else:
-        flash((f'☹️ Name must be between {min_len} ' +
-               f'and {max_len} characters long'), 
-               category='error')
-    # session.modified = True
-    return render_template('new_list.html', default_value=new_list_title)
+    print(f"{new_list_title=}")
+    print(f"{lists=}")
 
+    if not title_unique(title=new_list_title, lists=lists):
+        return render_template('new_list.html', 
+                               default_value=new_list_title)
+    
+    if not title_len_valid(new_list_title,
+                                min=MIN_TITLE_LENGTH,
+                                max=MAX_TITLE_LENGTH ):
+        return render_template('new_list.html', 
+                               default_value=new_list_title)
+
+    session['lists'].append({'title':new_list_title, 'todos': []})
+    flash('List created!', category='success')
+    session.modified = True
+    return app.redirect(url_for('lists'))
+    
 
 
 @app.route('/lists/new')
