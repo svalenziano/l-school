@@ -1,5 +1,6 @@
 from uuid import uuid4
-from utils import is_valid_len, title_is_unique
+from utils import is_valid_len, title_is_unique, find_list_by_id
+from werkzeug.exceptions import NotFound
 
 from flask import (
     Flask, 
@@ -9,6 +10,7 @@ from flask import (
     request, 
     session,
     flash,
+    abort
 )
 
 # CONSTANTS
@@ -35,6 +37,24 @@ def before_request():
 def index():
     return app.redirect('/lists')
 
+# @app.get('/list')
+# def no_list():
+#     raise NotFound()
+
+@app.get('/list/<id>')
+def one_list(id):
+    ids = [lst['id'] for lst in session['lists']]
+    print(ids)
+    
+    if id in ids:
+        lst = find_list_by_id(session['lists'], id)
+        return render_template('list.html', id=id, lst=lst)
+    raise NotFound(description="Hmm, I can't find that list.")
+
+# @app.errorhandler(404)
+# def error_404(error):
+#     return f'This page does not exist: {error}', 404
+
 @app.get('/lists')
 def lists():
     return render_template('lists.html', lists=session['lists'])
@@ -57,7 +77,9 @@ def lists_post():
         return render_template('new_list.html', 
                                default_value=new_list_title)
 
-    session['lists'].append({'id':'tktk','title':new_list_title, 'todos': []})
+    session['lists'].append({'id': str(uuid4()),
+                             'title':new_list_title, 
+                             'todos': []})
     flash('List created!', category='success')
     session.modified = True
     return app.redirect(url_for('lists'))

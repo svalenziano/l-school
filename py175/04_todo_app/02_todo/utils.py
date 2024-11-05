@@ -22,8 +22,23 @@ def title_is_unique(title:str, lists):
         return False
     return True
 
-class TodoList:
-    def __init__(self, name):
-        self.id = uuid4()
-        self.name = name
-        self.todos = []
+def find_list_by_id(lists, id):
+    for lst in lists:
+        if lst['id'] == id:
+            return lst
+
+# class TodoList:
+#     def __init__(self, name):
+#         self.id = str(uuid4())
+#         self.name = name
+#         self.todos = []
+    
+#     def __str__(self):
+#         return ' | '.join([self.id,
+#                            self.name,
+#                            str(self.todos)])
+
+
+# if __name__ == '__main__':
+#     x = TodoList('hello world')
+#     print(x)
