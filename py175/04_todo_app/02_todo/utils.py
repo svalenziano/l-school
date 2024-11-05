@@ -1,19 +1,29 @@
 from flask import g, flash
+from uuid import uuid4
 
-def title_len_valid(title, min, max):
-    if min <= len(title) <= max:
+def is_valid_len(input, min, max):
+    '''
+    Verifies that input is not too short or too long
+    '''
+    if min <= len(input) <= max:
         # flash(f'length {len(title)} is valid (btw {min} and {max})', category='info')
         return True
     
-    flash((f'☹️ Name must be between {min} ' +
+    flash((f'☹️ Input must be between {min} ' +
                f'and {max} characters long'), 
                category='error')
     return False
 
-def title_unique(title:str, lists):
+def title_is_unique(title:str, lists):
     list_titles = (lst['title'] for lst in lists)
     if title in list_titles:
         flash('List name already exists!  Please choose a unique name.', 
               'error')
         return False
     return True
+
+class TodoList:
+    def __init__(self, name):
+        self.id = uuid4()
+        self.name = name
+        self.todos = []

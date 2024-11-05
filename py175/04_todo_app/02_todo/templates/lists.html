@@ -5,7 +5,7 @@
     {% if lists %}
     <ul id="lists">
       {% for lst in lists %}
-        <li>
+        <li href="{{ url_for('list', ) }}">
           <a>
             <h2>{{ lst['title'] }}</h2>
             <p>{{ lst['todos'] | count }}</p>

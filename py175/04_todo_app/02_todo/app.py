@@ -1,5 +1,5 @@
 from uuid import uuid4
-from utils import title_len_valid, title_unique
+from utils import is_valid_len, title_is_unique
 
 from flask import (
     Flask, 
@@ -47,17 +47,17 @@ def lists_post():
     print(f"{new_list_title=}")
     print(f"{lists=}")
 
-    if not title_unique(title=new_list_title, lists=lists):
+    if not title_is_unique(title=new_list_title, lists=lists):
         return render_template('new_list.html', 
                                default_value=new_list_title)
     
-    if not title_len_valid(new_list_title,
+    if not is_valid_len(new_list_title,
                                 min=MIN_TITLE_LENGTH,
                                 max=MAX_TITLE_LENGTH ):
         return render_template('new_list.html', 
                                default_value=new_list_title)
 
-    session['lists'].append({'title':new_list_title, 'todos': []})
+    session['lists'].append({'id':'tktk','title':new_list_title, 'todos': []})
     flash('List created!', category='success')
     session.modified = True
     return app.redirect(url_for('lists'))
