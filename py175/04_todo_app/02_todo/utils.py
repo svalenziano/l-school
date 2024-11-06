@@ -73,15 +73,16 @@ def toggle_todo_completed(list_id, todo_id):
     # the same as the object accessed by passing
     # explicit indexes!!! 
     # pp("session = " + str(session))
-    my_todo = (session
+    session_todo = (session
           ['lists']
           [0]
           ['todos']
           [0])
-    print("🟢 Direct access=".rjust(20), hex(id(my_todo)))
+    print("🟢 Direct access=".rjust(20), hex(id(session_todo)))
     print("🔴 id(todo)=".rjust(20), hex(id(todo)))
-    print("todo after", todo)
+    print("todo after", session_todo)
 
+    # THE SESSION IS NOT BEING MODIFIED!!!  
     
     # print(f"{todo['completed']=}")
     # pp(session)
