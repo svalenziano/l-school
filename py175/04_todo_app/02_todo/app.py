@@ -1,9 +1,14 @@
 from uuid import uuid4
 from utils import (is_valid_len, 
                    title_is_unique, 
-                   list_by_id,
+                   return_list_by_id,
                    return_new_todo_list,
-                   return_new_todo)
+                   return_new_todo,
+                   return_all_list_ids,
+                   return_all_lists,
+                   verify_lists_exist,
+                   return_all_todo_ids,
+                   toggle_todo_completed)
 from werkzeug.exceptions import NotFound
 
 from flask import (
@@ -33,11 +38,8 @@ lists = [
 
 @app.before_request
 def before_request():
-    # Check session for list info
-    if 'lists' not in session:
-        session['lists'] = []
-    else:
-        g.lists = session['lists']
+    verify_lists_exist()
+    g.lists = return_all_lists()
 
 @app.route("/")
 def index():
@@ -49,11 +51,9 @@ def index():
 
 @app.get('/list/<lst_id>')
 def one_list(lst_id):
-    ids = [lst['id'] for lst in session['lists']]
-    print(ids)
     
-    if lst_id in ids:
-        lst = list_by_id(g.lists, lst_id)
+    if lst_id in return_all_list_ids():
+        lst = return_list_by_id(g.lists, lst_id)
         return render_template('list.html', id=lst_id, lst=lst)
     raise NotFound(description="Hmm, I can't find that list.")
 
@@ -98,7 +98,7 @@ def new_list():
 def new_todo(list_id):
     new_todo = request.form['todo']
     default = new_todo
-    lst = list_by_id(g.lists, list_id)
+    lst = return_list_by_id(g.lists, list_id)
     if not lst:
         raise NotFound("List not found!")
     # if list is valid, update the session
@@ -108,6 +108,23 @@ def new_todo(list_id):
         flash('Todo added', category='message')
         default = ''
     return render_template('list.html', id=list_id, lst=lst, default=default)
+
+@app.post('/lists/<list_id>/todos/<todo_id>/toggle')
+def toggle_todo(list_id, todo_id):
+    print('request = ', request)
+    
+    # validate requested URL
+    if not list_id in return_all_list_ids():
+        raise NotFound("List not found ☹️.")
+    if not todo_id in return_all_todo_ids():
+        raise NotFound("Todo not found ☹️.")
+    
+    toggle_todo_completed(list_id, todo_id)
+    session.update = True
+
+    return app.redirect(url_for('one_list', lst_id=list_id))
+
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5003)

@@ -1,5 +1,6 @@
-from flask import g, flash
+from flask import g, flash, session
 from uuid import uuid4
+from pprint import pp
 
 def is_valid_len(input, min, max):
     '''
@@ -22,10 +23,36 @@ def title_is_unique(title:str, lists):
         return False
     return True
 
-def list_by_id(lists, id):
+def verify_lists_exist():
+    if 'lists' not in session:
+        session['lists'] = []
+        session.update = True
+
+def return_all_lists():
+    return session['lists']
+
+def return_all_list_ids():
+    return [lst['id'] for lst in return_all_lists()]
+
+def return_list_by_id(lists, id):
     for lst in lists:
         if lst['id'] == id:
             return lst
+
+def return_all_todo_ids():
+    lst = return_all_lists()
+    todo_ids = [todo['id']
+                for lst in lst
+                for todo in lst['todos']]
+    print(f"{todo_ids}=")
+    return todo_ids
+
+def return_todo_by_id(lst_id, todo_id):
+    lst = return_list_by_id(return_all_lists(), lst_id)
+    print(f"{lst=}")
+    for todo in lst['todos']:
+        if todo['id'] == todo_id:
+            return todo
 
 def return_new_todo_list(title:str):
     return {'id': str(uuid4()),
@@ -37,18 +64,25 @@ def return_new_todo(text:str):
             'title': text, 
             'completed': False}
 
-class Todo:
-    def __init__(self, name):
-        self.id = str(uuid4())
-        self.name = name
-        self.done = False
+def toggle_todo_completed(list_id, todo_id):
+    todo = return_todo_by_id(list_id, todo_id)
+    todo['completed'] = not todo['completed']
     
-    def __repr__(self):
-        return ' | '.join([self.id,
-                           self.name,
-                           str(self.done)])
+    print(f"{todo['completed']=}")
+    pp(session)
+
+# class Todo:
+#     def __init__(self, name):
+#         self.id = str(uuid4())
+#         self.name = name
+#         self.done = False
+    
+#     def __repr__(self):
+#         return ' | '.join([self.id,
+#                            self.name,
+#                            str(self.done)])
 
 
-if __name__ == '__main__':
-    x = Todo('hello world')
-    print(x)
+# if __name__ == '__main__':
+#     x = Todo('hello world')
+#     print(x)
