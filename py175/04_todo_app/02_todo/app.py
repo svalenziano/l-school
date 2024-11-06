@@ -7,9 +7,13 @@ from utils import (is_valid_len,
                    return_new_todo,
                    return_all_list_ids,
                    return_all_lists,
-                   verify_lists_exist,
+                   initialize_session,
                    return_all_todo_ids,
-                   toggle_todo_completed)
+                   return_todo_by_id,
+                   toggle_todo_completed,
+                   verify_list_exists,
+                   verify_todo_exists,
+                   delete_todo_by_id)
 from werkzeug.exceptions import NotFound
 
 from flask import (
@@ -40,7 +44,7 @@ lists = [
 @app.before_request
 def before_request():
     # pp(session)
-    verify_lists_exist()
+    initialize_session()
     g.lists = return_all_lists()
 
 @app.route("/")
@@ -53,11 +57,9 @@ def index():
 
 @app.get('/list/<lst_id>')
 def one_list(lst_id):
-    
-    if lst_id in return_all_list_ids():
-        lst = return_list_by_id(lst_id)
-        return render_template('list.html', id=lst_id, lst=lst)
-    raise NotFound(description="Hmm, I can't find that list.")
+    verify_list_exists(lst_id)
+    lst = return_list_by_id(lst_id)
+    return render_template('list.html', id=lst_id, lst=lst)
 
 # @app.errorhandler(404)
 # def error_404(error):
@@ -89,8 +91,6 @@ def lists_post():
     flash('List created!', category='success')
     session.modified = True
     return app.redirect(url_for('lists'))
-    
-
 
 @app.route('/lists/new')
 def new_list():
@@ -100,9 +100,8 @@ def new_list():
 def new_todo(list_id):
     new_todo = request.form['todo']
     default = new_todo
+    verify_list_exists(list_id)
     lst = return_list_by_id(list_id)
-    if not lst:
-        raise NotFound("List not found!")
     # if list is valid, update the session
     if is_valid_len(new_todo, 1, 100):
         lst['todos'].append(return_new_todo(new_todo))
@@ -113,17 +112,18 @@ def new_todo(list_id):
 
 @app.post('/lists/<list_id>/todos/<todo_id>/toggle')
 def toggle_todo(list_id, todo_id):
-    # print('request = ', request)
-    
-    # validate requested URL
-    if not list_id in return_all_list_ids():
-        raise NotFound("List not found ☹️.")
-    if not todo_id in return_all_todo_ids():
-        raise NotFound("Todo not found ☹️.")
-    
+    verify_list_exists(list_id)
+    verify_todo_exists(todo_id)
     toggle_todo_completed(list_id, todo_id)
     session.modified = True
+    return app.redirect(url_for('one_list', lst_id=list_id))
 
+@app.post('/lists/<list_id>/todos/<todo_id>/delete')
+def delete_todo(list_id, todo_id):
+    verify_list_exists(list_id)
+    verify_todo_exists(todo_id)
+    delete_todo_by_id(list_id, todo_id)
+    session.modified = True
     return app.redirect(url_for('one_list', lst_id=list_id))
 
 

@@ -1,4 +1,5 @@
 from flask import g, flash, session
+from werkzeug.exceptions import NotFound
 from uuid import uuid4
 from pprint import pp
 
@@ -23,7 +24,7 @@ def title_is_unique(title:str, lists):
         return False
     return True
 
-def verify_lists_exist():
+def initialize_session():
     if 'lists' not in session:
         session['lists'] = []
         session.update = True
@@ -33,6 +34,10 @@ def return_all_lists():
 
 def return_all_list_ids():
     return [lst['id'] for lst in return_all_lists()]
+
+def verify_list_exists(list_id_to_verify):
+    if not list_id_to_verify in return_all_list_ids():
+        raise NotFound("List not found ☹️.")
 
 def return_list_by_id(id):
     for lst in return_all_lists():
@@ -47,12 +52,23 @@ def return_all_todo_ids():
     # print(f"{todo_ids}=")
     return todo_ids
 
+def verify_todo_exists(todo_id_to_verify):
+    if not todo_id_to_verify in return_all_todo_ids():
+        raise NotFound("Todo not found ☹️.")
+
+
 def return_todo_by_id(lst_id, todo_id):
     lst = return_list_by_id(lst_id)
     # print(f"{lst=}")
     for todo in lst['todos']:
         if todo['id'] == todo_id:
             return todo
+
+def delete_todo_by_id(lst_id, todo_id):
+    lst = return_list_by_id(lst_id)
+    for idx, todo in enumerate(lst['todos']):
+        if todo['id'] == todo_id:
+            del lst['todos'][idx]
 
 def return_new_todo_list(title:str):
     return {'id': str(uuid4()),
