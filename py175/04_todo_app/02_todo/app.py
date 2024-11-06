@@ -1,5 +1,9 @@
 from uuid import uuid4
-from utils import is_valid_len, title_is_unique, find_list_by_id
+from utils import (is_valid_len, 
+                   title_is_unique, 
+                   list_by_id,
+                   return_new_todo_list,
+                   return_new_todo)
 from werkzeug.exceptions import NotFound
 
 from flask import (
@@ -32,6 +36,8 @@ def before_request():
     # Check session for list info
     if 'lists' not in session:
         session['lists'] = []
+    else:
+        g.lists = session['lists']
 
 @app.route("/")
 def index():
@@ -47,7 +53,7 @@ def one_list(id):
     print(ids)
     
     if id in ids:
-        lst = find_list_by_id(session['lists'], id)
+        lst = list_by_id(g.lists, id)
         return render_template('list.html', id=id, lst=lst)
     raise NotFound(description="Hmm, I can't find that list.")
 
@@ -57,7 +63,7 @@ def one_list(id):
 
 @app.get('/lists')
 def lists():
-    return render_template('lists.html', lists=session['lists'])
+    return render_template('lists.html', lists=g.lists)
 
 @app.post('/lists')
 def lists_post():
@@ -77,9 +83,7 @@ def lists_post():
         return render_template('new_list.html', 
                                default_value=new_list_title)
 
-    session['lists'].append({'id': str(uuid4()),
-                             'title':new_list_title, 
-                             'todos': []})
+    g.lists.append(return_new_todo_list(new_list_title))
     flash('List created!', category='success')
     session.modified = True
     return app.redirect(url_for('lists'))
@@ -89,6 +93,20 @@ def lists_post():
 @app.route('/lists/new')
 def new_list():
     return render_template('new_list.html')
+
+@app.post('/lists/<list_id>/todos')
+def new_todo(list_id):
+    '''
+    validate todo
+    '''
+    todo_title = request.form['todo']
+    # if list is valid, update the session
+    if is_valid_len(todo_title, 1, 100):
+        lst = list_by_id(g.lists, list_id)
+        lst['todos'].append(return_new_todo(todo_title))
+        session.modified = True
+        flash('Todo added', category='message')
+    return app.redirect(url_for('one_list', id=list_id))
 
 if __name__ == "__main__":
     app.run(debug=True, port=5003)
