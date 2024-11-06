@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <a class="add" href="/lists/new">New List</a>
+    <h2><a class="add" href="/lists/new">Lists</a></h2>
     {% if lists %}
     <ul id="lists">
       {% for lst in lists %}

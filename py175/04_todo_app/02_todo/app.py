@@ -13,7 +13,8 @@ from utils import (is_valid_len,
                    toggle_todo_completed,
                    verify_list_exists,
                    verify_todo_exists,
-                   delete_todo_by_id)
+                   delete_todo_by_id,
+                   return_todos_for_list)
 from werkzeug.exceptions import NotFound
 
 from flask import (
@@ -95,6 +96,18 @@ def lists_post():
 @app.route('/lists/new')
 def new_list():
     return render_template('new_list.html')
+
+@app.post('/lists/<list_id>/complete_all')
+def complete_all(list_id):
+    verify_list_exists(list_id)
+    todos = return_todos_for_list(list_id)
+    for todo in todos:
+        todo['completed'] = True
+    session.modified = True
+    flash('All todos have been marked complete. 💪')
+    print(session)
+    return app.redirect(url_for('one_list', lst_id=list_id))
+    
 
 @app.post('/lists/<list_id>/todos')
 def new_todo(list_id):

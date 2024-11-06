@@ -44,6 +44,13 @@ def return_list_by_id(id):
         if lst['id'] == id:
             return lst
 
+def return_todos_for_list(list_id):
+    '''
+    Returns a list of todos
+    '''
+    lst = return_list_by_id(list_id)
+    return lst['todos']
+
 def return_all_todo_ids():
     lst = return_all_lists()
     todo_ids = [todo['id']
