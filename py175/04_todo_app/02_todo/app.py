@@ -47,14 +47,14 @@ def index():
 # def no_list():
 #     raise NotFound()
 
-@app.get('/list/<id>')
-def one_list(id):
+@app.get('/list/<lst_id>')
+def one_list(lst_id):
     ids = [lst['id'] for lst in session['lists']]
     print(ids)
     
-    if id in ids:
-        lst = list_by_id(g.lists, id)
-        return render_template('list.html', id=id, lst=lst)
+    if lst_id in ids:
+        lst = list_by_id(g.lists, lst_id)
+        return render_template('list.html', id=lst_id, lst=lst)
     raise NotFound(description="Hmm, I can't find that list.")
 
 # @app.errorhandler(404)
@@ -68,7 +68,7 @@ def lists():
 @app.post('/lists')
 def lists_post():
     new_list_title = request.form['list_title'].strip()
-    lists = session.get('lists')
+    lists = g.lists
     
     print(f"{new_list_title=}")
     print(f"{lists=}")
@@ -99,14 +99,16 @@ def new_todo(list_id):
     '''
     validate todo
     '''
-    todo_title = request.form['todo']
+    new_todo = request.form['todo']
+    default = new_todo
+    lst = list_by_id(g.lists, list_id)
     # if list is valid, update the session
-    if is_valid_len(todo_title, 1, 100):
-        lst = list_by_id(g.lists, list_id)
-        lst['todos'].append(return_new_todo(todo_title))
+    if is_valid_len(new_todo, 1, 100):
+        lst['todos'].append(return_new_todo(new_todo))
         session.modified = True
         flash('Todo added', category='message')
-    return app.redirect(url_for('one_list', id=list_id))
+        default = ''
+    return render_template('list.html', id=list_id, lst=lst, default=default)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5003)
