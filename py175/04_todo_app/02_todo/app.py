@@ -1,3 +1,4 @@
+from pprint import pp
 from uuid import uuid4
 from utils import (is_valid_len, 
                    title_is_unique, 
@@ -38,6 +39,7 @@ lists = [
 
 @app.before_request
 def before_request():
+    # pp(session)
     verify_lists_exist()
     g.lists = return_all_lists()
 
@@ -53,7 +55,7 @@ def index():
 def one_list(lst_id):
     
     if lst_id in return_all_list_ids():
-        lst = return_list_by_id(g.lists, lst_id)
+        lst = return_list_by_id(lst_id)
         return render_template('list.html', id=lst_id, lst=lst)
     raise NotFound(description="Hmm, I can't find that list.")
 
@@ -98,7 +100,7 @@ def new_list():
 def new_todo(list_id):
     new_todo = request.form['todo']
     default = new_todo
-    lst = return_list_by_id(g.lists, list_id)
+    lst = return_list_by_id(list_id)
     if not lst:
         raise NotFound("List not found!")
     # if list is valid, update the session
@@ -111,7 +113,7 @@ def new_todo(list_id):
 
 @app.post('/lists/<list_id>/todos/<todo_id>/toggle')
 def toggle_todo(list_id, todo_id):
-    print('request = ', request)
+    # print('request = ', request)
     
     # validate requested URL
     if not list_id in return_all_list_ids():

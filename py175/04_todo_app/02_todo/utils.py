@@ -34,8 +34,8 @@ def return_all_lists():
 def return_all_list_ids():
     return [lst['id'] for lst in return_all_lists()]
 
-def return_list_by_id(lists, id):
-    for lst in lists:
+def return_list_by_id(id):
+    for lst in return_all_lists():
         if lst['id'] == id:
             return lst
 
@@ -44,12 +44,12 @@ def return_all_todo_ids():
     todo_ids = [todo['id']
                 for lst in lst
                 for todo in lst['todos']]
-    print(f"{todo_ids}=")
+    # print(f"{todo_ids}=")
     return todo_ids
 
 def return_todo_by_id(lst_id, todo_id):
-    lst = return_list_by_id(return_all_lists(), lst_id)
-    print(f"{lst=}")
+    lst = return_list_by_id(lst_id)
+    # print(f"{lst=}")
     for todo in lst['todos']:
         if todo['id'] == todo_id:
             return todo
@@ -66,10 +66,25 @@ def return_new_todo(text:str):
 
 def toggle_todo_completed(list_id, todo_id):
     todo = return_todo_by_id(list_id, todo_id)
+    print("todo before", todo)
     todo['completed'] = not todo['completed']
     
-    print(f"{todo['completed']=}")
-    pp(session)
+    # Verified that the object accessed by `todo` is 
+    # the same as the object accessed by passing
+    # explicit indexes!!! 
+    # pp("session = " + str(session))
+    my_todo = (session
+          ['lists']
+          [0]
+          ['todos']
+          [0])
+    print("🟢 Direct access=".rjust(20), hex(id(my_todo)))
+    print("🔴 id(todo)=".rjust(20), hex(id(todo)))
+    print("todo after", todo)
+
+    
+    # print(f"{todo['completed']=}")
+    # pp(session)
 
 # class Todo:
 #     def __init__(self, name):
