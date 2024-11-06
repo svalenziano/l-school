@@ -122,7 +122,7 @@ def toggle_todo(list_id, todo_id):
         raise NotFound("Todo not found ☹️.")
     
     toggle_todo_completed(list_id, todo_id)
-    session.update = True
+    session.modified = True
 
     return app.redirect(url_for('one_list', lst_id=list_id))
 
