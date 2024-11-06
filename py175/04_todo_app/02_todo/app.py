@@ -96,12 +96,11 @@ def new_list():
 
 @app.post('/lists/<list_id>/todos')
 def new_todo(list_id):
-    '''
-    validate todo
-    '''
     new_todo = request.form['todo']
     default = new_todo
     lst = list_by_id(g.lists, list_id)
+    if not lst:
+        raise NotFound("List not found!")
     # if list is valid, update the session
     if is_valid_len(new_todo, 1, 100):
         lst['todos'].append(return_new_todo(new_todo))
