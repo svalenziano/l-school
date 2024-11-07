@@ -5,10 +5,12 @@
     {% if lists %}
     <ul id="lists">
       {% for lst in lists %}
-        <li>
+        <li class="{{ 'complete' if completed(lst.id) else '' }}">
+          <!-- <li class="complete"> -->
+        <!-- <li> -->
           <a href="{{ url_for('one_list', lst_id=lst['id']) }}">
             <h2>{{ lst['title'] }}</h2>
-            <p>{{ lst['todos'] | count }}</p>
+            <p>{{ count_incomplete(lst.id) }} / {{ lst['todos'] | count }}</p>
           </a>
         </li>
       {% endfor %}

@@ -14,7 +14,7 @@ def is_valid_len(input, min, max):
     return False
 
 def title_is_unique(title:str):
-    list_titles = (lst['title'] for lst in return_all_lists())
+    list_titles = (lst['title'] for lst in return_session_lists())
     if title in list_titles:
         return False
     return True
@@ -45,36 +45,44 @@ def initialize_session():
         session['lists'] = []
         session.update = True
 
-def return_all_lists():
+def return_session_lists():
     return session['lists']
 
 def return_all_list_ids():
-    return [lst['id'] for lst in return_all_lists()]
+    return [lst['id'] for lst in return_session_lists()]
 
 def verify_list_exists(list_id_to_verify):
     if not list_id_to_verify in return_all_list_ids():
         raise NotFound("List not found ☹️.")
 
 def return_list_by_id(id):
-    for lst in return_all_lists():
+    for lst in return_session_lists():
         if lst['id'] == id:
             return lst
+    return []
+        
+def list_is_completed(list_id):
+        if (count_todos(list_id) > 0 and count_incomplete_todos(list_id) == 0):
+            return True
+        return False
         
 def delete_list_from_session(list_id):
-    lists = return_all_lists()
+    lists = return_session_lists()
     for idx, lst in enumerate(lists):
         if lst['id'] == list_id:
             lists.pop(idx)
 
 def return_todos_for_list(list_id):
     '''
-    Returns a list of todos
+    Returns a list of todos (a list of dictionaries)
     '''
     lst = return_list_by_id(list_id)
-    return lst['todos']
+    if lst:
+        return lst['todos']
+    return []
 
 def return_all_todo_ids():
-    lst = return_all_lists()
+    lst = return_session_lists()
     todo_ids = [todo['id']
                 for lst in lst
                 for todo in lst['todos']]
@@ -113,7 +121,15 @@ def toggle_todo_completed(list_id, todo_id):
     todo = return_todo_by_id(list_id, todo_id)
     # print("todo before", todo)
     todo['completed'] = not todo['completed']
-    
+
+def count_todos(list_id):
+    return len(return_todos_for_list(list_id))
+
+def count_incomplete_todos(list_id):
+    return sum(1 for todo in return_todos_for_list(list_id) 
+                if not todo['completed'])
+
+
     # Verified that the object accessed by `todo` is 
     # the same as the object accessed by passing
     # explicit indexes!!! 

@@ -28,7 +28,13 @@ lists = [
 def before_request():
     # pp(session)
     initialize_session()
-    g.lists = return_all_lists()
+    g.lists = return_session_lists()
+
+@app.context_processor
+def for_all_templates():
+    return dict(
+        completed=list_is_completed
+    )
 
 @app.route("/")
 def index():
@@ -50,7 +56,9 @@ def one_list(lst_id):
 
 @app.get('/lists')
 def lists():
-    return render_template('lists.html', lists=g.lists)
+    return render_template('lists.html', 
+                           lists=g.lists,
+                           count_incomplete=count_incomplete_todos)
 
 @app.post('/lists')
 def lists_post():
@@ -75,18 +83,6 @@ def new_list():
 
 @app.post('/lists/<list_id>/update_title')
 def update_list_title(list_id):
-    '''
-    verify list exists
-    access list_title from request
-    validate the new title
-    if it's valid
-        access the title in the session and update it
-        flash success message
-        update the session (list title)
-        redirect to the list (from where you came)
-    otherwise
-        render_template (redisplay the same page)
-    '''
     verify_list_exists(list_id)
     new_title = request.form['list_title']
     if list_title_is_valid(new_title):

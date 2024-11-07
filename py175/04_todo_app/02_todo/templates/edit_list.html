@@ -31,7 +31,7 @@
     <!-- SAVE AND CANCEL BUTTONS -->
     <fieldset class="actions">
       <input type="submit" value="Save">
-      <a href="/lists/{{ lst['id'] }}">Cancel</a>
+      <a href="{{ url_for('one_list', lst_id=lst.id) }}">Cancel</a>
     </fieldset>
   </form>
 {% endblock %}
