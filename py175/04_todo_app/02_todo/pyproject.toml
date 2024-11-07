@@ -4,8 +4,8 @@ distribution = true
 [tool.pdm.build]
 includes = []
 [build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
 
 
 [project]
