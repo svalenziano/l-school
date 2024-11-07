@@ -64,7 +64,8 @@ def lists_post():
     print(f"{new_list_title=}")
     print(f"{lists=}")
 
-    if not title_is_unique(title=new_list_title, lists=lists):
+    if not title_is_unique(title=new_list_title):
+        flash_unique_title_error()
         return render_template('new_list.html', 
                                default_value=new_list_title)
     
@@ -82,6 +83,29 @@ def lists_post():
 @app.route('/lists/new')
 def new_list():
     return render_template('new_list.html')
+
+@app.post('/lists/<list_id>/update_title')
+def update_list_title(list_id):
+    '''
+    verify list exists
+    access list_title from request
+    validate the new title
+    if it's valid
+        access the title in the session and update it
+        flash success message
+        update the session (list title)
+        redirect to the list (from where you came)
+    otherwise
+        render_template (redisplay the same page)
+    '''
+    verify_list_exists(list_id)
+    new_title = request.form['list_title']
+    if title_is_unique(new_title):
+        flash_title_updated()
+
+        return new_title
+    flash_unique_title_error()
+    lst = return_list_by_id(list_id)
 
 @app.post('/lists/<list_id>/delete')
 def delete_list(list_id):

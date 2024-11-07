@@ -1,4 +1,4 @@
-from flask import g, flash, session
+from flask import flash, session
 from werkzeug.exceptions import NotFound
 from uuid import uuid4
 from pprint import pp
@@ -16,13 +16,22 @@ def is_valid_len(input, min, max):
                category='error')
     return False
 
-def title_is_unique(title:str, lists):
-    list_titles = (lst['title'] for lst in lists)
+def title_is_unique(title:str):
+    list_titles = (lst['title'] for lst in return_all_lists())
     if title in list_titles:
-        flash('List name already exists!  Please choose a unique name.', 
-              'error')
         return False
     return True
+
+# def validate_list_title(title:str):
+#     return bool(title_is_unique(title) and 
+#                 is_valid_len(title, ))
+
+def flash_unique_title_error():
+    flash('List name already exists!  Please choose a unique name.', 
+              'error')
+    
+def flash_title_updated():
+    flash('List title updated! 💪')
 
 def initialize_session():
     if 'lists' not in session:
@@ -95,21 +104,21 @@ def return_new_todo(text:str):
 
 def toggle_todo_completed(list_id, todo_id):
     todo = return_todo_by_id(list_id, todo_id)
-    print("todo before", todo)
+    # print("todo before", todo)
     todo['completed'] = not todo['completed']
     
     # Verified that the object accessed by `todo` is 
     # the same as the object accessed by passing
     # explicit indexes!!! 
     # pp("session = " + str(session))
-    session_todo = (session
-          ['lists']
-          [0]
-          ['todos']
-          [0])
-    print("🟢 Direct access=".rjust(20), hex(id(session_todo)))
-    print("🔴 id(todo)=".rjust(20), hex(id(todo)))
-    print("todo after", session_todo)
+    # session_todo = (session
+    #       ['lists']
+    #       [0]
+    #       ['todos']
+    #       [0])
+    # print("🟢 Direct access=".rjust(20), hex(id(session_todo)))
+    # print("🔴 id(todo)=".rjust(20), hex(id(todo)))
+    # print("todo after", session_todo)
 
     # THE SESSION IS NOT BEING MODIFIED!!!  
     
