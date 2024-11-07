@@ -14,10 +14,6 @@ from flask import (
     abort
 )
 
-# CONSTANTS
-MIN_TITLE_LENGTH = 1
-MAX_TITLE_LENGTH = 50
-
 
 app = Flask(__name__)
 app.secret_key='secret1'  # WARNING, INSECURE!
@@ -61,17 +57,10 @@ def lists_post():
     new_list_title = request.form['list_title'].strip()
     lists = g.lists
     
-    print(f"{new_list_title=}")
-    print(f"{lists=}")
+    # print(f"{new_list_title=}")
+    # print(f"{lists=}")
 
-    if not title_is_unique(title=new_list_title):
-        flash_unique_title_error()
-        return render_template('new_list.html', 
-                               default_value=new_list_title)
-    
-    if not is_valid_len(new_list_title,
-                                min=MIN_TITLE_LENGTH,
-                                max=MAX_TITLE_LENGTH ):
+    if not list_title_is_valid(new_list_title):
         return render_template('new_list.html', 
                                default_value=new_list_title)
 
@@ -100,12 +89,14 @@ def update_list_title(list_id):
     '''
     verify_list_exists(list_id)
     new_title = request.form['list_title']
-    if title_is_unique(new_title):
+    if list_title_is_valid(new_title):
+        lst = return_list_by_id(list_id)
+        lst['title'] = new_title
+        session.modified = True
         flash_title_updated()
-
-        return new_title
-    flash_unique_title_error()
-    lst = return_list_by_id(list_id)
+        return app.redirect(url_for('one_list', lst_id=list_id))
+    else:
+        return app.redirect(url_for('edit_list', list_id=list_id))
 
 @app.post('/lists/<list_id>/delete')
 def delete_list(list_id):

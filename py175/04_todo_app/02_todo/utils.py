@@ -3,17 +3,14 @@ from werkzeug.exceptions import NotFound
 from uuid import uuid4
 from pprint import pp
 
+# CONSTANTS
+MIN_TITLE_LENGTH = 1
+MAX_TITLE_LENGTH = 50
+
+
 def is_valid_len(input, min, max):
-    '''
-    Verifies that input is not too short or too long
-    '''
     if min <= len(input) <= max:
-        # flash(f'length {len(title)} is valid (btw {min} and {max})', category='info')
         return True
-    
-    flash((f'☹️ Input must be between {min} ' +
-               f'and {max} characters long'), 
-               category='error')
     return False
 
 def title_is_unique(title:str):
@@ -22,13 +19,23 @@ def title_is_unique(title:str):
         return False
     return True
 
-# def validate_list_title(title:str):
-#     return bool(title_is_unique(title) and 
-#                 is_valid_len(title, ))
+def list_title_is_valid(title:str):
+    if not title_is_unique(title):
+        flash_unique_title_error()
+        return False
+    if not is_valid_len(title, min=MIN_TITLE_LENGTH, max=MAX_TITLE_LENGTH):
+        flash_invalid_title_length()
+        return False
+    return True
 
 def flash_unique_title_error():
     flash('List name already exists!  Please choose a unique name.', 
               'error')
+    
+def flash_invalid_title_length():
+    flash((f'☹️ Input must be between {MIN_TITLE_LENGTH} ' +
+               f'and {MAX_TITLE_LENGTH} characters long'), 
+               category='error')
     
 def flash_title_updated():
     flash('List title updated! 💪')
