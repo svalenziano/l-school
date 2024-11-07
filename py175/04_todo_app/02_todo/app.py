@@ -1,3 +1,4 @@
+import os
 from pprint import pp
 from uuid import uuid4
 from utils import *
@@ -168,4 +169,7 @@ def delete_todo(list_id, todo_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5003)
+    if os.environ.get('FLASK_ENV') == 'production':
+        app.run(debug=False)
+    else:
+        app.run(debug=True, port=5003) # Use port 8080 on Cloud9
