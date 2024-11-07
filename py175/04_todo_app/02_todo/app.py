@@ -56,6 +56,17 @@ def one_list(lst_id):
 
 @app.get('/lists')
 def lists():
+    
+    # sort alphabetically and by completion status
+    g.lists.sort(key=list_title)
+    complete = [lst for lst in g.lists
+                if list_is_completed(lst['id'])]
+    incomplete = [lst for lst in g.lists
+                if not list_is_completed(lst['id'])]
+    g.lists = incomplete + complete
+    session['lists'] = g.lists
+    session.modified = True
+    
     return render_template('lists.html', 
                            lists=g.lists,
                            count_incomplete=count_incomplete_todos)
@@ -72,7 +83,9 @@ def lists_post():
                                default_value=new_list_title)
 
     g.lists.append(return_new_todo_list(new_list_title))
-    print(g.lists)
+    
+    
+
     flash('List created!', category='success')
     session.modified = True
     return app.redirect(url_for('lists'))
@@ -100,7 +113,7 @@ def delete_list(list_id):
     title = return_list_by_id(list_id)['title']
     delete_list_from_session(list_id)
     session.modified = True
-    flash(f'List {title} has been deleted.')
+    flash(f'List "{title}" has been deleted.')
     return app.redirect(url_for('lists'))
 
 

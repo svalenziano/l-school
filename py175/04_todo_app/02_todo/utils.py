@@ -66,6 +66,9 @@ def list_is_completed(list_id):
             return True
         return False
         
+def list_title(lst):
+    return lst['title'].lower()
+
 def delete_list_from_session(list_id):
     lists = return_session_lists()
     for idx, lst in enumerate(lists):
