@@ -1,14 +1,21 @@
 {% extends 'layout.html' %}
 
 {% block header_links %}
+<section id="todos">
+  <h2>Editing {{ lst.title }}</h2>
+    <form class="delete"
+          action="{{ url_for('delete_list', list_id=lst.id) }}"
+          method="post">
+    <ul>
+      <li>Delete List</li>
+    </ul>
+  </form>
+
+</section>
 {% endblock %}
 
 {% block content %}
-<section id="todos">
-    <h2>Editing {{ lst.title }}</h2>
-    
 
-</section>
 {% endblock %}
 
 

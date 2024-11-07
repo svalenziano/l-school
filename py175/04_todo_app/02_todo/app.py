@@ -97,6 +97,10 @@ def lists_post():
 def new_list():
     return render_template('new_list.html')
 
+@app.route('/lists/<list_id>/delete')
+def delete_list(list_id):
+    pass
+
 @app.post('/lists/<list_id>/complete_all')
 def complete_all(list_id):
     verify_list_exists(list_id)
