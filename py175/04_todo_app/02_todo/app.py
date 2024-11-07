@@ -62,17 +62,17 @@ def lists():
 
 @app.post('/lists')
 def lists_post():
+    '''
+    Handles form requests for adding a new list
+    '''
     new_list_title = request.form['list_title'].strip()
-    lists = g.lists
     
-    # print(f"{new_list_title=}")
-    # print(f"{lists=}")
-
     if not list_title_is_valid(new_list_title):
         return render_template('new_list.html', 
                                default_value=new_list_title)
 
     g.lists.append(return_new_todo_list(new_list_title))
+    print(g.lists)
     flash('List created!', category='success')
     session.modified = True
     return app.redirect(url_for('lists'))
