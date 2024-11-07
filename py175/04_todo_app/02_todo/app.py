@@ -1,20 +1,6 @@
 from pprint import pp
 from uuid import uuid4
-from utils import (is_valid_len, 
-                   title_is_unique, 
-                   return_list_by_id,
-                   return_new_todo_list,
-                   return_new_todo,
-                   return_all_list_ids,
-                   return_all_lists,
-                   initialize_session,
-                   return_all_todo_ids,
-                   return_todo_by_id,
-                   toggle_todo_completed,
-                   verify_list_exists,
-                   verify_todo_exists,
-                   delete_todo_by_id,
-                   return_todos_for_list)
+from utils import *
 from werkzeug.exceptions import NotFound
 
 from flask import (
@@ -97,9 +83,21 @@ def lists_post():
 def new_list():
     return render_template('new_list.html')
 
-@app.route('/lists/<list_id>/delete')
+@app.post('/lists/<list_id>/delete')
 def delete_list(list_id):
-    pass
+    verify_list_exists(list_id)
+    title = return_list_by_id(list_id)['title']
+    delete_list_from_session(list_id)
+    session.modified = True
+    flash(f'List {title} has been deleted.')
+    return app.redirect(url_for('lists'))
+
+
+@app.route('/lists/<list_id>/edit')
+def edit_list(list_id):
+    verify_list_exists(list_id)
+    return render_template('edit_list.html', 
+                           lst=return_list_by_id(list_id))
 
 @app.post('/lists/<list_id>/complete_all')
 def complete_all(list_id):

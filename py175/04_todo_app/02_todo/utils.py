@@ -43,6 +43,12 @@ def return_list_by_id(id):
     for lst in return_all_lists():
         if lst['id'] == id:
             return lst
+        
+def delete_list_from_session(list_id):
+    lists = return_all_lists()
+    for idx, lst in enumerate(lists):
+        if lst['id'] == list_id:
+            lists.pop(idx)
 
 def return_todos_for_list(list_id):
     '''
