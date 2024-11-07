@@ -1,27 +1,16 @@
-[tool.pdm]
-distribution = true
-
-[tool.pdm.build]
-includes = []
-[build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
-
-
-[project]
+[tool.poetry]
 name = "todos"
 version = "0.1.0"
 description = ""
-authors = [
-    {name = "senorvalenz", email = "senorvalenz@gmail.com"},
-    {name = "Your Name", email = "you@example.com"},
-]
-dependencies = [
-    "flask<4.0.0,>=3.0.0",
-    "gunicorn<22.0.0,>=21.2.0",
-    "uuid<2.0,>=1.30",
-]
-requires-python = "<4.0,>=3.8"
+authors = ["Your Name <you@example.com>"]
 readme = "README.md"
-license = {text = "MIT"}
 
+[tool.poetry.dependencies]
+python = "^3.11"
+flask = "^3.0.0"
+gunicorn = "^21.2.0"
+uuid = "^1.30"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
