@@ -37,13 +37,14 @@ def require_list(f):
         return f(*args, **kwargs)
     return wrapper
 
-# def require_todo(f):
-#     @wraps(f)
-#     @require_list
-#     def wrapper(*args, **kwargs):
-#         verify_todo_exists(todo_id)
-
-
+def require_todo(f):
+    @wraps(f)
+    @require_list
+    def wrapper(*args, **kwargs):
+        todo_id = kwargs.get('todo_id')
+        verify_todo_exists(todo_id)
+        return f(*args, **kwargs)
+    return wrapper
 
 @app.before_request
 def before_request():
@@ -103,8 +104,6 @@ def lists_post():
                                default_value=new_list_title)
 
     g.lists.append(return_new_todo_list(new_list_title))
-    
-    
 
     flash('List created!', category='success')
     session.modified = True
@@ -144,8 +143,8 @@ def edit_list(list_id):
                            lst=return_list_by_id(list_id))
 
 @app.post('/lists/<list_id>/complete_all')
+@require_list
 def complete_all(list_id):
-    verify_list_exists(list_id)
     todos = return_todos_for_list(list_id)
     for todo in todos:
         todo['completed'] = True
@@ -156,12 +155,12 @@ def complete_all(list_id):
     
 
 @app.post('/lists/<list_id>/todos')
+@require_list
 def new_todo(list_id):
     new_todo = request.form['todo']
     default = new_todo
-    verify_list_exists(list_id)
     lst = return_list_by_id(list_id)
-    # if list is valid, update the session
+    # if todo is valid, update the session
     if is_valid_len(new_todo, 1, 100):
         lst['todos'].append(return_new_todo(new_todo))
         session.modified = True
@@ -170,17 +169,15 @@ def new_todo(list_id):
     return render_template('list.html', id=list_id, lst=lst, default=default)
 
 @app.post('/lists/<list_id>/todos/<todo_id>/toggle')
+@require_todo
 def toggle_todo(list_id, todo_id):
-    verify_list_exists(list_id)
-    verify_todo_exists(todo_id)
     toggle_todo_completed(list_id, todo_id)
     session.modified = True
     return app.redirect(url_for('one_list', lst_id=list_id))
 
 @app.post('/lists/<list_id>/todos/<todo_id>/delete')
+@require_todo
 def delete_todo(list_id, todo_id):
-    verify_list_exists(list_id)
-    verify_todo_exists(todo_id)
     delete_todo_by_id(list_id, todo_id)
     session.modified = True
     return app.redirect(url_for('one_list', lst_id=list_id))
