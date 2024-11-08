@@ -18,7 +18,7 @@ authors = [
 ]
 dependencies = [
     "flask<4.0.0,>=3.0.0",
-    "gunicorn<22.0.0,>=21.2.0",
+    "gunicorn>22.0.0", # Greater than 22.0.0 per github Dependabot
     "uuid<2.0,>=1.30",
 ]
 requires-python = "<4.0,>=3.8"
