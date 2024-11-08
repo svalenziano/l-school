@@ -3,6 +3,7 @@ from pprint import pp
 from uuid import uuid4
 from utils import *
 from werkzeug.exceptions import NotFound
+from functools import wraps
 
 from flask import (
     Flask, 
@@ -25,6 +26,25 @@ lists = [
         {"title": "Dinner Groceries", "todos": []},
     ]
 
+def require_list(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        '''
+        Ensure that list exists and is valid
+        '''
+        list_id = kwargs.get('list_id') or kwargs.get('lst_id')
+        verify_list_exists(list_id)
+        return f(*args, **kwargs)
+    return wrapper
+
+# def require_todo(f):
+#     @wraps(f)
+#     @require_list
+#     def wrapper(*args, **kwargs):
+#         verify_todo_exists(todo_id)
+
+
+
 @app.before_request
 def before_request():
     # pp(session)
@@ -46,8 +66,8 @@ def index():
 #     raise NotFound()
 
 @app.get('/list/<lst_id>')
+@require_list
 def one_list(lst_id):
-    verify_list_exists(lst_id)
     lst = return_list_by_id(lst_id)
     return render_template('list.html', id=lst_id, lst=lst)
 
@@ -57,7 +77,6 @@ def one_list(lst_id):
 
 @app.get('/lists')
 def lists():
-    
     # sort alphabetically and by completion status
     g.lists.sort(key=list_title)
     complete = [lst for lst in g.lists
@@ -96,8 +115,8 @@ def new_list():
     return render_template('new_list.html')
 
 @app.post('/lists/<list_id>/update_title')
+@require_list
 def update_list_title(list_id):
-    verify_list_exists(list_id)
     new_title = request.form['list_title']
     if list_title_is_valid(new_title):
         lst = return_list_by_id(list_id)
@@ -109,8 +128,8 @@ def update_list_title(list_id):
         return app.redirect(url_for('edit_list', list_id=list_id))
 
 @app.post('/lists/<list_id>/delete')
+@require_list
 def delete_list(list_id):
-    verify_list_exists(list_id)
     title = return_list_by_id(list_id)['title']
     delete_list_from_session(list_id)
     session.modified = True
@@ -119,8 +138,8 @@ def delete_list(list_id):
 
 
 @app.route('/lists/<list_id>/edit')
+@require_list
 def edit_list(list_id):
-    verify_list_exists(list_id)
     return render_template('edit_list.html', 
                            lst=return_list_by_id(list_id))
 
