@@ -1,5 +1,8 @@
 from flask import (Flask, 
                    render_template,
+                   send_from_directory,
+                   flash,
+                   url_for,
                    g)
 import os
 import os.path
@@ -17,6 +20,7 @@ def get_data_dir(f):
     return wrapper
 
 app = Flask(__name__)
+app.secret_key = 'DEVELOPMENT'
 
 @app.route("/")
 @get_data_dir
@@ -27,15 +31,16 @@ def index():
 @app.route('/<filename>')
 @get_data_dir
 def file(filename):
-    filepath = os.path.join(g.data_dir, filename)
-    with open(filepath, 'r') as f:
-        content = f.readlines()
-    return render_template('file.html', content=content)
+    filenames = os.listdir(g.data_dir) 
+    if not filename in filenames:
+        flash(f'{filename} does not exist.')
+        return app.redirect(url_for('index'))
+    return send_from_directory(g.data_dir, filename)
 
 if __name__ == "__main__":
     x = os.environ.get('LS_DEV_MACHINE')  # requires `export LS_DEV_MACHINE=true` in .bashrc
     if x:
-        print("🔴")
+        # print("🔴")
         app.run(debug=True, port=5003)
     else:
         app.run(debug=False)
