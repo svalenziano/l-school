@@ -38,6 +38,13 @@ class CMSTest(unittest.TestCase):
         with self.client.get("/") as response:
             self.assertNotIn("notafile.ext does not exist",
                              response.get_data(as_text=True))
+            
+    def test_markdown_conversion(self):
+        with self.client.get('/markdown_test.md') as response:
+            r = response.get_data(as_text=True)
+            self.assertIn('<h2>', r)
+            self.assertIn('<blockquote>', r)
+
 
 if __name__ == '__main__':
     unittest.main()

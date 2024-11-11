@@ -5,7 +5,7 @@
 groups = ["default"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:cf2480dadb1bf160c0167dc91a1fcdce1654d9d3b3792fd65d07270036ff2735"
+content_hash = "sha256:b8eb07d3605213233ad5d5e27496fbc5e6a6c178d695d07bb94135533369a5bb"
 
 [[metadata.targets]]
 requires_python = "~=3.8"
@@ -121,6 +121,20 @@ dependencies = [
 files = [
     {file = "jinja2-3.1.4-py3-none-any.whl", hash = "sha256:bc5dd2abb727a5319567b7a813e6a2e7318c39f4f487cfe6c89c6f9c7d25197d"},
     {file = "jinja2-3.1.4.tar.gz", hash = "sha256:4a3aee7acbbe7303aede8e9648d13b8bf88a429282aa6122a993f0ac800cb369"},
+]
+
+[[package]]
+name = "markdown"
+version = "3.7"
+requires_python = ">=3.8"
+summary = "Python implementation of John Gruber's Markdown."
+groups = ["default"]
+dependencies = [
+    "importlib-metadata>=4.4; python_version < \"3.10\"",
+]
+files = [
+    {file = "Markdown-3.7-py3-none-any.whl", hash = "sha256:7eb6df5690b81a1d7942992c97fad2938e956e79df20cbc6186e9c3a77b1c803"},
+    {file = "markdown-3.7.tar.gz", hash = "sha256:2ae2471477cfd02dbbf038d5d9bc226d40def84b4fe2986e49b59b6b472bbed2"},
 ]
 
 [[package]]

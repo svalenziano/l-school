@@ -1,9 +1,5 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-  {% for line in content %}
-  <section>
-    <p>{{ line }}</p>
-  {% endfor %}  
-  </section>
+  {{ safe_content | safe }}
 {% endblock body %}

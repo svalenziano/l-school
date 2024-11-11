@@ -7,6 +7,7 @@ from flask import (Flask,
 import os
 import os.path
 from functools import wraps
+from markdown import markdown  
 
 def get_data_dir(f):
     '''
@@ -35,6 +36,11 @@ def file(filename):
     if not filename in filenames:
         flash(f'{filename} does not exist.')
         return app.redirect(url_for('index'))
+    if filename.endswith('.md'):
+        path = os.path.join(g.data_dir, filename)
+        with open(path, 'r') as f:
+            html = markdown(f.read())
+        return render_template('file.html', safe_content=html)
     return send_from_directory(g.data_dir, filename)
 
 if __name__ == "__main__":
