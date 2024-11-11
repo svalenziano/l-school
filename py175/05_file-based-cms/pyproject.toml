@@ -18,7 +18,7 @@ authors = [
 dependencies = [
     "flask<4.0.0,>=3.0.0",
     "gunicorn>22.0.0",
-    "uuid<2.0,>=1.30",
+    "uuid>=1.30",
 ]
 requires-python = "<4.0,>=3.8"
 readme = "README.md"
