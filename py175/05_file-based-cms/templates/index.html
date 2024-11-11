@@ -3,7 +3,7 @@
 {% block body %}
   <ul>
   {% for file in filenames %}
-    <li>{{ file }}  </li>
+    <li><a href="{{ file }}">{{ file }}</a></li>
   {% endfor %}
   </ul>
 {% endblock body %}

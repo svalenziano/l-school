@@ -1,0 +1,9 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  {% for line in content %}
+  <section>
+    <p>{{ line }}</p>
+  {% endfor %}  
+  </section>
+{% endblock body %}
