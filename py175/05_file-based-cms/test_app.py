@@ -1,3 +1,4 @@
+import shutil
 import os
 import unittest
 from app import (app,
@@ -24,8 +25,13 @@ def delete_dummy_file(filename):
 class CMSTest(unittest.TestCase):
 
     def setUp(self):
-        app.config['TESTING'] = True
+        app.testing = True
         self.client = app.test_client()
+        self.data_dir = return_data_dir()
+        os.makedirs(self.data_dir)
+
+    # def tearDown(self):
+    #     shutil.rmtree(self.data_dir)
 
     def test_index(self):
         response = self.client.get('/')
