@@ -32,7 +32,9 @@ class CMSTest(unittest.TestCase):
         os.makedirs(self.data_dir, exist_ok=True)
 
     def tearDown(self):
-        shutil.rmtree(self.data_dir, ignore_errors=True)
+        shutil.rmtree(self.data_dir, 
+                      ignore_errors=True,
+                      )
 
     def test_index(self):
         make_dummy_file('about.txt')
