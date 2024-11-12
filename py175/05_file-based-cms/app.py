@@ -3,6 +3,7 @@ from flask import (Flask,
                    send_from_directory,
                    flash,
                    url_for,
+                   request,
                    g)
 import os
 import os.path
@@ -65,9 +66,19 @@ def edit(filename):
                            filename=filename, 
                            current_file=read_file_to_str(filepath))
 
-# @app.post('/<filename>/edit')
-# @get_data_dir
-# def edit(filename):
+@app.post('/<filename>/save')
+@get_data_dir
+def save(filename):
+    filepath = os.path.join(g.data_dir, filename)
+    old_contents = read_file_to_str(filepath)
+    new_contents = request.form['raw_file']
+    if old_contents.strip() == new_contents.strip():
+        flash('No changes detected, file was not modified.')
+    else:
+        write_str_to_file(filepath=filepath, 
+                        text=new_contents)
+        flash(f"🙌 <{filename}> has been edited!")
+    return app.redirect(url_for('index'))
 
 
 if __name__ == "__main__":

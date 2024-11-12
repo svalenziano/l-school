@@ -26,7 +26,7 @@ class CMSTest(unittest.TestCase):
     def test_document_not_found(self):
         # Attempt to access a nonexistent file and verify a redirect happens
         with self.client.get("/notafile.ext") as response:
-            self.assertEqual(response.status_code, 302)
+            self.assertEqual(response.status_code, 404)
 
         # Verify redirect and message handling works
         with self.client.get(response.headers['Location']) as response:
@@ -44,6 +44,30 @@ class CMSTest(unittest.TestCase):
             r = response.get_data(as_text=True)
             self.assertIn('<h2>', r)
             self.assertIn('<blockquote>', r)
+ 
+    def test_editing_document(self):
+        '''
+        A fairly basic test that ensures that `<textarea` 
+        and `<button type="submit" are in the Flask response.
+        '''
+        response = self.client.get("/changes.txt/edit")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("<textarea", response.get_data(as_text=True))
+        self.assertIn('<button type="submit"', response.get_data(as_text=True))
+
+    def test_updating_document(self):
+        response = self.client.post("/changes.txt/save",
+                                    data={'content': "new content"})
+        self.assertEqual(response.status_code, 302)
+
+        follow_response = self.client.get(response.headers['Location'])
+        self.assertIn("changes.txt has been updated",
+                      follow_response.get_data(as_text=True))
+
+        with self.client.get("/changes.txt") as content_response:
+            self.assertEqual(content_response.status_code, 200)
+            self.assertIn("new content",
+                          content_response.get_data(as_text=True))
 
 
 if __name__ == '__main__':

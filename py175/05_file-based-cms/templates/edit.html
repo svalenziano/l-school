@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<form method="post" action="{{ url_for('edit', filename=filename)}}">
+<form method="post" action="{{ url_for('save', filename=filename)}}">
   <label for="raw_file">Edit contents of {{ filename }}:  </label>
   <br>
   <textarea id="raw_file" name="raw_file" class="input" cols="150" rows="20">{{ current_file }}</textarea>
