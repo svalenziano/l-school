@@ -1,6 +1,25 @@
 import os
 import unittest
-from app import app
+from app import (app,
+                 return_data_dir,)
+
+
+def make_dummy_file(filename):
+    filepath = os.path.join(return_data_dir(), filename)
+    lipsum = ("Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+    "sed do eiusmod tempor incididunt ut labore et dolore magna "
+    "aliqua. Ut enim ad minim veniam, quis nostrud exercitation "
+    "ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis "
+    "aute irure dolor in reprehenderit in voluptate velit esse cillum "
+    "dolore eu fugiat nulla pariatur. Excepteur sint occaecat "
+    "cupidatat non proident, sunt in culpa qui officia deserunt "
+    "mollit anim id est laborum.")
+    with open(filepath, 'w') as f:
+        f.write(lipsum)
+
+def delete_dummy_file(filename):
+    filepath = os.path.join(return_data_dir(), filename)
+    os.remove(filepath)
 
 class CMSTest(unittest.TestCase):
 
@@ -57,24 +76,27 @@ class CMSTest(unittest.TestCase):
         self.assertIn('<button type="submit"', response.get_data(as_text=True))
 
     def test_updating_document(self):
-        response = self.client.post("/changes.txt/save",
+        # SETUP
+        filename = 'tktk_testing_file.txt'
+        make_dummy_file(filename)
+        
+        # EXECUTE AND ASSERT
+        response = self.client.post(f"/{filename}/save",
                                     data={'raw_file': "new content"})
         self.assertEqual(response.status_code, 302)
 
-        # follow the redirect and make a new request
         follow_response = self.client.get(response.headers['Location'])
         self.assertIn("has been updated",
                       follow_response.get_data(as_text=True))
 
-
-        with self.client.get("/changes.txt") as content_response:
+        with self.client.get(f"/{filename}") as content_response:
             self.assertEqual(content_response.status_code, 200)
             self.assertIn("new content",
                           content_response.get_data(as_text=True))
 
+        # TEARDOWN
+        delete_dummy_file(filename)
 
-    # def make_dummy_file(filename):
-    #     filepath = 
 
 if __name__ == '__main__':
     unittest.main()
