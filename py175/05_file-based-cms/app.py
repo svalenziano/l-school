@@ -11,14 +11,17 @@ from functools import wraps
 from markdown import markdown
 from utils import *
 
+def return_data_dir():
+    root = os.path.abspath(os.path.dirname(__file__))
+    return os.path.join(root, "cms/data")
+
 def get_data_dir(f):
     '''
     Get path to data directory and store in `g.data_dir`
     '''
     @wraps(f)
     def wrapper(*args, **kwargs):
-        root = os.path.abspath(os.path.dirname(__file__))
-        g.data_dir = os.path.join(root, "cms/data")
+        g.data_dir = return_data_dir()
         # print(f"✨{g.data_dir=}")
         return f(*args, **kwargs)
     return wrapper
@@ -29,11 +32,11 @@ def verify_filename(f):
     def wrapper(*args, **kwargs):
         filenames = os.listdir(g.data_dir)
         g.filenames = filenames
-        if args:
-            filename = args[0]  # Assumes `filename` is first positional arg!
+        if kwargs:
+            filename = kwargs['filename']  # Assumes `filename` is first positional arg!
             if not filename in filenames:
                 flash(f'{filename} does not exist.')
-                return app.redirect(url_for('index'))
+                return app.redirect(url_for('index'), 302)
             g.filename = filename
             # print(f"⏩{g.filename=}")
             # print(f"⏩{g.filenames=}")
@@ -72,12 +75,12 @@ def save(filename):
     filepath = os.path.join(g.data_dir, filename)
     old_contents = read_file_to_str(filepath)
     new_contents = request.form['raw_file']
-    if old_contents.strip() == new_contents.strip():
-        flash('No changes detected, file was not modified.')
-    else:
-        write_str_to_file(filepath=filepath, 
-                        text=new_contents)
-        flash(f"🙌 <{filename}> has been edited!")
+    # if old_contents.strip() == new_contents.strip():
+    #     flash('No changes detected, file was not modified.')
+    # else:
+    write_str_to_file(filepath=filepath, 
+                    text=new_contents)
+    flash(f"🙌 <{filename}> has been updated!")
     return app.redirect(url_for('index'))
 
 

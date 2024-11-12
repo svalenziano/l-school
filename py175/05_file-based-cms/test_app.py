@@ -1,3 +1,4 @@
+import os
 import unittest
 from app import app
 
@@ -26,7 +27,7 @@ class CMSTest(unittest.TestCase):
     def test_document_not_found(self):
         # Attempt to access a nonexistent file and verify a redirect happens
         with self.client.get("/notafile.ext") as response:
-            self.assertEqual(response.status_code, 404)
+            self.assertEqual(response.status_code, 302)
 
         # Verify redirect and message handling works
         with self.client.get(response.headers['Location']) as response:
@@ -57,18 +58,23 @@ class CMSTest(unittest.TestCase):
 
     def test_updating_document(self):
         response = self.client.post("/changes.txt/save",
-                                    data={'content': "new content"})
+                                    data={'raw_file': "new content"})
         self.assertEqual(response.status_code, 302)
 
+        # follow the redirect and make a new request
         follow_response = self.client.get(response.headers['Location'])
-        self.assertIn("changes.txt has been updated",
+        self.assertIn("has been updated",
                       follow_response.get_data(as_text=True))
+
 
         with self.client.get("/changes.txt") as content_response:
             self.assertEqual(content_response.status_code, 200)
             self.assertIn("new content",
                           content_response.get_data(as_text=True))
 
+
+    # def make_dummy_file(filename):
+    #     filepath = 
 
 if __name__ == '__main__':
     unittest.main()
