@@ -14,7 +14,7 @@ from utils import *
 def return_data_dir():
     root = os.path.abspath(os.path.dirname(__file__))
     if app.testing:
-        print("🔴 Testing is enabled.")
+        # print("🔴 Testing is enabled.")
         return os.path.join(root, 'tests/data')
     return os.path.join(root, "cms/data")
 

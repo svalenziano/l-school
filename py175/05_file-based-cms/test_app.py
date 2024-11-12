@@ -5,18 +5,19 @@ from app import (app,
                  return_data_dir,)
 
 
-def make_dummy_file(filename):
+def make_dummy_file(filename, content=''):
     filepath = os.path.join(return_data_dir(), filename)
-    lipsum = ("Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-    "sed do eiusmod tempor incididunt ut labore et dolore magna "
-    "aliqua. Ut enim ad minim veniam, quis nostrud exercitation "
-    "ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis "
-    "aute irure dolor in reprehenderit in voluptate velit esse cillum "
-    "dolore eu fugiat nulla pariatur. Excepteur sint occaecat "
-    "cupidatat non proident, sunt in culpa qui officia deserunt "
-    "mollit anim id est laborum.")
+    if content == 'dummy':
+        content = ("Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                    "sed do eiusmod tempor incididunt ut labore et dolore magna "
+                    "aliqua. Ut enim ad minim veniam, quis nostrud exercitation "
+                    "ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis "
+                    "aute irure dolor in reprehenderit in voluptate velit esse cillum "
+                    "dolore eu fugiat nulla pariatur. Excepteur sint occaecat "
+                    "cupidatat non proident, sunt in culpa qui officia deserunt "
+                    "mollit anim id est laborum.")
     with open(filepath, 'w') as f:
-        f.write(lipsum)
+        f.write(content)
 
 def delete_dummy_file(filename):
     filepath = os.path.join(return_data_dir(), filename)
@@ -28,12 +29,16 @@ class CMSTest(unittest.TestCase):
         app.testing = True
         self.client = app.test_client()
         self.data_dir = return_data_dir()
-        os.makedirs(self.data_dir)
+        os.makedirs(self.data_dir, exist_ok=True)
 
-    # def tearDown(self):
-    #     shutil.rmtree(self.data_dir)
+    def tearDown(self):
+        shutil.rmtree(self.data_dir, ignore_errors=True)
 
     def test_index(self):
+        make_dummy_file('about.txt')
+        make_dummy_file('changes.txt')
+        make_dummy_file('history.txt')
+        
         response = self.client.get('/')
 
         self.assertEqual(response.status_code, 200)
@@ -43,6 +48,9 @@ class CMSTest(unittest.TestCase):
         self.assertIn("history.txt", response.text)
 
     def test_viewing_text_document(self):
+        make_dummy_file('history.txt', 
+                        content="Python 0.9.0 (initial release) is released.")
+        
         with self.client.get('/history.txt') as response:
             self.assertEqual(response.status_code, 200)
             self.assertEqual(response.content_type, "text/plain; charset=utf-8")
@@ -66,7 +74,13 @@ class CMSTest(unittest.TestCase):
                              response.text)
             
     def test_markdown_conversion(self):
-        with self.client.get('/markdown_test.md') as response:
+        markdown = ("## Hello World\n"
+                    "> This is a quote\n"
+                    "> So is this\n")
+        
+        make_dummy_file('markdown.md', content=markdown)
+
+        with self.client.get('/markdown.md') as response:
             r = response.text
             self.assertIn('<h2>', r)
             self.assertIn('<blockquote>', r)
@@ -76,6 +90,7 @@ class CMSTest(unittest.TestCase):
         A fairly basic test that ensures that `<textarea` 
         and `<button type="submit" are in the Flask response.
         '''
+        make_dummy_file('changes.txt', content='dummy')
         response = self.client.get("/changes.txt/edit")
         self.assertEqual(response.status_code, 200)
         self.assertIn("<textarea", response.text)
@@ -84,7 +99,7 @@ class CMSTest(unittest.TestCase):
     def test_updating_document(self):
         # SETUP
         filename = 'tktk_testing_file.txt'
-        make_dummy_file(filename)
+        make_dummy_file(filename, content='dummy')
         
         # EXECUTE AND ASSERT
         response = self.client.post(f"/{filename}/save",
