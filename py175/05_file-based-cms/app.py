@@ -18,25 +18,38 @@ def get_data_dir(f):
     def wrapper(*args, **kwargs):
         root = os.path.abspath(os.path.dirname(__file__))
         g.data_dir = os.path.join(root, "cms/data")
+        # print(f"✨{g.data_dir=}")
+        return f(*args, **kwargs)
+    return wrapper
+
+def verify_filename(f):
+    @wraps(f)
+    @get_data_dir
+    def wrapper(*args, **kwargs):
+        filenames = os.listdir(g.data_dir)
+        g.filenames = filenames
+        if args:
+            filename = args[0]  # Assumes `filename` is first positional arg!
+            if not filename in filenames:
+                flash(f'{filename} does not exist.')
+                return app.redirect(url_for('index'))
+            g.filename = filename
+            # print(f"⏩{g.filename=}")
+            # print(f"⏩{g.filenames=}")
         return f(*args, **kwargs)
     return wrapper
 
 app = Flask(__name__)
-app.secret_key = 'DEVELOPMENT'
+app.secret_key = 'TKTK_CHANGE ME'
 
 @app.route("/")
-@get_data_dir
+@verify_filename
 def index():
-    filenames = os.listdir(g.data_dir) 
-    return render_template('index.html', filenames = filenames)
+    return render_template('index.html', filenames = g.filenames)
 
 @app.route('/<filename>')
-@get_data_dir
+@verify_filename
 def file(filename):
-    filenames = os.listdir(g.data_dir) 
-    if not filename in filenames:
-        flash(f'{filename} does not exist.')
-        return app.redirect(url_for('index'))
     if filename.endswith('.md'):
         path = os.path.join(g.data_dir, filename)
         with open(path, 'r') as f:
@@ -45,16 +58,17 @@ def file(filename):
     return send_from_directory(g.data_dir, filename)
 
 @app.get('/<filename>/edit')
-@get_data_dir
+@verify_filename
 def edit(filename):
-    filenames = os.listdir(g.data_dir) 
-    if not filename in filenames:
-        flash(f'{filename} does not exist.')
-        return app.redirect(url_for('index'))
     filepath = os.path.join(g.data_dir, filename)
     return render_template('edit.html', 
                            filename=filename, 
                            current_file=read_file_to_str(filepath))
+
+# @app.post('/<filename>/edit')
+# @get_data_dir
+# def edit(filename):
+
 
 if __name__ == "__main__":
     x = os.environ.get('LS_DEV_MACHINE')  # requires `export LS_DEV_MACHINE=true` in .bashrc
