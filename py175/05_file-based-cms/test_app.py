@@ -32,16 +32,16 @@ class CMSTest(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content_type, "text/html; charset=utf-8")
-        self.assertIn("about.txt", response.get_data(as_text=True))
-        self.assertIn("changes.txt", response.get_data(as_text=True))
-        self.assertIn("history.txt", response.get_data(as_text=True))
+        self.assertIn("about.txt", response.text)
+        self.assertIn("changes.txt", response.text)
+        self.assertIn("history.txt", response.text)
 
     def test_viewing_text_document(self):
         with self.client.get('/history.txt') as response:
             self.assertEqual(response.status_code, 200)
             self.assertEqual(response.content_type, "text/plain; charset=utf-8")
             self.assertIn("Python 0.9.0 (initial release) is released.",
-                          response.get_data(as_text=True))
+                          response.text)
 
     def test_document_not_found(self):
         # Attempt to access a nonexistent file and verify a redirect happens
@@ -52,16 +52,16 @@ class CMSTest(unittest.TestCase):
         with self.client.get(response.headers['Location']) as response:
             self.assertEqual(response.status_code, 200)
             self.assertIn("notafile.ext does not exist",
-                          response.get_data(as_text=True))
+                          response.text)
 
         # Assert that a page reload removes the message
         with self.client.get("/") as response:
             self.assertNotIn("notafile.ext does not exist",
-                             response.get_data(as_text=True))
+                             response.text)
             
     def test_markdown_conversion(self):
         with self.client.get('/markdown_test.md') as response:
-            r = response.get_data(as_text=True)
+            r = response.text
             self.assertIn('<h2>', r)
             self.assertIn('<blockquote>', r)
  
@@ -72,8 +72,8 @@ class CMSTest(unittest.TestCase):
         '''
         response = self.client.get("/changes.txt/edit")
         self.assertEqual(response.status_code, 200)
-        self.assertIn("<textarea", response.get_data(as_text=True))
-        self.assertIn('<button type="submit"', response.get_data(as_text=True))
+        self.assertIn("<textarea", response.text)
+        self.assertIn('<button type="submit"', response.text)
 
     def test_updating_document(self):
         # SETUP
@@ -87,12 +87,12 @@ class CMSTest(unittest.TestCase):
 
         follow_response = self.client.get(response.headers['Location'])
         self.assertIn("has been updated",
-                      follow_response.get_data(as_text=True))
+                      follow_response.text)
 
         with self.client.get(f"/{filename}") as content_response:
             self.assertEqual(content_response.status_code, 200)
             self.assertIn("new content",
-                          content_response.get_data(as_text=True))
+                          content_response.text)
 
         # TEARDOWN
         delete_dummy_file(filename)
