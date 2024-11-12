@@ -3,7 +3,10 @@
 {% block body %}
   <ul>
   {% for file in filenames %}
-    <li><a href="{{ file }}">{{ file }}</a></li>
+    <li>
+      <a href="{{ file }}">{{ file }}</a> | 
+      <a href="{{ url_for('edit', filename=file) }}"> Edit </a>
+    </li>
   {% endfor %}
   </ul>
 {% endblock body %}

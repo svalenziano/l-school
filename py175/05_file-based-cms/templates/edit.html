@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<form>
+  <label for="raw_file">Edit contents of {{ filename }}:  </label>
+  <br>
+  <textarea id="raw_file" name="raw_file" class="input" cols="150" rows="20">{{ current_file }}</textarea>
+  <br>
+  <button type="submit">Save Changes</button>
+</form>
+{% endblock %}

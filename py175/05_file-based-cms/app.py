@@ -7,7 +7,8 @@ from flask import (Flask,
 import os
 import os.path
 from functools import wraps
-from markdown import markdown  
+from markdown import markdown
+from utils import *
 
 def get_data_dir(f):
     '''
@@ -42,6 +43,18 @@ def file(filename):
             html = markdown(f.read())
         return render_template('file.html', safe_content=html)
     return send_from_directory(g.data_dir, filename)
+
+@app.get('/<filename>/edit')
+@get_data_dir
+def edit(filename):
+    filenames = os.listdir(g.data_dir) 
+    if not filename in filenames:
+        flash(f'{filename} does not exist.')
+        return app.redirect(url_for('index'))
+    filepath = os.path.join(g.data_dir, filename)
+    return render_template('edit.html', 
+                           filename=filename, 
+                           current_file=read_file_to_str(filepath))
 
 if __name__ == "__main__":
     x = os.environ.get('LS_DEV_MACHINE')  # requires `export LS_DEV_MACHINE=true` in .bashrc
