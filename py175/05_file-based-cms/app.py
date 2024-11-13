@@ -118,14 +118,24 @@ def new_post():
     flash(f'{filename} created!')
     return app.redirect(url_for('edit', filename=filename))
 
-@app.get('/<filename>/delete')
-@verify_filename
-def delete_file(filename):
-    try:
-        os.remove(g.filepath)
-    except OSError:
+@app.post('/delete')
+@get_data_dir
+def delete_file():
+    filename = request.form.get('file_to_delete')
+    
+    def failure():
         flash(f"Failed to deleted {filename} :(")
         return app.redirect(url_for('index')), 422
+
+    if not filename:
+        return failure()
+    filepath = os.path.join(g.data_dir, filename)
+
+    try:
+        os.remove(filepath)
+    except OSError:
+        return failure()
+    
     flash(f"{filename} has been deleted.")
     return app.redirect(url_for('index'))
 
