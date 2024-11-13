@@ -1,0 +1,10 @@
+
+body {
+    font-family: sans-serif;
+    padding: 1em;
+}
+
+.flash_msg {
+    padding: 5px;
+    background-color: rgb(255, 255, 163);
+}

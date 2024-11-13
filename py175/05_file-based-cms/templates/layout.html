@@ -7,10 +7,12 @@
   </head>
   <header>
     {% with flashed = get_flashed_messages() %}
-      {% if flashed %}
+    {% if flashed %}
+      <section class="flash_msg">
         {% for msg in flashed %}
           <p>{{ msg }}</p>
         {% endfor %}
+      </section>
       {% endif %}
     {% endwith %}
   </header>
