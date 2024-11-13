@@ -20,6 +20,7 @@ dependencies = [
     "gunicorn>22.0.0",
     "uuid>=1.30",
     "markdown>=3.7",
+    "rich>=13.9.4",
 ]
 requires-python = "<4.0,>=3.8"
 readme = "README.md"

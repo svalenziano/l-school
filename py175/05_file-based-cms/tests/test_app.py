@@ -1,9 +1,16 @@
 import shutil
 import os
 import unittest
+import sys
+
+tests_dir = os.path.dirname(__file__)
+project_root = os.path.join(tests_dir, '..')
+sys.path.insert(0, project_root)
+
 import utils
 from app import (app,
                  return_data_dir,)
+
 
 VALID_FILENAMES = [
             '.hello.py',

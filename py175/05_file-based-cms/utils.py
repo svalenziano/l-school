@@ -1,9 +1,17 @@
 import re
 import os
-from functools import wraps
+import rich
+from functools import wraps, partial
 from flask import (flash,
                    request,
                    render_template)
+
+def print_pfa(text:str, color='red'):
+    rich.print(f"[{color}]{text}[/{color}]")
+
+red, blue, green = (partial(print_pfa, color=color) 
+                    for color in ['red', 'blue', 'green'])
+
 
 def read_file_to_str(filepath):
     with open(filepath, 'r') as f:
