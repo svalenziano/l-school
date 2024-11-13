@@ -9,7 +9,8 @@ sys.path.insert(0, project_root)
 
 import utils
 from app import (app,
-                 return_data_dir,)
+                 return_data_dir,
+                 green,)
 
 
 VALID_FILENAMES = [
@@ -155,10 +156,35 @@ class CMSTest(unittest.TestCase):
                 self.assertEqual(response.status_code, 422)
                 self.assertIn('is invalid', response.text)
 
-    # def test_create_new_files(self):
-    #     for filename in [
+    def test_delete_file(self):
+        # create files to test
+        for fname in ['foo.txt',
+                      'q23p9jafwe48492__.html']:
+            make_dummy_file(fname)
+            
+            # try to delete the file
+            with self.client.get(f'{fname}/delete') as response:
+                self.assertEqual(response.status_code, 302)
+                
+            # follow the redirect
+            with self.client.get(response.headers['Location']) as response:    
+                self.assertIn(fname, response.text)
+                self.assertIn( 'has been deleted', response.text)
 
-    #     ]
+    def test_delete_nonexistent_file(self):
+        for fname in ['foo.txt',
+                      'q23p9jafwe48492__.html']:
+            
+            # try to delete the file
+            with self.client.get(f'{fname}/delete') as response:
+                self.assertEqual(response.status_code, 302)
+                
+            # follow the redirect
+            with self.client.get(response.headers['Location']) as response:    
+                self.assertIn(fname, response.text)
+                self.assertIn( 'does not exist', response.text)
+
+
 
 class UtilsTest(unittest.TestCase):
 
@@ -179,4 +205,5 @@ class UtilsTest(unittest.TestCase):
             self.assertFalse(utils.is_valid_filename(fname))
 
 if __name__ == '__main__':
+    green('Running tests***********************************************')
     unittest.main()

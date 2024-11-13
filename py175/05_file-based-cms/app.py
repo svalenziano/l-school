@@ -40,7 +40,7 @@ def verify_filename(f):
                 flash(f'{filename} does not exist.')
                 return app.redirect(url_for('index'), 302)
             g.filename = filename
-            g.filepath = os.path.join(g.filepath, g.filename)
+            g.filepath = os.path.join(g.data_dir, g.filename)
             # print(f"⏩{g.filename=}")
             # print(f"⏩{g.filenames=}")
         return f(*args, **kwargs)
