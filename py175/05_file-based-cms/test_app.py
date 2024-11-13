@@ -1,9 +1,25 @@
 import shutil
 import os
 import unittest
+import utils
 from app import (app,
                  return_data_dir,)
 
+VALID_FILENAMES = [
+            '.hello.py',
+            'hello_world.txt',
+            'VERY_SCREAMY.TXT',
+            'hello-world-12340.txt',
+            "hello-'world'.html",
+            '1.a',
+            ]
+
+INVALID_FILENAMES = [
+            '/../big_trouble.txt',
+            'big..trouble.txt',
+            'hello.',
+            '!.txt',
+            ]
 
 def make_dummy_file(filename, content=''):
     filepath = os.path.join(return_data_dir(), filename)
@@ -120,6 +136,40 @@ class CMSTest(unittest.TestCase):
         # TEARDOWN
         delete_dummy_file(filename)
 
+    def test_create_invalid_filenames(self):
+        for invalid_filename in INVALID_FILENAMES:
+            with self.client.get("/new") as response:
+                self.assertIn('Create', response.text)
+
+            with self.client.post('/new',
+                                  data={
+                                      'filename': invalid_filename,
+                                  }) as response:
+                self.assertEqual(response.status_code, 422)
+                self.assertIn('is invalid', response.text)
+
+    # def test_create_new_files(self):
+    #     for filename in [
+
+    #     ]
+
+class UtilsTest(unittest.TestCase):
+
+    def test_valid_filename_chars(self):
+        self.assertTrue(utils.valid_filename_chars('hello_world-1.txt'))
+        self.assertFalse(utils.valid_filename_chars('!@#$%^&*'))
+        self.assertFalse(utils.valid_filename_chars('hello%world'))
+
+    '''
+    Skip for now bc the 'INVALID_FILENAMES' constant isn't
+    setup to test it correctly.
+    '''
+    @unittest.skip
+    def test_is_valid_filename(self):
+        for fname in INVALID_FILENAMES:
+            self.assertTrue(utils.is_valid_filename(fname))
+        for fname in VALID_FILENAMES:
+            self.assertFalse(utils.is_valid_filename(fname))
 
 if __name__ == '__main__':
     unittest.main()

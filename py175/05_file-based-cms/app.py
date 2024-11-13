@@ -33,11 +33,10 @@ def verify_filename(f):
     @wraps(f)
     @get_data_dir
     def wrapper(*args, **kwargs):
-        filenames = os.listdir(g.data_dir)
-        g.filenames = filenames
+        g.filenames = get_files(g.data_dir)
         if kwargs:
             filename = kwargs['filename']  # Assumes `filename` is first positional arg!
-            if not filename in filenames:
+            if not filename in g.filenames:
                 flash(f'{filename} does not exist.')
                 return app.redirect(url_for('index'), 302)
             g.filename = filename
@@ -86,6 +85,37 @@ def save(filename):
     flash(f"🙌 <{filename}> has been updated!")
     return app.redirect(url_for('index'))
 
+@app.get('/new')
+def new():
+    return render_template('new_file.html')
+
+@app.post('/new')
+@get_data_dir
+def new_post():
+    def reload():
+        return render_template('new_file.html', invalid_filename=filename), 422
+
+    filename = request.form['filename']
+
+    if not filename:
+        flash("Document name can't be empty!", 'error')
+        return reload()
+    if not is_valid_filename(filename):
+        flash("Filename is invalid.", 'error')
+        return reload()
+    MAX = 50
+    if len(filename) > MAX:
+        flash(f"Maximum filename length of {MAX} characters, please", 'error')
+        return reload()
+    if file_exists(g.data_dir, filename):
+        flash("Filename already exists.  Please pick a unique name.")
+        return reload()
+
+    # If filename is valid
+    filepath = os.path.join(g.data_dir, filename)
+    write_str_to_file(filepath, text='')
+    flash(f'{filename} created!')
+    return app.redirect(url_for('edit', filename=filename))
 
 if __name__ == "__main__":
     x = os.environ.get('LS_DEV_MACHINE')  # requires `export LS_DEV_MACHINE=true` in .bashrc
