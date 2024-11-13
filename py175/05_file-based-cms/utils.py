@@ -6,6 +6,9 @@ from flask import (flash,
                    request,
                    render_template)
 
+
+# SETUP COLOR PRINTING *****************************************************
+
 def print_pfa(text:str, color='red'):
     rich.print(f"[{color}]{text}[/{color}]")
 

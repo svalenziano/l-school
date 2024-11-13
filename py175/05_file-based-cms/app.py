@@ -40,6 +40,7 @@ def verify_filename(f):
                 flash(f'{filename} does not exist.')
                 return app.redirect(url_for('index'), 302)
             g.filename = filename
+            g.filepath = os.path.join(g.filepath, g.filename)
             # print(f"⏩{g.filename=}")
             # print(f"⏩{g.filenames=}")
         return f(*args, **kwargs)
@@ -116,6 +117,17 @@ def new_post():
     write_str_to_file(filepath, text='')
     flash(f'{filename} created!')
     return app.redirect(url_for('edit', filename=filename))
+
+@app.get('/<filename>/delete')
+@verify_filename
+def delete_file(filename):
+    try:
+        os.remove(g.filepath)
+    except OSError:
+        flash(f"Failed to deleted {filename} :(")
+        return app.redirect(url_for('index')), 422
+    flash(f"{filename} has been deleted.")
+    return app.redirect(url_for('index'))
 
 if __name__ == "__main__":
     x = os.environ.get('LS_DEV_MACHINE')  # requires `export LS_DEV_MACHINE=true` in .bashrc

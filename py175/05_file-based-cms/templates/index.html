@@ -4,8 +4,11 @@
   <ul>
   {% for file in filenames %}
     <li>
-      <a href="{{ file }}">{{ file }}</a> | 
+      <a href="{{ file }}">{{ file }}</a> 
+      | 
       <a href="{{ url_for('edit', filename=file) }}"> Edit </a>
+      |
+      <a method="post" href="{{ url_for('delete_file', filename=file)}}"> Delete </a>
     </li>
   {% endfor %}
   </ul>
