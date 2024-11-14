@@ -29,6 +29,11 @@ INVALID_FILENAMES = [
             '!.txt',
             ]
 
+### HELPER METHODS
+    # tktk    
+
+### TESTS
+
 def make_dummy_file(filename, content=''):
     filepath = os.path.join(return_data_dir(), filename)
     if content == 'dummy':
@@ -173,19 +178,20 @@ class CMSTest(unittest.TestCase):
                 self.assertIn(fname, response.text)
                 self.assertIn( 'has been deleted', response.text)
 
-    @unittest.skip
     def test_delete_nonexistent_file(self):
         for fname in ['foo.txt',
                       'q23p9jafwe48492__.html']:
             
             # try to delete the file
-            with self.client.get(f'{fname}/delete') as response:
-                self.assertEqual(response.status_code, 302)
+            with self.client.post(f'/delete', data={
+                'file_to_delete': fname,
+            }) as response:
+                self.assertEqual(response.status_code, 422)
                 
             # follow the redirect
             with self.client.get(response.headers['Location']) as response:    
                 self.assertIn(fname, response.text)
-                self.assertIn( 'does not exist', response.text)
+                self.assertIn( 'Failed to delete', response.text)
 
 
 

@@ -124,7 +124,7 @@ def delete_file():
     filename = request.form.get('file_to_delete')
     
     def failure():
-        flash(f"Failed to deleted {filename} :(")
+        flash(f"Failed to delete {filename} :(")
         return app.redirect(url_for('index')), 422
 
     if not filename:
