@@ -10,7 +10,8 @@ sys.path.insert(0, project_root)
 import utils
 from app import (app,
                  return_data_dir,
-                 green,)
+                 green,
+                 session,)
 
 
 VALID_FILENAMES = [
@@ -64,12 +65,26 @@ class CMSTest(unittest.TestCase):
         shutil.rmtree(self.data_dir, 
                       ignore_errors=True,
                       )
-
+        
+    def magic_login(self):
+        with self.client.session_transaction() as session:
+            session['username'] = "admin"
+    
     def test_index(self):
+        
         make_dummy_file('about.txt')
         make_dummy_file('changes.txt')
         make_dummy_file('history.txt')
         
+        # TEST WITHOUT LOGIN
+        response = self.client.get('/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content_type, "text/html; charset=utf-8")
+        self.assertIn('Login', response.text)
+
+        # LOGIN AND TEST AGAIN
+        self.magic_login()
         response = self.client.get('/')
 
         self.assertEqual(response.status_code, 200)
@@ -77,6 +92,7 @@ class CMSTest(unittest.TestCase):
         self.assertIn("about.txt", response.text)
         self.assertIn("changes.txt", response.text)
         self.assertIn("history.txt", response.text)
+
 
     def test_viewing_text_document(self):
         make_dummy_file('history.txt', 
@@ -162,6 +178,8 @@ class CMSTest(unittest.TestCase):
                 self.assertIn('is invalid', response.text)
 
     def test_delete_file(self):
+        self.magic_login()
+        
         # create files to test
         for fname in ['foo.txt',
                       'q23p9jafwe48492__.html']:
@@ -179,6 +197,7 @@ class CMSTest(unittest.TestCase):
                 self.assertIn( 'has been deleted', response.text)
 
     def test_delete_nonexistent_file(self):
+        
         for fname in ['foo.txt',
                       'q23p9jafwe48492__.html']:
             
@@ -193,7 +212,43 @@ class CMSTest(unittest.TestCase):
                 self.assertIn(fname, response.text)
                 self.assertIn( 'Failed to delete', response.text)
 
+    def test_signin_form(self):
+        response = self.client.get('/login')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("<input", response.text)
+        self.assertIn('<button type="submit"', response.text)
 
+    def test_signin(self):
+        username = 'admin'
+        response = self.client.post('/login',
+                                    data={
+                                        'username': username,
+                                        'password': 'secret',
+                                    },
+                                    follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Welcome", response.text)
+        self.assertIn("Logged in as", response.text)
+        self.assertIn(username, response.text)
+
+    def test_signin_with_bad_credentials(self):
+        response = self.client.post('/login',
+                                    data={
+                                        'username': 'guest',
+                                        'password': 'shhhh',
+                                    })
+        self.assertEqual(response.status_code, 422)
+        self.assertIn("Invalid login credentials", response.get_data(as_text=True))
+
+    @unittest.skip
+    def test_signout(self):
+        self.client.post('/login',
+                         data={'username': 'admin', 'password': 'secret'},
+                         follow_redirects=True)
+        response = self.client.post('/users/signout', follow_redirects=True)
+        self.assertIn("You have been signed out",
+                      response.get_data(as_text=True))
+        self.assertIn("Sign In", response.get_data(as_text=True))
 
 class UtilsTest(unittest.TestCase):
 

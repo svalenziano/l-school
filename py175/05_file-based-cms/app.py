@@ -4,6 +4,7 @@ from flask import (Flask,
                    flash,
                    url_for,
                    request,
+                   session,
                    g)
 import os
 import os.path
@@ -49,10 +50,18 @@ def verify_filename(f):
 app = Flask(__name__)
 app.secret_key = 'TKTK_CHANGE ME'
 
+@app.route("/testing")
+def testing():
+    return ('Session:\n' + str(session))
+
 @app.route("/")
 @verify_filename
 def index():
-    return render_template('index.html', filenames = g.filenames)
+    # check for login credentials
+    username = session.get('username')
+
+    return render_template('index.html', filenames = g.filenames, 
+                           username=username)
 
 @app.route('/<filename>')
 @verify_filename
@@ -121,11 +130,17 @@ def new_post():
 @app.post('/delete')
 @get_data_dir
 def delete_file():
+    
+        
+
     filename = request.form.get('file_to_delete')
     
     def failure():
         flash(f"Failed to delete {filename} :(")
         return app.redirect(url_for('index')), 422
+    
+    if session.get('username') != 'admin':
+        return failure()
 
     if not filename:
         return failure()
@@ -139,8 +154,32 @@ def delete_file():
     flash(f"{filename} has been deleted.")
     return app.redirect(url_for('index'))
 
+@app.route('/login', methods=('GET', 'POST'))
+def login():
+    if request.method == 'GET':
+        return render_template('login.html')
+    if request.method == 'POST':
+        uname = request.form['username']
+        pword = request.form['password']
+        if uname == 'admin' and pword == 'secret':
+            session['username'] = uname
+            session.modified = True
+            flash(f"Welcome {uname}!")
+            return app.redirect(url_for('index'))
+        else:
+            flash("Invalid login credentials, please try again.")
+            return render_template('login.html', username=uname), 422
+
+@app.route('/logout')
+def logout():
+    del session['username']
+    session.modified = True
+    flash("As you wish.  You've been logged out.")
+    return app.redirect(url_for('index'))
+
 if __name__ == "__main__":
-    x = os.environ.get('LS_DEV_MACHINE')  # requires `export LS_DEV_MACHINE=true` in .bashrc
+    # To function properly, requires `export LS_DEV_MACHINE=true` in .bashrc
+    x = os.environ.get('LS_DEV_MACHINE')  
     if x:
         # print("🔴")
         app.run(debug=True, port=5003)

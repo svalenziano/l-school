@@ -1,20 +1,32 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-  <ul>
-  {% for file in filenames %}
-    <li>
-      <a href="{{ file }}">{{ file }}</a> 
-      | 
-      <a href="{{ url_for('edit', filename=file) }}">Edit</a>
-      
-      <form class="inline" method="post" action="{{ url_for('delete_file') }}">
-        <input type="hidden" name="file_to_delete" value="{{ file }}"/>
-        <button type="submit"> Delete </button>
-      </form>
-    </li>
-  {% endfor %}
-  </ul>
+  
+  {% if username %}
+    <ul>
+    {% for file in filenames %}
+      <li>
+        <a href="{{ file }}">{{ file }}</a> 
+        | 
+        <a href="{{ url_for('edit', filename=file) }}">Edit</a>
+        
+        <form class="inline" method="post" action="{{ url_for('delete_file') }}">
+          <input type="hidden" name="file_to_delete" value="{{ file }}"/>
+          <button type="submit"> Delete </button>
+        </form>
+      </li>
+    {% endfor %}
+    </ul>
+    <p><a href="{{ url_for('new') }}">New document</a></p>
+  {% endif %}
 
-  <p><a href="{{ url_for('new') }}">New document</a></p>
+
+  {% if username %}
+    <form method="GET" action="{{ url_for('logout') }}">
+      <label for="logout">Logged in as {{username}}.</label>
+      <button name="logout"  type="submit">Logout</button>
+    </form>
+  {% else %}
+    <p><a href="{{ url_for('login') }}">Login</a></p>
+  {% endif %}
 {% endblock body %}
