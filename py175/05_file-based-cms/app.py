@@ -12,6 +12,9 @@ from functools import wraps
 from markdown import markdown
 from utils import *
 
+#############################################################################
+# DECORATORS
+
 def return_data_dir():
     root = os.path.abspath(os.path.dirname(__file__))
     if app.testing:
@@ -47,6 +50,19 @@ def verify_filename(f):
         return f(*args, **kwargs)
     return wrapper
 
+def require_login(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if session.get('username') != 'admin':
+            flash("You must be logged in to do that.")
+            return app.redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return wrapper
+
+
+#############################################################################
+# 
+
 app = Flask(__name__)
 app.secret_key = 'TKTK_CHANGE ME'
 
@@ -64,6 +80,7 @@ def index():
                            username=username)
 
 @app.route('/<filename>')
+@require_login
 @verify_filename
 def file(filename):
     if filename.endswith('.md'):

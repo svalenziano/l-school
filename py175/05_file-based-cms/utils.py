@@ -15,6 +15,7 @@ def print_pfa(text:str, color='red'):
 red, blue, green = (partial(print_pfa, color=color) 
                     for color in ['red', 'blue', 'green'])
 
+# def user_is_logged_in()
 
 def read_file_to_str(filepath):
     with open(filepath, 'r') as f:
