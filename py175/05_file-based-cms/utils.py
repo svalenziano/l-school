@@ -8,6 +8,7 @@ from flask import (flash,
                    session)
 import yaml
 from app import app
+from passwords import *
 
 
 # SETUP COLOR PRINTING *****************************************************
