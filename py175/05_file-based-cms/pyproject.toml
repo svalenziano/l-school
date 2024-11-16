@@ -21,6 +21,7 @@ dependencies = [
     "uuid>=1.30",
     "markdown>=3.7",
     "rich>=13.9.4",
+    "pyyaml>=6.0.2",
 ]
 requires-python = "<4.0,>=3.8"
 readme = "README.md"

@@ -11,6 +11,7 @@ import os.path
 from functools import wraps
 from markdown import markdown
 from utils import *
+import yaml
 
 #############################################################################
 # DECORATORS
@@ -53,7 +54,7 @@ def verify_filename(f):
 def require_login(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
-        if session.get('username') != 'admin':
+        if not user_is_logged_in():
             flash("You must be logged in to do that.")
             return app.redirect(url_for('login'))
         return f(*args, **kwargs)
@@ -91,6 +92,7 @@ def file(filename):
     return send_from_directory(g.data_dir, filename)
 
 @app.get('/<filename>/edit')
+@require_login
 @verify_filename
 def edit(filename):
     filepath = os.path.join(g.data_dir, filename)
@@ -99,6 +101,7 @@ def edit(filename):
                            current_file=read_file_to_str(filepath))
 
 @app.post('/<filename>/save')
+@require_login
 @get_data_dir
 def save(filename):
     filepath = os.path.join(g.data_dir, filename)
@@ -113,10 +116,12 @@ def save(filename):
     return app.redirect(url_for('index'))
 
 @app.get('/new')
+@require_login
 def new():
     return render_template('new_file.html')
 
 @app.post('/new')
+@require_login
 @get_data_dir
 def new_post():
     def reload():
@@ -145,10 +150,9 @@ def new_post():
     return app.redirect(url_for('edit', filename=filename))
 
 @app.post('/delete')
+@require_login
 @get_data_dir
 def delete_file():
-    
-        
 
     filename = request.form.get('file_to_delete')
     
@@ -189,8 +193,9 @@ def login():
 
 @app.route('/logout')
 def logout():
-    del session['username']
-    session.modified = True
+    if 'username' in session:
+        del session['username']
+        session.modified = True
     flash("As you wish.  You've been logged out.")
     return app.redirect(url_for('index'))
 

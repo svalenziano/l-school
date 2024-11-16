@@ -2,6 +2,7 @@ import shutil
 import os
 import unittest
 import sys
+from functools import wraps
 
 tests_dir = os.path.dirname(__file__)
 project_root = os.path.join(tests_dir, '..')
@@ -70,6 +71,14 @@ class CMSTest(unittest.TestCase):
         with self.client.session_transaction() as session:
             session['username'] = "admin"
     
+    def magic_login_decorator(f):
+        @wraps(f)
+        def decorated_func(self, *args, **kwargs):
+            with self.client.session_transaction() as session:
+                session['username'] = "admin"
+            return f(self, *args, **kwargs)
+        return decorated_func
+
     def test_index(self):
         
         make_dummy_file('about.txt')
@@ -94,17 +103,21 @@ class CMSTest(unittest.TestCase):
         self.assertIn("history.txt", response.text)
 
 
+    @magic_login_decorator
     def test_viewing_text_document(self):
         make_dummy_file('history.txt', 
                         content="Python 0.9.0 (initial release) is released.")
         
+        # self.magic_login()
         with self.client.get('/history.txt') as response:
             self.assertEqual(response.status_code, 200)
             self.assertEqual(response.content_type, "text/plain; charset=utf-8")
             self.assertIn("Python 0.9.0 (initial release) is released.",
                           response.text)
 
+    @magic_login_decorator
     def test_document_not_found(self):
+        # self.magic_login()
         # Attempt to access a nonexistent file and verify a redirect happens
         with self.client.get("/notafile.ext") as response:
             self.assertEqual(response.status_code, 302)
@@ -120,6 +133,7 @@ class CMSTest(unittest.TestCase):
             self.assertNotIn("notafile.ext does not exist",
                              response.text)
             
+    @magic_login_decorator
     def test_markdown_conversion(self):
         markdown = ("## Hello World\n"
                     "> This is a quote\n"
@@ -132,6 +146,7 @@ class CMSTest(unittest.TestCase):
             self.assertIn('<h2>', r)
             self.assertIn('<blockquote>', r)
  
+    @magic_login_decorator
     def test_editing_document(self):
         '''
         A fairly basic test that ensures that `<textarea` 
@@ -143,6 +158,7 @@ class CMSTest(unittest.TestCase):
         self.assertIn("<textarea", response.text)
         self.assertIn('<button type="submit"', response.text)
 
+    @magic_login_decorator
     def test_updating_document(self):
         # SETUP
         filename = 'tktk_testing_file.txt'
@@ -165,6 +181,7 @@ class CMSTest(unittest.TestCase):
         # TEARDOWN
         delete_dummy_file(filename)
 
+    @magic_login_decorator
     def test_create_invalid_filenames(self):
         for invalid_filename in INVALID_FILENAMES:
             with self.client.get("/new") as response:
@@ -177,8 +194,9 @@ class CMSTest(unittest.TestCase):
                 self.assertEqual(response.status_code, 422)
                 self.assertIn('is invalid', response.text)
 
+    @magic_login_decorator
     def test_delete_file(self):
-        self.magic_login()
+        # self.magic_login()
         
         # create files to test
         for fname in ['foo.txt',
@@ -196,6 +214,7 @@ class CMSTest(unittest.TestCase):
                 self.assertIn(fname, response.text)
                 self.assertIn( 'has been deleted', response.text)
 
+    @magic_login_decorator
     def test_delete_nonexistent_file(self):
         
         for fname in ['foo.txt',
@@ -241,10 +260,11 @@ class CMSTest(unittest.TestCase):
         self.assertIn("Invalid login credentials", response.get_data(as_text=True))
 
     @unittest.skip
+    @magic_login_decorator
     def test_signout(self):
-        self.client.post('/login',
-                         data={'username': 'admin', 'password': 'secret'},
-                         follow_redirects=True)
+        # self.client.post('/login',
+        #                  data={'username': 'admin', 'password': 'secret'},
+        #                  follow_redirects=True)
         response = self.client.post('/users/signout', follow_redirects=True)
         self.assertIn("You have been signed out",
                       response.get_data(as_text=True))

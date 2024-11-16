@@ -4,7 +4,8 @@ import rich
 from functools import wraps, partial
 from flask import (flash,
                    request,
-                   render_template)
+                   render_template,
+                   session)
 
 
 # SETUP COLOR PRINTING *****************************************************
@@ -15,7 +16,8 @@ def print_pfa(text:str, color='red'):
 red, blue, green = (partial(print_pfa, color=color) 
                     for color in ['red', 'blue', 'green'])
 
-# def user_is_logged_in()
+def user_is_logged_in():
+    return session.get('username') == 'admin'
 
 def read_file_to_str(filepath):
     with open(filepath, 'r') as f:
