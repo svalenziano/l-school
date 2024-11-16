@@ -74,8 +74,7 @@ class CMSTest(unittest.TestCase):
     def magic_login_decorator(f):
         @wraps(f)
         def decorated_func(self, *args, **kwargs):
-            with self.client.session_transaction() as session:
-                session['username'] = "admin"
+            self.magic_login()
             return f(self, *args, **kwargs)
         return decorated_func
 
