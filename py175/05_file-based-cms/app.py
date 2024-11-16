@@ -174,7 +174,9 @@ def login():
     if request.method == 'POST':
         uname = request.form['username']
         pword = request.form['password']
-        if get_valid_logins().get(uname) == pword:
+        stored_password = get_valid_logins().get(uname)
+        # If the password is valid
+        if verify_password(pword, stored_password):
             session['username'] = uname
             session.modified = True
             flash(f"Welcome {uname}!")
@@ -195,7 +197,9 @@ if __name__ == "__main__":
     # To function properly, requires `export LS_DEV_MACHINE=true` in .bashrc
     x = os.environ.get('LS_DEV_MACHINE')  
     if x:
-        # print("🔴")
+        help_text = '''Running in debug mode.  To disable debug mode, you must remove the LS_DEV_MACHINE environment variable.  For example, remove this from your .bashrc: `LS_DEV_MACHINE=true`.
+'''
+        red(help_text)
         app.run(debug=True, port=5003)
     else:
         app.run(debug=False)

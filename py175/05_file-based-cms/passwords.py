@@ -16,6 +16,6 @@ def verify_password(plain_password, hashed_password):
 
 
 if __name__ == '__main__':
-    x = get_password_hash('secret')
+    x = get_password_hash('world')
     print(x)
     print(verify_password('secret', x))
