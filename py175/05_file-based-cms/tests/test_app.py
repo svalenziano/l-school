@@ -9,9 +9,9 @@ project_root = os.path.join(tests_dir, '..')
 sys.path.insert(0, project_root)
 
 import utils
+from utils import (return_data_dir,
+                   red, green, blue,)
 from app import (app,
-                 return_data_dir,
-                 green,
                  session,)
 
 
@@ -61,6 +61,7 @@ class CMSTest(unittest.TestCase):
         self.client = app.test_client()
         self.data_dir = return_data_dir()
         os.makedirs(self.data_dir, exist_ok=True)
+        utils.write_test_login_yaml()
 
     def tearDown(self):
         shutil.rmtree(self.data_dir, 
@@ -68,8 +69,10 @@ class CMSTest(unittest.TestCase):
                       )
         
     def magic_login(self):
+        valid_logins = utils.get_valid_logins()
+        user, pword = valid_logins.popitem()
         with self.client.session_transaction() as session:
-            session['username'] = "admin"
+            session[user] = pword
     
     def magic_login_decorator(f):
         @wraps(f)

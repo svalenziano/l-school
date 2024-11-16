@@ -6,6 +6,8 @@ from flask import (flash,
                    request,
                    render_template,
                    session)
+import yaml
+from app import app
 
 
 # SETUP COLOR PRINTING *****************************************************
@@ -17,7 +19,33 @@ red, blue, green = (partial(print_pfa, color=color)
                     for color in ['red', 'blue', 'green'])
 
 def user_is_logged_in():
-    return session.get('username') == 'admin'
+    username = session.get('username')
+    username_is_valid = username in get_valid_logins()
+    return username_is_valid
+
+def make_login_filepath():
+    return os.path.join(return_data_dir(), 'users.yaml')
+
+def get_valid_logins():
+    valids = None
+    with open(make_login_filepath(), 'r') as f:
+        valids = yaml.safe_load(f)
+        red('get_valid_logins = ' + str(valids))
+        return valids
+    if not valids:
+        raise OSError('Failed to load logins from YAML')
+    
+def write_test_login_yaml():
+    with open(make_login_filepath(), 'w') as f:
+        test_login = {'admin': 'secret'}
+        yaml.dump(test_login, f)
+
+def return_data_dir():
+    root = os.path.abspath(os.path.dirname(__file__))
+    if app.testing:
+        # print("🔴 Testing is enabled.")
+        return os.path.join(root, 'tests/data')
+    return os.path.join(root, "cms/data")
 
 def read_file_to_str(filepath):
     with open(filepath, 'r') as f:

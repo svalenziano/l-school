@@ -154,9 +154,6 @@ def delete_file():
     def failure():
         flash(f"Failed to delete {filename} :(")
         return app.redirect(url_for('index')), 422
-    
-    if session.get('username') != 'admin':
-        return failure()
 
     if not filename:
         return failure()
@@ -177,7 +174,7 @@ def login():
     if request.method == 'POST':
         uname = request.form['username']
         pword = request.form['password']
-        if uname == 'admin' and pword == 'secret':
+        if get_valid_logins().get(uname) == pword:
             session['username'] = uname
             session.modified = True
             flash(f"Welcome {uname}!")
