@@ -61,7 +61,7 @@ def get_files(directory):
     Only return filenames with an extension
     '''
     fnames = [fname for fname in os.listdir(directory)
-                if fname.find('.')]
+                if fname.find('.') and fname != 'users.yaml']
     fnames.sort()
     return fnames
 

@@ -36,6 +36,8 @@ INVALID_FILENAMES = [
 
 ### TESTS
 
+
+
 def make_dummy_file(filename, content=''):
     filepath = os.path.join(return_data_dir(), filename)
     if content == 'dummy':
@@ -56,6 +58,11 @@ def delete_dummy_file(filename):
 
 class CMSTest(unittest.TestCase):
 
+    # for PDB debugging
+    def print_session(self):
+        with self.client.session_transaction() as session:
+                print(session)
+
     def setUp(self):
         app.testing = True
         self.client = app.test_client()
@@ -70,9 +77,11 @@ class CMSTest(unittest.TestCase):
         
     def magic_login(self):
         valid_logins = utils.get_valid_logins()
-        user, pword = valid_logins.popitem()
+        # user, pword = valid_logins.popitem()
+        user = 'admin'
+        pword = 'secret'
         with self.client.session_transaction() as session:
-            session[user] = pword
+            session['username'] = user
     
     def magic_login_decorator(f):
         @wraps(f)
@@ -109,7 +118,6 @@ class CMSTest(unittest.TestCase):
     def test_viewing_text_document(self):
         make_dummy_file('history.txt', 
                         content="Python 0.9.0 (initial release) is released.")
-        
         # self.magic_login()
         with self.client.get('/history.txt') as response:
             self.assertEqual(response.status_code, 200)
@@ -154,6 +162,7 @@ class CMSTest(unittest.TestCase):
         A fairly basic test that ensures that `<textarea` 
         and `<button type="submit" are in the Flask response.
         '''
+        breakpoint()
         make_dummy_file('changes.txt', content='dummy')
         response = self.client.get("/changes.txt/edit")
         self.assertEqual(response.status_code, 200)
