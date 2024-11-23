@@ -1,0 +1,17 @@
+body {
+    font-family: serif;
+}
+
+mark {
+    background-color: yellow;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+strong {
+    font-weight: bold;
+}
+
+em {
+    font-style: italic;
+    text-transform: uppercase;
+}

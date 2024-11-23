@@ -1,0 +1,25 @@
+body {
+    background-color: #ffffe0;
+}
+
+.deemphasize {
+    color:gray
+}
+
+#final {
+    text-decoration: underline;
+}
+
+h1 {
+    color: orange;
+}
+
+b {
+    font-weight: bold;
+    text-decoration: underline;
+    color: blue;
+}
+
+i {
+    color: red;
+}
