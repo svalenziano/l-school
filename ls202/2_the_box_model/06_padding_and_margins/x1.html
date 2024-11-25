@@ -1,0 +1,28 @@
+<!--
+Don't worry about contents of this <script> tag: it is JavaScript. We need it to
+implement the color toggle, but you don't need to understand it right now.
+You'll learn all about JavaScript in future courses.
+-->
+<head>
+<script>
+  var article = {
+    toggleColor: function() {
+      document.querySelector('article').classList.toggle('toggled');
+    }
+  };
+</script>
+<link rel="stylesheet" href="x1.css">
+</head>
+<!--
+The onclick attribute on the article tag causes the browser to run the
+JavaScript above when the user clicks the <article> element. Don't bother
+memorizing this right now.
+-->
+<section>
+  <article onclick="article.toggleColor();">
+    Click here
+  </article>
+  <article onclick="article.toggleColor();">
+    Click here
+  </article>
+</section>

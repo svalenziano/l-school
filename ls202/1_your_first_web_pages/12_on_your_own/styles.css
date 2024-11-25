@@ -2,6 +2,25 @@ body {
     margin-left: 25px;
   }
   
-  ul {
+ul {
     padding-left: 0;
-  }
+    display: block;
+    list-style-type: none;
+}
+
+h1 {
+    font-size: xx-large;
+}
+
+#afternoon h2 {
+    font-size: x-large;
+    color: blue;
+}
+
+#afternoon p {
+    font-style: italic;
+}
+
+#evening {
+    color:blueviolet;
+}
