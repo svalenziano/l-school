@@ -61,11 +61,10 @@ body {
     margin: 8px;
 }
 
-
-footer {
-    font: 12px monospace;
+footer p {
+    font: 0.5em monospace;
     color: gray;
-    width: 50%;
+    width: 75%;
     line-height: normal;
     margin-top: 3em;
 }
@@ -86,37 +85,39 @@ article{
     padding: 12px;
 }
 
-article h1 {
+h1 {
     font-family: 'Helvetica Black','Arial Black', sans-serif;
     font-size: 2.5rem;
 }
 
-article h2,
-article h3 {
-    display: inline-block;
+h2,
+h3 {
     font-family: 'Helvetica Black','Arial Black', sans-serif;
     font-size: 0.8rem;
 }
 
-article h3 {
+h3 {
     text-align: right;
+    display: inline-block;
     width: 100%;
 }
 
-article p {
+p {
     font-size: 1rem;
     line-height: 1.2;
 }
 
+/* A weird little list for the "Percent Daily Values" */
 li {
     font-size: 0.85rem;
-    margin-top: 0.5rem;
-    margin-left: 3%;
+    margin: 0.5rem 0 0 3%;
     padding-left: 1%;
     width: 93%;
     list-style-type: "*";
     list-style-position: outside;
 }
+
+/* DEFINITION LISTS (USED FOR MACROS AND MICROS) */
 
 dl {
     display: inline-block;
@@ -124,15 +125,14 @@ dl {
 
 dt, dd {
     display: inline;
-    overflow: visible;
 }
 
+/* Use bold font for dt's */
 dt {
     font-family: 'Helvetica Black','Arial Black', sans-serif;
 }
 
 dl:first-child {
-    text-align: left;
     width: 55%;
 }
 
@@ -144,10 +144,7 @@ dl:last-child {
 
 /* Indented sections */
 
-.indent {
-    /* display: block; */
-    margin-left: 1rem;
-}
+
 
 /* Thematic break / horizontal rule */
 article hr {
@@ -164,22 +161,20 @@ table {
     border-collapse: collapse;
 }
 
-
 td,
 th {
     padding-top: 0.2rem;
-    outline: red 1px solid;
-    outline: none;
 }
 
 thead {
     border-bottom: 1px black solid;
 }
 
+/* INDENTS */
+.indent {
+    margin-left: 1rem;
+}
+
 th.indent{
     text-indent: 1.25rem;
 }
-
-/* tr th:first-child{
-    width: 30%;
-} */
