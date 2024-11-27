@@ -1,0 +1,17 @@
+html {
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+select,
+input {
+    border: rgb(124, 124, 238) 1px solid;
+    border-radius: 2px;
+    height: 1.8rem;
+    margin: 0.25rem;
+}
+
+fieldset {
+    background-color: rgb(223, 223, 223);
+    border: rgb(151, 151, 151) 2.5px solid;
+}
