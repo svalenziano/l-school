@@ -55,12 +55,10 @@ html {
     font-size: 28px;
     font-family: Arial, Helvetica, sans-serif;
 }
-
 body {
     width: 690px;
     margin: 8px;
 }
-
 footer p {
     font: 0.5em monospace;
     color: gray;
@@ -68,45 +66,37 @@ footer p {
     line-height: normal;
     margin-top: 3em;
 }
-
 div, section {
     padding-top: 0.2rem;
     padding-bottom: 0.2rem;
 
 }
-
 section {
     border-bottom: 1px solid black;
 }
-
 /* ARTICLE */
 article{
     border: 2px black solid;
     padding: 12px;
 }
-
 h1 {
     font-family: 'Helvetica Black','Arial Black', sans-serif;
     font-size: 2.5rem;
 }
-
 h2,
 h3 {
     font-family: 'Helvetica Black','Arial Black', sans-serif;
     font-size: 0.8rem;
 }
-
 h3 {
     text-align: right;
     display: inline-block;
     width: 100%;
 }
-
 p {
     font-size: 1rem;
     line-height: 1.2;
 }
-
 /* A weird little list for the "Percent Daily Values" */
 li {
     font-size: 0.85rem;
@@ -116,43 +106,31 @@ li {
     list-style-type: "*";
     list-style-position: outside;
 }
-
 /* DEFINITION LISTS (USED FOR MACROS AND MICROS) */
-
 dl {
     display: inline-block;
 }
-
 dt, dd {
     display: inline;
 }
-
 /* Use bold font for dt's */
 dt {
     font-family: 'Helvetica Black','Arial Black', sans-serif;
 }
-
 dl:first-child {
     width: 55%;
 }
-
 /* Right-justify the last dd element */
 dl:last-child {
     width: 43%;
     text-align: right;
 }
-
-/* Indented sections */
-
-
-
 /* Thematic break / horizontal rule */
 article hr {
     border: none;
     border-top: 12px solid black;
     margin: 0;
 }
-
 /* TABLES! */
 table {
     font-size: 0.85rem;
@@ -160,21 +138,17 @@ table {
     text-align: left;
     border-collapse: collapse;
 }
-
 td,
 th {
     padding-top: 0.2rem;
 }
-
 thead {
     border-bottom: 1px black solid;
 }
-
 /* INDENTS */
 .indent {
     margin-left: 1rem;
 }
-
 th.indent{
     text-indent: 1.25rem;
 }
