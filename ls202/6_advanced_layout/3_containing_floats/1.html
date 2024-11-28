@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Here's some floats!🔥</title>
+    <style>
+      /* SV CSS */
+      html {
+        font-size: 16px;
+      }
+      body {
+        margin: 1rem;
+      }
+      
+      article {
+        padding: 1rem;
+        border: red 1px solid;
+        height: 50px;
+      }
+
+      /* CLEARFIX */
+      article::after {
+        clear: both;
+        content: "";
+        display: block;
+        outline: blue 1px solid;
+      }
+      
+      section,
+      aside {
+        /* outline: red 1px solid; */
+        box-sizing: border-box;
+        padding: 1rem;
+        background-color: rgb(66, 66, 66);
+        margin: 0 1rem;
+        font-size: 1rem;
+        color: white;
+      }
+      section {
+        float:right;
+        width: 60%
+      }
+      aside {
+        float: right;
+        width: 25%;
+      }
+    </style>
+  </head>
+  <body>
+    <article>
+      <section>
+        Culpa voluptate anim qui eu ad reprehenderit. Consequat consequat ea nulla mollit sint id. Irure commodo irure mollit voluptate deserunt dolor ex enim elit minim deserunt cillum elit. Magna reprehenderit magna consectetur dolore aute. Dolore aute eu magna duis exercitation proident nisi. Enim veniam excepteur enim fugiat. Ad culpa ut irure in amet Lorem aliquip non laborum ad.
+      </section>
+      <aside>
+        In other news, Hanna is the cutest pup.
+      </aside>
+    </article>
+    <article>
+      <section>
+        Cool
+      </section>
+    </article>
+  </body>
+</html>

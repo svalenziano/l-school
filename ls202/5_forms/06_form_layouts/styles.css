@@ -1,3 +1,7 @@
+body {
+    width: 100%;
+}
+
 /* Eliminate margins and padding on everything */
 .styled-form * {
     margin: 0;
@@ -62,4 +66,13 @@
   .side-by-side input,
   .side-by-side select {
     width: 15rem;
+  }
+
+  .form-group {
+    margin: 0.5rem 0;
+  }
+
+  .half {
+    width: 50%;
+    min-width: 75px;
   }
