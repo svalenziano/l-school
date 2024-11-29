@@ -1,0 +1,40 @@
+<head>
+  <style>
+    html, body, * {
+      margin: 0;
+      padding: 0;
+      font-family: monospace;
+      color: white;
+    }
+    div {
+      /* margin: 1rem; */
+      height: 20rem;
+      width: 20rem;
+      padding: 1rem;
+      vertical-align: middle;
+      background-color: rgb(156, 112, 28);
+      display: inline-block;
+      position: relative;
+      box-sizing: border-box;
+    }
+    p{
+      text-align: center;
+    }
+    .middle {
+      left: -2rem;
+      top: 2rem;
+      background-color: blue;
+      z-index: 3;
+    }
+    .right {
+      left: -4rem;
+      top: 4rem;
+      background-color: rgb(51, 99, 83);
+    }
+  </style>
+</head>
+<body>
+  <div><p>Sibling 1</p></div>
+  <div class="middle"><p>Sibling 2</p></div>
+  <div class="right"><p>Sibling 3</p></div>
+</body>
