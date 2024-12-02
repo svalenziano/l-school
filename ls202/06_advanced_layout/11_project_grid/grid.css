@@ -62,6 +62,11 @@ html {
   font: normal 24px Helvetica, Arial, sans-serif;
 }
 
+html,
+body {
+  width: 100%;
+}
+
 header, h1 {
   background-color: blue;
   color: white;
@@ -70,10 +75,13 @@ header, h1 {
 header {
   padding: 1rem;
   text-align: center;
+  grid-area: header;
 }
 
 nav {
   background-color: cyan;
+  grid-area: nav;
+
   ul {
     list-style-type: none;
     display: flex;
@@ -102,7 +110,17 @@ h1 {
   font-weight: bold;
 }
 
-
+body {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: auto auto auto auto auto;
+  grid-template-areas: 
+    "header header header"
+    "nav nav nav"
+    "aside-1 article-1 aside-2"
+    "aside-3 article-2 article-2"
+    "logo copyright copyright";
+}
 
 a:focus,
 a:hover {
@@ -119,16 +137,35 @@ aside {
   background-color: lightgreen;
 }
 
+#aside-1 {
+  grid-area: aside-1;
+}
+
+#aside-2 {
+  grid-area: aside-2;
+}
+
 #aside-3 {
   background-color: pink;
+  grid-area: aside-3;
+}
+
+#article-1 {
+  grid-area: article-1;
 }
 
 #article-2 {
   background-color: skyblue;
+  grid-area: article-2;
 }
 
 p {
   margin: 1rem 0;
+}
+
+img {
+  width: 100%;
+  height: auto;
 }
 
 footer {
@@ -137,8 +174,10 @@ footer {
 
 #copyright {
   margin: 0 1rem;
+  grid-area: copyright;
 }
 
 #logo {
   background-color: orange;
+  grid-area: logo;
 }
