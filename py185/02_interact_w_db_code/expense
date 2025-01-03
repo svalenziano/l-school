@@ -1,0 +1,22 @@
+#!/usr/bin/env python
+
+import psycopg2
+from psycopg2 import extras
+
+DBNAME = 'py185_2_expenses'
+try:
+    with psycopg2.connect(dbname = DBNAME) as con:
+        with con.cursor(cursor_factory=extras.DictCursor) as cur:
+            cur.execute("SELECT * FROM expenses ORDER BY id ASC")
+            rows = cur.fetchall()
+finally:
+    con.close()
+
+for row in rows:
+    columns = [
+        str(row['id']),
+        str(row['created_on']),
+        str(row['amount']).rjust(9),
+        row['memo'],
+    ]
+    print(' | '.join(columns))
