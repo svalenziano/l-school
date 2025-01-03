@@ -4,7 +4,9 @@ import psycopg2
 from psycopg2 import extras
 from textwrap import dedent
 
-DBNAME = 'py185_2_expenses'
+DB_NAME = 'py185_2_expenses'
+TABLE_NAME = 'expenses'
+
 
 def print_help():
     print(dedent("""\
@@ -21,14 +23,14 @@ def print_help():
 
 def print_expenses():
     try:
-        with psycopg2.connect(dbname=DBNAME) as con:
+        with psycopg2.connect(dbname=DB_NAME) as con:
             with con.cursor(cursor_factory=extras.DictCursor) as cur:
                 cur.execute("SELECT * FROM expenses")
                 rows = cur.fetchall()
         if rows:
             for row in rows:
                 columns = [
-                    str(row['id']),
+                    str(row['id']).rjust(4),
                     str(row['created_on']),
                     str(row['amount']).rjust(9),
                     row['memo'],
@@ -45,10 +47,10 @@ def add_expense(amount, memo):
         - Validation
     '''
     try:
-        with psycopg2.connect(dbname=DBNAME) as con:
+        with psycopg2.connect(dbname=DB_NAME) as con:
             with con.cursor(cursor_factory=extras.DictCursor) as cur:
                 cur.execute(f'''INSERT INTO expenses (amount, memo, created_on)
-                                VALUES ({amount}, '{memo}', now())''')
+                                VALUES (%s, %s, now())''', (amount, memo))
     finally:
         con.commit()
         con.close()
