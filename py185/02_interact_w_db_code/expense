@@ -3,20 +3,28 @@
 from datetime import date
 from textwrap import dedent
 import sys
+from contextlib import contextmanager
 
 import psycopg2
 from psycopg2 import extras
 
+
+
 class ExpenseData:
-    def list_expenses(self):
-        connection = psycopg2.connect(dbname='expenses')
+    
+    @contextmanager
+    def _database_connect(self):
         try:
-            with connection:
-                with connection.cursor(cursor_factory=extras.DictCursor) as cursor:
-                    cursor.execute("SELECT * FROM expenses ORDER BY created_on ASC")
-                    result = cursor.fetchall()
+            with psycopg2.connect(dbname='expenses') as con:
+                with con.cursor(cursor_factory=extras.DictCursor) as cur:
+                    yield cur
         finally:
-            connection.close()
+            con.close()
+    
+    def list_expenses(self):
+        with self._database_connect() as cursor:
+            cursor.execute("SELECT * FROM expenses ORDER BY created_on ASC")
+            result = cursor.fetchall()
 
         for expense in result:
             columns = [
@@ -28,21 +36,16 @@ class ExpenseData:
             print(" | ".join(columns))
 
     def add_expense(self, amount, memo):
-        connection = psycopg2.connect(dbname='expenses')
-        try:
-            with connection:
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        """
-                            INSERT INTO expenses
-                            (amount, memo, created_on)
-                            VALUES
-                            (%s, %s, %s)
-                        """,
-                        (amount, memo, date.today())
-                    )
-        finally:
-            connection.close()
+        with self._database_connect() as cursor:
+            cursor.execute(
+                """
+                    INSERT INTO expenses
+                    (amount, memo, created_on)
+                    VALUES
+                    (%s, %s, %s)
+                """,
+                (amount, memo, date.today())
+            )
 
 class CLI:
     def __init__(self):
