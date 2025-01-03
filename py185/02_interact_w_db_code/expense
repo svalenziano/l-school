@@ -7,72 +7,86 @@ from textwrap import dedent
 DB_NAME = 'py185_2_expenses'
 TABLE_NAME = 'expenses'
 
+class ExpenseData():
+    def __init__(self):
+        self.db_name = DB_NAME
+        self.table_name = TABLE_NAME
+    
+    def add_expense(self, amount, memo):
+        '''
+        NEED TO IMPLEMENT
+            - Validation
+        '''
+        try:
+            with psycopg2.connect(dbname=DB_NAME) as con:
+                with con.cursor(cursor_factory=extras.DictCursor) as cur:
+                    cur.execute(f'''INSERT INTO expenses (amount, memo, created_on)
+                                    VALUES (%s, %s, now())''', (amount, memo))
+        finally:
+            con.commit()
+            con.close()
+            print("EXPENSE ADDED")
+            self.list_expenses()
 
-def print_help():
-    print(dedent("""\
-        WELCOME TO THE EXPENSINATOR!
-                
-        Commands:
+    def list_expenses(self):
+        try:
+            with psycopg2.connect(dbname=DB_NAME) as con:
+                with con.cursor(cursor_factory=extras.DictCursor) as cur:
+                    cur.execute("SELECT * FROM expenses")
+                    rows = cur.fetchall()
+            if rows:
+                for row in rows:
+                    columns = [
+                        str(row['id']).rjust(4),
+                        str(row['created_on']),
+                        str(row['amount']).rjust(9),
+                        row['memo'],
+                    ]
+                    print(' | '.join(columns))
+            else:
+                print('No expenses found!')
+        finally:
+            con.close()
 
-        add AMOUNT MEMO [DATE] - record a new expense
-        clear - delete all expenses
-        list - list all expenses
-        delete NUMBER - remove expense with id NUMBER
-        search QUERY - list expenses with a matching memo field
-          """))
+class CLI():
+    def __init__(self):
+        self.db = ExpenseData()
 
-def print_expenses():
-    try:
-        with psycopg2.connect(dbname=DB_NAME) as con:
-            with con.cursor(cursor_factory=extras.DictCursor) as cur:
-                cur.execute("SELECT * FROM expenses")
-                rows = cur.fetchall()
-        if rows:
-            for row in rows:
-                columns = [
-                    str(row['id']).rjust(4),
-                    str(row['created_on']),
-                    str(row['amount']).rjust(9),
-                    row['memo'],
-                ]
-                print(' | '.join(columns))
+    def run(self, args:list):
+        if len(args) > 1:
+            if args[1] == 'list':
+                if len(args) > 2:
+                    print("'list' doesn't accept any further arguments.  Try 'expense list'")
+                else:    
+                    self.db.list_expenses()
+            if args[1] == 'add':
+                if len(args) < 4:
+                    print ("You must provide an amount and memo")
+                elif len(args) > 4:
+                    print("Too many arguments, 'add' expected 2 addt'l arguments: amount & memo")
+                else:
+                    self.db.add_expense(args[2], args[3])
         else:
-            print('No expenses found!')
-    finally:
-        con.close()
+            self.print_help()
+    
+    def print_help(self):
+        print(dedent("""\
+            WELCOME TO THE EXPENSINATOR!
+                    
+            Commands:
 
-def add_expense(amount, memo):
-    '''
-    NEED TO IMPLEMENT
-        - Validation
-    '''
-    try:
-        with psycopg2.connect(dbname=DB_NAME) as con:
-            with con.cursor(cursor_factory=extras.DictCursor) as cur:
-                cur.execute(f'''INSERT INTO expenses (amount, memo, created_on)
-                                VALUES (%s, %s, now())''', (amount, memo))
-    finally:
-        con.commit()
-        con.close()
-        print("EXPENSE ADDED")
-        print_expenses()
+            add AMOUNT MEMO [DATE] - record a new expense
+            clear - delete all expenses
+            list - list all expenses
+            delete NUMBER - remove expense with id NUMBER
+            search QUERY - list expenses with a matching memo field
+            """))
+
 
 if __name__ == '__main__':
     args = sys.argv
+    interface = CLI()
+    interface.run(args)
     
-    if len(args) > 1:
-        if args[1] == 'list':
-            if len(args) > 2:
-                print("'list' doesn't accept any further arguments.  Try 'expense list'")
-            else:    
-                print_expenses()
-        if args[1] == 'add':
-            if len(args) < 4:
-                print ("You must provide an amount and memo")
-            elif len(args) > 4:
-                print("Too many arguments, 'add' expected 2 addt'l arguments: amount & memo")
-            else:
-                add_expense(args[2], args[3])
-    else:
-        print_help()
+    
     
