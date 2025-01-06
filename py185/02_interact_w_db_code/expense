@@ -6,7 +6,7 @@ import sys
 from contextlib import contextmanager
 
 import psycopg2
-from psycopg2 import extras
+from psycopg2 import extras, errors
 
 
 
@@ -40,8 +40,30 @@ class ExpenseData:
         with self._database_connect() as cursor:
             cursor.execute("SELECT * FROM expenses ORDER BY created_on ASC")
             result = cursor.fetchall()
-        self._display_expenses(result)
-        
+        if result:
+            self._display_expenses(result)
+        else:
+            print("There are no expenses to display.")
+    
+    def insert_dummy_data(self):
+        with self._database_connect() as cursor:
+            try:
+                cursor.execute("""
+        INSERT INTO expenses VALUES (9, 1.99, 'Chewing gum', '2025-01-03');
+        INSERT INTO expenses VALUES (10, 1600.00, 'Surly LHT', '2025-01-03');
+        INSERT INTO expenses VALUES (12, 32.45, 'Wicked Tix', '2025-01-03');
+        INSERT INTO expenses VALUES (13, 32.45, 'Hose reel', '2025-01-03');
+        INSERT INTO expenses VALUES (15, 1.99, 'Chewing gum', '2025-01-03');
+        INSERT INTO expenses VALUES (16, 1.00, 'Great_stuff', '2025-01-03');
+        INSERT INTO expenses VALUES (17, 20.00, 'Toxic foam', '2025-01-03');
+        INSERT INTO expenses VALUES (18, 5.99, 'Broccoli', '2025-01-03');
+        INSERT INTO expenses VALUES (21, 99.99, 'mktg stuff', '2025-01-06');
+        INSERT INTO expenses VALUES (22, 6.99, 'hi there', '2025-01-06');
+        """)
+                print("Dummy data inserted.")
+            except psycopg2.errors.UniqueViolation:
+                print("Error.  Values already exist.  Must 'clear' first.")
+    
 
     def add_expense(self, amount, memo):
         with self._database_connect() as cursor:
@@ -75,6 +97,22 @@ class ExpenseData:
             else:
                 print(f"No results for search '{search_string}'")
 
+    def delete_expense(self, id:int):
+        with self._database_connect() as cursor:
+            cursor.execute("SELECT * FROM expenses WHERE id=%s", (id,))
+            result = cursor.fetchall()
+            if result:
+                cursor.execute("DELETE FROM expenses WHERE id=%s", (id,))
+                print("Deleted:")
+                self._display_expenses(result)
+            else:
+                print(f"Expense with id={id} not found.  Nothing done.")
+
+    def delete_all_expenses(self):
+        with self._database_connect() as cursor:
+            cursor.execute("DELETE FROM expenses")
+        print("All expenses have been deleted.")
+
 class CLI:
     def __init__(self):
         self.application = ExpenseData()
@@ -100,7 +138,31 @@ class CLI:
                         raise IndexError
                     self.application.search_expenses(arguments[0])
                 except IndexError:
-                    print("Expected invalid QUERY argument for 'search'")
+                    print("Invalid QUERY argument for 'search'")
+            case ("del" | "delete"):
+                try:
+                    if len(arguments) != 1:
+                        raise IndexError
+                    self.application.delete_expense(arguments[0])
+                except IndexError:
+                    print("Invalid 'id NUMBER' argument for 'del' (delete)")
+            case "clear":
+                try:
+                    if len(arguments) != 0:
+                        raise IndexError
+                    else:
+                        confirm = input("This will remove all expenses. " +
+                                "Are you sure? (enter y to confirm) ")
+                        if confirm in ('y', 'Y'):
+                            self.application.delete_all_expenses()
+                except IndexError:
+                    print("Clear doesn't take any arguments,\
+                         did you mean 'del'?")
+            case "dummy":
+                if len(arguments) == 0:
+                    self.application.insert_dummy_data()
+                else:
+                    "'Dummy' command doesn't take any arugments!"
             case _:
                 self.display_help()
 
@@ -115,6 +177,7 @@ class CLI:
             list - list all expenses
             delete NUMBER - remove expense with id NUMBER
             search QUERY - list expenses with a matching memo field
+            dummy - populate with dummy data
         """).strip("\n"))
 
 if __name__ == "__main__":
