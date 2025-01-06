@@ -21,12 +21,12 @@ class ExpenseData:
         finally:
             con.close()
     
-    def list_expenses(self):
-        with self._database_connect() as cursor:
-            cursor.execute("SELECT * FROM expenses ORDER BY created_on ASC")
-            result = cursor.fetchall()
-
-        for expense in result:
+    def _display_expenses(self, query_result:extras.DictCursor):
+        '''
+        Input: Query results from 'expenses' table via cursor.fetchall()
+        Output: Print the expenses
+        '''
+        for expense in query_result:
             columns = [
                 str(expense["id"]).rjust(3),
                 str(expense["created_on"]),
@@ -34,6 +34,14 @@ class ExpenseData:
                 str(expense["memo"])
             ]
             print(" | ".join(columns))
+
+    
+    def list_expenses(self):
+        with self._database_connect() as cursor:
+            cursor.execute("SELECT * FROM expenses ORDER BY created_on ASC")
+            result = cursor.fetchall()
+        self._display_expenses(result)
+        
 
     def add_expense(self, amount, memo):
         with self._database_connect() as cursor:
@@ -51,15 +59,21 @@ class ExpenseData:
         '''
         Execute SELECT query with ILIKE, print results
         '''
+        # breakpoint()
         with self._database_connect() as cur:
             cur.execute(
                 '''
                 SELECT * FROM expenses
-                    WHERE memo ILIKE '%%%s%%'
+                    WHERE memo ILIKE %s
                     ORDER BY id
-                '''
-            , search_string)
+                ''',
+            ('%' + search_string + '%',))
+
             result = cur.fetchall()
+            if result:
+                self._display_expenses(result)
+            else:
+                print(f"No results for search '{search_string}'")
 
 class CLI:
     def __init__(self):
@@ -80,6 +94,13 @@ class CLI:
                 self.application.add_expense(amount, memo)
             case "list":
                 self.application.list_expenses()
+            case "search":
+                try:
+                    if len(arguments) != 1:
+                        raise IndexError
+                    self.application.search_expenses(arguments[0])
+                except IndexError:
+                    print("Expected invalid QUERY argument for 'search'")
             case _:
                 self.display_help()
 
