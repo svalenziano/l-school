@@ -47,6 +47,20 @@ class ExpenseData:
                 (amount, memo, date.today())
             )
 
+    def search_expenses(self, search_string:str):
+        '''
+        Execute SELECT query with ILIKE, print results
+        '''
+        with self._database_connect() as cur:
+            cur.execute(
+                '''
+                SELECT * FROM expenses
+                    WHERE memo ILIKE '%%%s%%'
+                    ORDER BY id
+                '''
+            , search_string)
+            result = cur.fetchall()
+
 class CLI:
     def __init__(self):
         self.application = ExpenseData()
