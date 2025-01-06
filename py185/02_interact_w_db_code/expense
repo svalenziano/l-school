@@ -12,20 +12,48 @@ from psycopg2 import extras
 
 class ExpenseData:
     
+    def __init__(self):
+        self._setup_schema()
+
     @contextmanager
     def _database_connect(self):
         try:
             with psycopg2.connect(dbname='expenses') as con:
-                with con.cursor(cursor_factory=extras.DictCursor) as cur:
-                    yield cur
+                with con.cursor(cursor_factory=extras.DictCursor) as cursor:
+                    yield cursor
         finally:
+            con.commit()
             con.close()
     
+    def _setup_schema(self):
+        with self._database_connect() as cursor:
+            cursor.execute("""
+                SELECT count(*) FROM information_schema.tables
+                    WHERE table_schema = 'public'
+                        AND table_name = 'expenses'
+                           """)
+            result = cursor.fetchone()
+            if result[0] == 0:
+                cursor.execute("""
+                    CREATE TABLE expenses (
+                    id serial PRIMARY KEY,
+                    amount numeric(6,2) NOT NULL,
+                    memo text NOT NULL,
+                    created_on date NOT NULL,
+                    CONSTRAINT non_negative CHECK ((amount > 0.01))
+                    ); 
+                    """)
+                
+                               
+
+
     def _display_with_meta(self, query_result:extras.DictCursor):
         '''
         Display result along with count and total
         '''
         lines = len(query_result)
+        if lines < 1:
+            print("No results to display!")
         if lines == 1:
             self._display_count(1)
             self._display_expenses(query_result)
