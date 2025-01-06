@@ -12,6 +12,26 @@ gunicorn = "^21.2.0"
 uuid = "^1.30"
 
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+
+[tool.pdm]
+distribution = false
+
+[tool.pdm.build]
+includes = []
+[project]
+name = "todos"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "SValenziano", email = "senorvalenz@gmail.com"},
+    {name = "Your Name", email = "you@example.com"},
+]
+dependencies = [
+    "flask<4.0.0,>=3.0.0",
+    "gunicorn<22.0.0,>=21.2.0",
+    "uuid<2.0,>=1.30",
+]
+requires-python = "<4.0,>=3.11"
+readme = "README.md"
+license = {text = "None"}
+
