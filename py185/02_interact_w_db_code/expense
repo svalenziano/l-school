@@ -35,13 +35,32 @@ class ExpenseData:
             ]
             print(" | ".join(columns))
 
+    def _display_count(self, count:int):
+        match count:
+            case 0:
+                print("There are no expenses.")
+            case 1:
+                print("There is 1 expense.")
+            case _:
+                print(f'There are {count} expenses.')
+
+    def _display_total(self, total:float):
+        print("-" * 50) 
+        print(f"Total" + str(total).rjust(26))
     
     def list_expenses(self):
         with self._database_connect() as cursor:
             cursor.execute("SELECT * FROM expenses ORDER BY created_on ASC")
             result = cursor.fetchall()
-        if result:
+        lines = len(result)
+        if lines == 1:
+            self._display_count(1)
             self._display_expenses(result)
+        if lines > 1:
+            total = sum(row['amount'] for row in result)
+            self._display_count(len(result))
+            self._display_expenses(result)
+            self._display_total(total)
         else:
             print("There are no expenses to display.")
     
