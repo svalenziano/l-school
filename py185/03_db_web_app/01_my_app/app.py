@@ -28,12 +28,13 @@ app = Flask(__name__)
 app.secret_key=secrets.token_hex(32)
 
 def require_list(f):
-    '''
-    sv: Ensures that 'list_id' kwarg refers to a real list
-    Otherwise, raises 404/Not Found
-    '''
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        '''
+        sv: Ensures that 'list_id' kwarg refers to a real list
+        Otherwise, raises 404/Not Found
+        '''
+        
         list_id = kwargs.get('list_id')
         lst = find_list_by_id(list_id, session['lists'])
         if not lst:
