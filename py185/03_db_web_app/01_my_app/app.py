@@ -210,6 +210,8 @@ def delete_list(lst, list_id):
 @require_list
 def update_list(lst, list_id):
     """
+    Update the list title
+
     The `lst` arg is provided by the `require_list` decorator (passed as kwarg)
     """
     title = request.form["list_title"].strip()
@@ -219,9 +221,8 @@ def update_list(lst, list_id):
         flash(error, "error")
         return render_template('edit_list.html', lst=lst, title=title)
 
-    lst['title'] = title
+    g.storage.update_list_by_id(list_id, title)
     flash("The list has been updated.", "success")
-    session.modified = True
     return redirect(url_for('show_list', list_id=list_id))
 
 if __name__ == "__main__":

@@ -27,6 +27,17 @@ class SessionPersistence:
         })
         self.session.modified = True
 
-    def update_list_by_id(self, list_id):
+    def update_list_by_id(self, list_id, title:str):
+        '''
+        Update list title
+
+        Doesn't validate the list title or id.  You should do this elsewhere.
+        '''
+        lst = self.find_list_by_id(list_id)
+        lst['title'] = title
+        self.session.modified = True
+
+    def delete_list(self, list_id):
         pass
+
 
