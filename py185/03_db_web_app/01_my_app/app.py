@@ -28,7 +28,19 @@ from todos.utils import (
 
 app = Flask(__name__)
 app.secret_key = 'TODO: CHANGE ME'
-# app.secret_key=secrets.token_hex(32)
+# Random secret key is INCOMPATIBLE w/ storing data in session (? per SV):
+# app.secret_key=secrets.token_hex(32)  
+
+# ENABLE TYPE HINTING FOR `g` object
+class _g:
+    storage: SessionPersistence
+
+    def __getattr__(self, key):
+        return getattr(g, key)
+g = _g()
+
+
+# HELPER FUNCTIONS
 
 def require_list(f):
     @wraps(f)
@@ -202,7 +214,7 @@ def update_list(lst, list_id):
     """
     title = request.form["list_title"].strip()
 
-    error = error_for_list_title(title, session['lists'])
+    error = error_for_list_title(title, g.storage.all_lists())
     if error:
         flash(error, "error")
         return render_template('edit_list.html', lst=lst, title=title)

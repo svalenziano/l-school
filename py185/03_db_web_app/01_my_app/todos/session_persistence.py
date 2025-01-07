@@ -27,3 +27,6 @@ class SessionPersistence:
         })
         self.session.modified = True
 
+    def update_list_by_id(self, list_id):
+        pass
+
