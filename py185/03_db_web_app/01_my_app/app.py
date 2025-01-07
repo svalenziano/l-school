@@ -61,6 +61,10 @@ def require_todo(f):
     sv:
     Ensures that the requested `todo_id` exists.
     Otherwise, raises 404/ Not Found
+
+    Pass-thru of vars:
+        - lst
+        - list_id
     '''
     @wraps(f)
     @require_list
@@ -69,7 +73,9 @@ def require_todo(f):
         todo = g.storage.find_todo_by_id(todo_id, list_id)
         if not todo:
             raise NotFound(description="Todo not found")
-        return f(lst=lst, todo=todo, *args, **kwargs)
+        return f(list_id=list_id, 
+                 *args, 
+                 **kwargs)
 
     return decorated_function
 
@@ -144,8 +150,8 @@ def show_list(lst, list_id):
 @require_list
 def create_todo(lst, list_id) -> redirect:
     """Handle requests for adding a new todo to an existing list"""
-    todo_title = request.form["todo"].strip()
 
+    todo_title = request.form["todo"].strip()
     error = error_for_todo(todo_title)
     if error:
         flash(error, "error")
@@ -157,17 +163,17 @@ def create_todo(lst, list_id) -> redirect:
 
 @app.route("/lists/<list_id>/todos/<todo_id>/toggle", methods=["POST"])
 @require_todo
-def update_todo_status(lst, todo, list_id, todo_id):
+def update_todo_status(todo_id, list_id):
     """Handle POST requests for toggling the todo status"""
-    todo['completed'] = (request.form['completed'] == 'True')
-
+    
+    status =  (request.form['completed'] == 'True')
+    g.storage.update_todo_by_id(todo_id, list_id, status)
     flash("The todo has been updated.", "success")
-    session.modified = True
     return redirect(url_for('show_list', list_id=list_id))
 
 @app.route("/lists/<list_id>/todos/<todo_id>/delete", methods=["POST"])
 @require_todo
-def delete_todo(lst, todo, list_id, todo_id):
+def delete_todo(list_id, todo_id):
     g.storage.delete_todo_by_id(todo_id, list_id)
     flash("The todo has been deleted.", "success")
     return redirect(url_for('show_list', list_id=list_id))

@@ -53,13 +53,21 @@ class SessionPersistence:
 
     def find_todo_by_id(self, todo_id, list_id):
         lst = self.find_list_by_id(list_id)
-        return bool(next(
+        return next(
             (todo for todo in lst['todos']
              if todo['id'] == todo_id), 
-             False))
+             False)
 
     def delete_todo_by_id(self, todo_id, list_id):
         lst = self.find_list_by_id(list_id)
         lst['todos'] = [todo for todo in lst['todos'] 
                         if todo['id'] != todo_id]
+        self.session.modified = True
+
+    def update_todo_by_id(self, todo_id, list_id, new_status):
+        """
+        Update the 'completed' status of a todo
+        """
+        todo = self.find_todo_by_id(todo_id, list_id)
+        todo['completed'] = new_status
         self.session.modified = True
