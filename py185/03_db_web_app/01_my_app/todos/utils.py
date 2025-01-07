@@ -22,7 +22,7 @@ def find_list_by_id(list_id, lists):
 def find_todo_by_id(todo_id, todos):
     return next((todo for todo in todos if todo['id'] == todo_id), None)
 
-def is_list_completed(lst):
+def is_list_completed(lst) -> bool:
     return len(lst['todos']) > 0 and todos_remaining(lst) == 0
 
 def is_todo_completed(todo):
@@ -44,5 +44,5 @@ def sort_items(items, select_completed):
 
     return incomplete_items + complete_items
 
-def todos_remaining(lst):
+def todos_remaining(lst) -> int:
     return sum(1 for todo in lst['todos'] if not todo['completed'])

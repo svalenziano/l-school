@@ -28,6 +28,10 @@ app = Flask(__name__)
 app.secret_key=secrets.token_hex(32)
 
 def require_list(f):
+    '''
+    sv: Ensures that 'list_id' kwarg refers to a real list
+    Otherwise, raises 404/Not Found
+    '''
     @wraps(f)
     def decorated_function(*args, **kwargs):
         list_id = kwargs.get('list_id')
@@ -39,6 +43,11 @@ def require_list(f):
     return decorated_function
 
 def require_todo(f):
+    '''
+    sv:
+    Ensures that the requested `todo_id` exists.
+    Otherwise, raises 404/ Not Found
+    '''
     @wraps(f)
     @require_list
     def decorated_function(lst, *args, **kwargs):
@@ -51,7 +60,16 @@ def require_todo(f):
     return decorated_function
 
 @app.context_processor
-def list_utilities_processor():
+def list_utilities_processor() -> dict:
+    """
+    Provides templates with `is_list_completed()` callable
+
+    Context processors run prior to rendering any template, providing
+    context to the template.  
+    This C.P. passes the `is_list_completed` function to the Jinja template
+    where it can be called by the template, as needed.
+    """
+
     return dict(
         is_list_completed=is_list_completed,
     )
@@ -61,12 +79,18 @@ def initialize_session():
     if 'lists' not in session:
         session['lists'] = []
 
+
+"""
+ROUTES 
+"""
+
 @app.route("/")
 def index():
     return redirect(url_for('get_lists'))
 
 @app.route("/lists")
 def get_lists():
+    """Show all existing lists & allow for creation of new lists"""
     lists = sort_items(session['lists'], is_list_completed)
     return render_template('lists.html',
                            lists=lists,
@@ -74,6 +98,7 @@ def get_lists():
 
 @app.route("/lists", methods=["POST"])
 def create_list():
+    """Handle form requests for new lists"""
     title = request.form["list_title"].strip()
 
     error = error_for_list_title(title, session['lists'])
@@ -93,17 +118,20 @@ def create_list():
 
 @app.route("/lists/new")
 def add_todo_list():
+    """Display form to create new list"""
     return render_template('new_list.html')
 
 @app.route("/lists/<list_id>")
 @require_list
 def show_list(lst, list_id):
+    """Display a specific todo list"""
     lst['todos'] = sort_items(lst['todos'], is_todo_completed)
     return render_template('list.html', lst=lst)
 
 @app.route("/lists/<list_id>/todos", methods=["POST"])
 @require_list
-def create_todo(lst, list_id):
+def create_todo(lst, list_id) -> redirect:
+    """Handle requests for adding a new todo to an existing list"""
     todo_title = request.form["todo"].strip()
 
     error = error_for_todo(todo_title)
@@ -124,6 +152,7 @@ def create_todo(lst, list_id):
 @app.route("/lists/<list_id>/todos/<todo_id>/toggle", methods=["POST"])
 @require_todo
 def update_todo_status(lst, todo, list_id, todo_id):
+    """Handle POST requests for toggling the todo status"""
     todo['completed'] = (request.form['completed'] == 'True')
 
     flash("The todo has been updated.", "success")
