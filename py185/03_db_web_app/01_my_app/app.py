@@ -1,5 +1,4 @@
 import secrets
-from uuid import uuid4
 from functools import wraps
 from flask import (
     flash,
@@ -15,7 +14,6 @@ from werkzeug.exceptions import NotFound
 from todos.session_persistence import SessionPersistence
 
 from todos.utils import (
-    delete_todo_by_id,
     error_for_list_title, 
     error_for_todo, 
     find_todo_by_id,
@@ -66,9 +64,9 @@ def require_todo(f):
     '''
     @wraps(f)
     @require_list
-    def decorated_function(lst, *args, **kwargs):
+    def decorated_function(lst, list_id, *args, **kwargs):
         todo_id = kwargs.get('todo_id')
-        todo = find_todo_by_id(todo_id, lst['todos'])
+        todo = g.storage.find_todo_by_id(todo_id, list_id)
         if not todo:
             raise NotFound(description="Todo not found")
         return f(lst=lst, todo=todo, *args, **kwargs)
@@ -153,14 +151,8 @@ def create_todo(lst, list_id) -> redirect:
         flash(error, "error")
         return render_template('list.html', lst=lst)
 
-    lst['todos'].append({
-        'id': str(uuid4()),
-        'title': todo_title,
-        'completed': False,
-    })
-
+    g.storage.create_todo(list_id, todo_title)
     flash("The todo was added.", "success")
-    session.modified = True
     return redirect(url_for('show_list', list_id=list_id))
 
 @app.route("/lists/<list_id>/todos/<todo_id>/toggle", methods=["POST"])
@@ -176,10 +168,8 @@ def update_todo_status(lst, todo, list_id, todo_id):
 @app.route("/lists/<list_id>/todos/<todo_id>/delete", methods=["POST"])
 @require_todo
 def delete_todo(lst, todo, list_id, todo_id):
-    delete_todo_by_id(todo_id, lst)
-
+    g.storage.delete_todo_by_id(todo_id, list_id)
     flash("The todo has been deleted.", "success")
-    session.modified = True
     return redirect(url_for('show_list', list_id=list_id))
 
 @app.route("/lists/<list_id>/complete_all", methods=["POST"])
