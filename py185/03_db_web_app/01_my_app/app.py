@@ -4,6 +4,7 @@ from functools import wraps
 from flask import (
     flash,
     Flask,
+    g,
     redirect,
     render_template,
     request,
@@ -11,11 +12,12 @@ from flask import (
     url_for,
 )
 from werkzeug.exceptions import NotFound
+from todos.session_persistence import SessionPersistence
+
 from todos.utils import (
     delete_todo_by_id,
     error_for_list_title, 
     error_for_todo, 
-    find_list_by_id,
     find_todo_by_id,
     is_list_completed,
     is_todo_completed,
@@ -25,7 +27,8 @@ from todos.utils import (
 )
 
 app = Flask(__name__)
-app.secret_key=secrets.token_hex(32)
+app.secret_key = 'TODO: CHANGE ME'
+# app.secret_key=secrets.token_hex(32)
 
 def require_list(f):
     @wraps(f)
@@ -34,9 +37,9 @@ def require_list(f):
         sv: Ensures that 'list_id' kwarg refers to a real list
         Otherwise, raises 404/Not Found
         '''
-        
+
         list_id = kwargs.get('list_id')
-        lst = find_list_by_id(list_id, session['lists'])
+        lst = g.storage.find_list_by_id(list_id)
         if not lst:
             raise NotFound(description="List not found")
         return f(lst=lst, *args, **kwargs)
@@ -76,9 +79,10 @@ def list_utilities_processor() -> dict:
     )
 
 @app.before_request
-def initialize_session():
+def load_storage():
     if 'lists' not in session:
         session['lists'] = []
+    g.storage = SessionPersistence(session)
 
 
 """
@@ -92,7 +96,7 @@ def index():
 @app.route("/lists")
 def get_lists():
     """Show all existing lists & allow for creation of new lists"""
-    lists = sort_items(session['lists'], is_list_completed)
+    lists = sort_items(g.storage.all_lists(), is_list_completed)
     return render_template('lists.html',
                            lists=lists,
                            todos_remaining=todos_remaining)
@@ -102,19 +106,16 @@ def create_list():
     """Handle form requests for new lists"""
     title = request.form["list_title"].strip()
 
-    error = error_for_list_title(title, session['lists'])
+    # If the requested title is invalid, re-render the `new list` page
+    error = error_for_list_title(title, g.storage.all_lists())
     if error:
         flash(error, "error")
         return render_template('new_list.html', title=title)
 
-    session['lists'].append({
-        'id': str(uuid4()),
-        'title': title,
-        'todos': [],
-    })
-
+    # If title is valid, update the session and show all lists
+    g.storage.create_list(title)
+    
     flash("The list has been created.", "success")
-    session.modified = True
     return redirect(url_for('get_lists'))
 
 @app.route("/lists/new")
@@ -196,6 +197,9 @@ def delete_list(lst, list_id):
 @app.route("/lists/<list_id>", methods=["POST"])
 @require_list
 def update_list(lst, list_id):
+    """
+    The `lst` arg is provided by the `require_list` decorator (passed as kwarg)
+    """
     title = request.form["list_title"].strip()
 
     error = error_for_list_title(title, session['lists'])
