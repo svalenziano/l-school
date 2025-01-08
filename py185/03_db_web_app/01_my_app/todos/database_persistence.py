@@ -32,7 +32,20 @@ class DatabasePersistence:
             with con.cursor(cursor_factory=DictCursor) as cur:
                 cur.execute(query, (list_id,))
                 result = dict(cur.fetchone())
-        result.setdefault('todos', [])
+        todos = self._find_todos_for_list(list_id)
+        result.setdefault('todos', todos)
+        return result
+    
+    def _find_todos_for_list(self, list_id):
+        query = """
+                SELECT * FROM todos
+                    WHERE list_id = %s   
+                """
+        logger.info("Executing the query %s with list_id %s", query, list_id)
+        with self._database_connect() as con:
+            with con.cursor(cursor_factory=DictCursor) as cur:
+                cur.execute(query, (list_id, ))
+                result = cur.fetchall()
         return result
 
     def all_lists(self):
@@ -49,7 +62,18 @@ class DatabasePersistence:
 
     
     def create_list(self, title:str):
-        pass
+        """
+        LOG
+        Create cursor
+        Execute INSERT statement
+        No return value
+        """
+        query = "INSERT INTO lists (title) VALUES (%s)"
+        logger.info("Executing the query: %s", query)
+        with self._database_connect() as con:
+            with con.cursor() as cur:
+                cur.execute(query, (title,))
+
 
     def update_list_by_id(self, list_id, title:str):
         pass
@@ -75,5 +99,7 @@ class DatabasePersistence:
 
 if __name__ == '__main__':
     x = DatabasePersistence()
-    # print(x.all_lists())
-    print(x.find_list(1))
+    print(x.all_lists())
+    print(x._find_todos_for_list(1))
+    breakpoint()
+    # print(x.find_list(1))
