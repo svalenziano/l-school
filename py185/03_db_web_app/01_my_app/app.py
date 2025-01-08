@@ -47,7 +47,7 @@ def require_list(f):
         '''
 
         list_id = kwargs.get('list_id')
-        lst = g.storage.find_list_by_id(list_id)
+        lst = g.storage.find_list(list_id)
         if not lst:
             raise NotFound(description="List not found")
         return f(lst=lst, *args, **kwargs)

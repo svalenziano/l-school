@@ -1,7 +1,15 @@
 from contextlib import contextmanager
 import psycopg2
-from psycopg2.extras import DictCursor, RealDictCursor
+import logging
+from psycopg2.extras import (
+    DictCursor, 
+    RealDictCursor,
+)
 
+LOG_FORMAT = '%(asctime)s - %(levelname)s - %(message)s'
+logging.basicConfig(level=logging.INFO,
+                    format=LOG_FORMAT)
+logger = logging.getLogger(__name__)
 
 class DatabasePersistence:
   
@@ -16,17 +24,20 @@ class DatabasePersistence:
         finally:
             connection.close()
 
-    def find_list_by_id(self, list_id):
+    def find_list(self, list_id):
         query = "SELECT * FROM lists WHERE ID = %s"
+        logger.info("Executing the query %s with list_id %s", query, list_id)
+        print("🔴")
         with self._database_connect() as con: 
             with con.cursor(cursor_factory=DictCursor) as cur:
                 cur.execute(query, (list_id,))
-                result = dict(cur.fetchall())
+                result = dict(cur.fetchone())
         result.setdefault('todos', [])
         return result
 
     def all_lists(self):
         query = "SELECT * FROM lists"
+        logger.info("Executing the query: %s", query)
         with self._database_connect() as conn:
             with conn.cursor(cursor_factory=DictCursor) as cursor:
                 cursor.execute(query)
@@ -65,4 +76,4 @@ class DatabasePersistence:
 if __name__ == '__main__':
     x = DatabasePersistence()
     # print(x.all_lists())
-    print(x.find_list_by_id(1))
+    print(x.find_list(1))
