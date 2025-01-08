@@ -29,7 +29,7 @@ app.secret_key = 'TODO: CHANGE ME'
 
 # ENABLE TYPE HINTING FOR `g` object
 class _g:
-    storage: SessionPersistence
+    storage: DatabasePersistence
 
     def __getattr__(self, key):
         return getattr(g, key)
@@ -96,7 +96,7 @@ def list_utilities_processor() -> dict:
 def load_db():
     if 'lists' not in session:
         session['lists'] = []
-    g.storage = DatabasePersistence(session)
+    g.storage = DatabasePersistence()
 
 
 """
@@ -110,7 +110,8 @@ def index():
 @app.route("/lists")
 def get_lists():
     """Show all existing lists & allow for creation of new lists"""
-    lists = sort_items(g.storage.all_lists(), is_list_completed)
+    lists = g.storage.all_lists()
+    # lists = sort_items(g.storage.all_lists(), is_list_completed)
     return render_template('lists.html',
                            lists=lists,
                            todos_remaining=todos_remaining)

@@ -20,8 +20,11 @@ class DatabasePersistence:
         pass
     
     def all_lists(self):
-        with self._database_connect(self) as con:
-            pass
+        with self._database_connect() as con:
+            with con.cursor(cursor_factory=DictCursor) as cur:
+                cur.execute("SELECT * from lists")
+                rows = cur.fetchall()
+        return rows
     
     def create_list(self, title:str):
         pass
