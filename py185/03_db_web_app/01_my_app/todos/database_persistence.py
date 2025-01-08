@@ -1,5 +1,6 @@
 from contextlib import contextmanager
 import psycopg2
+from textwrap import dedent
 import logging
 from psycopg2.extras import (
     DictCursor, 
@@ -37,10 +38,10 @@ class DatabasePersistence:
         return result
     
     def _find_todos_for_list(self, list_id):
-        query = """
+        query = dedent("""
                 SELECT * FROM todos
                     WHERE list_id = %s   
-                """
+                """)
         logger.info("Executing the query %s with list_id %s", query, list_id)
         with self._database_connect() as con:
             with con.cursor(cursor_factory=DictCursor) as cur:
@@ -62,12 +63,6 @@ class DatabasePersistence:
 
     
     def create_list(self, title:str):
-        """
-        LOG
-        Create cursor
-        Execute INSERT statement
-        No return value
-        """
         query = "INSERT INTO lists (title) VALUES (%s)"
         logger.info("Executing the query: %s", query)
         with self._database_connect() as con:
@@ -76,10 +71,22 @@ class DatabasePersistence:
 
 
     def update_list_by_id(self, list_id, title:str):
-        pass
+        query = "UPDATE lists SET title = %s WHERE id = %s"
+        logger.info("Executing the query %s with list_id=%s and title=%s", 
+                    query, list_id, title)
+        with self._database_connect() as con:
+            with con.cursor() as cur:
+                cur.execute(query, (title, list_id))
 
     def delete_list(self, list_id):
-        pass
+        query = """
+                DELETE FROM lists WHERE id = %s;
+                """
+        logger.info("Executing the query %s with list_id=%s", query, list_id)
+        with self._database_connect() as con:
+            with con.cursor() as cur:
+                cur.execute(query, (list_id,))
+        
 
     def create_todo(self, list_id, todo_title):
         pass
