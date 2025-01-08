@@ -30,6 +30,7 @@ dependencies = [
     "flask<4.0.0,>=3.0.0",
     "gunicorn<22.0.0,>=21.2.0",
     "uuid<2.0,>=1.30",
+    "psycopg2>=2.9.10",
 ]
 requires-python = "<4.0,>=3.11"
 readme = "README.md"
