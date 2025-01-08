@@ -1,3 +1,4 @@
+import os
 from contextlib import contextmanager
 import psycopg2
 from textwrap import dedent
@@ -15,15 +16,56 @@ logger = logging.getLogger(__name__)
 class DatabasePersistence:
   
     def __init__(self):
-        pass
+        self.setup_schema()
 
     @contextmanager
     def _database_connect(self):
+        
+        if os.environ.get("LS_DEV_MACHINE").lower() == 'true':
+            connection = psycopg2.connect(dbname='todos')
+        else:
+            connection = psycopg2.connect(os.environ('DATABASE_URL'))
+
         try:
-            with psycopg2.connect(dbname='todos') as connection:
+            with connection:
                 yield connection
         finally:
             connection.close()
+
+    def setup_schema(self):
+        """
+        Check for necessary tables.  Set them up, if they don't exist.
+        """
+        with self._database_connect() as con:
+            with con.cursor() as cur:
+                cur.execute("""
+                            SELECT COUNT(*) FROM information_schema.tables
+                            WHERE table_schema = 'public'
+                                AND table_name = 'lists'
+                            """)
+                if cur.fetchone()[0] == 0:
+                    cur.execute("""
+                                CREATE TABLE lists (
+                                    id serial PRIMARY KEY,
+                                    title text NOT NULL
+                                );
+                                """)
+                cur.execute("""
+                            SELECT COUNT(*) FROM information_schema.tables
+                            WHERE table_schema = 'public'
+                                AND table_name = 'todos'
+                            """)
+                if cur.fetchone()[0] == 0:
+                    cur.execute("""
+                                CREATE TABLE todos (
+                                    id serial PRIMARY KEY,
+                                    title text NOT NULL,
+                                    completed boolean NOT NULL DEFAULT false,
+                                    list_id int NOT NULL
+                                        REFERENCES lists(id)
+                                        ON DELETE CASCADE
+                                );
+                                """)
 
     def find_list(self, list_id):
         query = "SELECT * FROM lists WHERE ID = %s"

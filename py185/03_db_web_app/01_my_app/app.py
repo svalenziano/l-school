@@ -1,3 +1,4 @@
+import os
 import secrets
 from functools import wraps
 from flask import (
@@ -23,9 +24,9 @@ from todos.utils import (
 )
 
 app = Flask(__name__)
-app.secret_key = 'TODO: CHANGE ME'
+# app.secret_key = 'TODO: CHANGE ME'
 # Random secret key is INCOMPATIBLE w/ storing data in session (? per SV):
-# app.secret_key=secrets.token_hex(32)  
+app.secret_key = secrets.token_hex(32)  
 
 # ENABLE TYPE HINTING FOR `g` object
 class _g:
@@ -214,4 +215,9 @@ def update_list(lst, list_id):
     return redirect(url_for('show_list', list_id=list_id))
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5003)
+    
+    if os.environ.get("LS_DEV_MACHINE").lower() == 'true':
+        print("🔴 Debug mode!")
+        app.run(debug=True, port=5003)
+    else:
+        app.run(debug=False)
