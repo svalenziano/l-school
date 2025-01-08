@@ -71,3 +71,9 @@ class SessionPersistence:
         todo = self.find_todo_by_id(todo_id, list_id)
         todo['completed'] = new_status
         self.session.modified = True
+
+    def mark_all_todos_completed(self, list_id):
+        lst = self.find_list_by_id(list_id)
+        for todo in lst['todos']:
+            todo['completed'] = True
+        self.session.modified = True
