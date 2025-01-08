@@ -94,8 +94,6 @@ def list_utilities_processor() -> dict:
 
 @app.before_request
 def load_db():
-    if 'lists' not in session:
-        session['lists'] = []
     g.storage = DatabasePersistence()
 
 
