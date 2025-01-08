@@ -37,6 +37,5 @@ def sort_items(items, select_completed):
     return incomplete_items + complete_items
 
 def todos_remaining(lst) -> int:
-    return 1  # TODO
     return sum(1 for todo in lst['todos'] if not todo['completed'])
 
