@@ -216,7 +216,7 @@ def update_list(lst, list_id):
 
 if __name__ == "__main__":
     
-    if os.environ.get("LS_DEV_MACHINE").lower() == 'true':
+    if os.environ.get("LS_DEV_MACHINE") == 'true':
         print("🔴 Debug mode!")
         app.run(debug=True, port=5003)
     else:

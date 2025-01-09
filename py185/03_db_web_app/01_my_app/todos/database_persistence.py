@@ -21,7 +21,7 @@ class DatabasePersistence:
     @contextmanager
     def _database_connect(self):
         
-        if os.environ.get("LS_DEV_MACHINE").lower() == 'true':
+        if os.environ.get("LS_DEV_MACHINE") == 'true':
             connection = psycopg2.connect(dbname='todos')
         else:
             connection = psycopg2.connect(os.environ('DATABASE_URL'))
