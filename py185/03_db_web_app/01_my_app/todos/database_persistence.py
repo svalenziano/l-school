@@ -53,16 +53,22 @@ class DatabasePersistence:
         return result
 
     def all_lists(self):
-        query = "SELECT * FROM lists"
-        logger.info("Executing query: %s", query) 
+        query = '''
+            SELECT lists.*, 
+                COUNT(todos.*) as todos_count,
+                COUNT(nullif(todos.completed, true)) as todos_remaining
+            FROM lists
+            LEFT JOIN todos
+                ON todos.list_id = lists.id
+            GROUP BY lists.id
+            ORDER BY lists.title;
+        '''
+        logger.info("Executing query %s", query) 
         with self._database_connect() as conn:
             with conn.cursor(cursor_factory=DictCursor) as cursor:
                 cursor.execute(query)
                 results = cursor.fetchall()
         results = [dict(row) for row in results]
-        for row in results:
-            todos = self._find_todos_for_list(row['id'])
-            row.setdefault('todos', todos)
         return results
 
     
@@ -174,6 +180,6 @@ class DatabasePersistence:
 if __name__ == '__main__':
     x = DatabasePersistence()
     print(x.all_lists())
-    print(x._find_todos_for_list(1))
-    breakpoint()
+    # print(x._find_todos_for_list(1))
+    # breakpoint()
     # print(x.find_list(1))

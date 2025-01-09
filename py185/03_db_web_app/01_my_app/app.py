@@ -112,8 +112,7 @@ def get_lists():
     lists = g.storage.all_lists()
     # lists = sort_items(g.storage.all_lists(), is_list_completed)
     return render_template('lists.html',
-                           lists=lists,
-                           todos_remaining=todos_remaining)
+                           lists=lists)
 
 @app.route("/lists", methods=["POST"])
 def create_list():
