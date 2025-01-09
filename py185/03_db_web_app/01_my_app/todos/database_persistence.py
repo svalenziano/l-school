@@ -70,7 +70,6 @@ class DatabasePersistence:
     def find_list(self, list_id):
         query = "SELECT * FROM lists WHERE ID = %s"
         logger.info("Executing the query %s with list_id %s", query, list_id)
-        print("🔴")
         with self._database_connect() as con: 
             with con.cursor(cursor_factory=DictCursor) as cur:
                 cur.execute(query, (list_id,))
@@ -163,7 +162,8 @@ class DatabasePersistence:
         query = """UPDATE todos SET completed = %s
                         WHERE list_id = %s AND id = %s
                 """
-        logger.info("Executing query %s with id=%s and list_id=%s",
+        logger.info("Executing query %s with new_status=%s,\
+                     id=%s, and list_id=%s",
                     query, new_status, todo_id, list_id)
         with self._database_connect() as con:
             with con.cursor() as cur:
