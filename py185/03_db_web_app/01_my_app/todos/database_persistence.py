@@ -24,7 +24,7 @@ class DatabasePersistence:
         if os.environ.get("LS_DEV_MACHINE") == 'true':
             connection = psycopg2.connect(dbname='todos')
         else:
-            connection = psycopg2.connect(os.environ('DATABASE_URL'))
+            connection = psycopg2.connect(os.environ['DATABASE_URL'])
 
         try:
             with connection:
