@@ -1,4 +1,3 @@
-
 def error_for_list_title(title, lists):
     if any(lst['title'] == title for lst in lists):
         return "The title must be unique."
@@ -13,15 +12,11 @@ def error_for_todo(title):
 
     return None
 
-def find_list_by_id(list_id, lists):
-    return next((lst for lst in lists if lst['id'] == list_id), None)
-
 def find_todo_by_id(todo_id, todos):
     return next((todo for todo in todos if todo['id'] == todo_id), None)
 
 def is_list_completed(lst) -> bool:
     return len(lst['todos']) > 0 and todos_remaining(lst) == 0
-    # return False
 
 def is_todo_completed(todo):
     return todo['completed']
@@ -38,4 +33,3 @@ def sort_items(items, select_completed):
 
 def todos_remaining(lst) -> int:
     return sum(1 for todo in lst['todos'] if not todo['completed'])
-
