@@ -33,7 +33,16 @@ class DatabasePersistence:
             connection.close()
 
     def find_list(self, list_id):
-        query = "SELECT * FROM lists WHERE ID = %s"
+        query = '''
+            SELECT lists.*, 
+                COUNT(todos.*) as todos_count,
+                COUNT(nullif(todos.completed, true)) as todos_remaining
+            FROM lists
+            LEFT JOIN todos
+                ON todos.list_id = lists.id
+            WHERE lists.id = %s
+            GROUP BY lists.id, lists.title
+        '''
         logger.info("Executing the query %s with list_id %s", query, list_id)
         with self._database_connect() as con: 
             with con.cursor(cursor_factory=DictCursor) as cur:

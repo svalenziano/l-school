@@ -141,7 +141,9 @@ def add_todo_list():
 def show_list(lst, list_id):
     """Display a specific todo list"""
     lst['todos'] = sort_items(lst['todos'], is_todo_completed)
-    return render_template('list.html', lst=lst)
+    return render_template('list.html', 
+                           lst=lst, 
+                           is_list_completed=is_list_completed)
 
 @app.route("/lists/<int:list_id>/todos", methods=["POST"])
 @require_list
