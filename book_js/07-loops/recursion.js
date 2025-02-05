@@ -1,11 +1,10 @@
-const MAX = 10;
+const MAX = 50;
 
 function doubler(num) {
-  return num * 2;
+  console.log(num);
+  if (num <= MAX) {
+    doubler(num * 2);
+  }
 }
 
-num = 1
-while (doubler(num) < MAX) {
-  num = doubler(num);
-  console.log(num);
-}
+doubler(5)
