@@ -1,27 +1,29 @@
 function randomNumberBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
+// LS stuff
+// let tries = 0;
+// let result = randomNumberBetween(1, 6);
+// tries += 1;
 
-/*
-min = 0
-max = 10
-0.5 * (10 - 0 + 1) + 0
-0.5 * 11 + 0
-5.5
+// while (result <= 2) {
+//   result = randomNumberBetween(1, 6);
+//   tries += 1;
+// }
+// end ls stuff
 
-min = 0
-max = 1
-0.9 * (1 - 0 + 1) + 0
-1
-*/
+let TRIALS = 6;
 
 let tries = 0;
-let result = randomNumberBetween(1, 6);
-tries += 1;
-
-while (result <= 2) {
-  result = randomNumberBetween(1, 6);
-  tries += 1;
+let result = [];
+for (let i=0; i < TRIALS; i++){
+  tries = 0
+  do {
+    result.push(randomNumberBetween(1, 6));
+    tries += 1;
+  } while (result <= 2);
 }
 
-console.log('It took ' + String(tries) + ' tries to get a number greater than 2');
+for (let i=0; i < result.length; i++) {
+  console.log('It took ' + String(result[i]) + ' tries to get a number greater than 2');
+}
