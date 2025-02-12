@@ -5,5 +5,5 @@ function updateColors(colors) {
   colors.push(color);
 }
 
-updateColors(colors);
-console.log(colors);
+updateColors(colors); 
+console.log(colors);  
