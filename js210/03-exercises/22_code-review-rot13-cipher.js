@@ -1,128 +1,56 @@
-/*
-Rot13
-For each letter:
-  - If char is in English alphabet, change it to char 13 positions later
-    - wrap around to beginning if the end of alphabet is reached
-  - Preserve case (A -> N and a -> n)
-  - Don't modify chars that aren't letters (numbers, punctuation, etc)
-*/
-
-/*
-P
-E
-D
-  - There are two ranges of chars:
-    - uppercase = 'A'.charCodeAt() to 'Z'.charCodeAt()
-    - lowercase = 'a'.charCodeAt() to 'z'.charCodeAt()
-A
-  - v1 HIGH LEVEL
-  - result = ''
-  - for each char:
-    - if char is alphabetic
-      - perform transformation and append onto `result`
-    - else:
-      - append char (no transformation)
-  
-  v1 LOW LEVEL
-  - result = ''
-  - for each char:
-    - if char is lowercase letter:
-      - perform rotation
-    - else if char is uppercase letter
-      -perform rotation
-    - else:
-      - append char (no transformation)
-  ROT_13_HELPER (helper)
-    - Performs rotation, no validation
-    - Inputs: min, max, character
-    - Output: character
-    - Algo
-      - Add 13
-      - if greater than max:
-        - subtract (max - min)
-*/
-
-// MY SOLUTION
-
-// Code Point Constants
+// CODE POINT CONSTANTS
 const CP_UPPER_A = 'A'.charCodeAt(0);
 const CP_UPPER_Z = 'Z'.charCodeAt(0);
 const CP_LOWER_A = 'a'.charCodeAt(0);
 const CP_LOWER_Z = 'z'.charCodeAt(0);
+const ROTATION_AMOUNT = 13;
 
-function rot_13_character(minCodePoint, maxCodePoint, character) {
+
+// HELPER FUNCTIONS
+function rot13Character(minCodePoint, maxCodePoint, character) {
+  /*
+  Notes:
+  - 'character' = alphabetic character
+  - If the 'maxCodePoint' is exceeded, the result will 'wrap around'
+    to the beginning.
+  */
   let codePoint = character.charCodeAt(0);
-  codePoint += 13
+  codePoint += ROTATION_AMOUNT;
   if (codePoint > maxCodePoint) {
-    codePoint -= (maxCodePoint - minCodePoint) + 1
+    codePoint -= (maxCodePoint - minCodePoint) + 1;
   }
-  return String.fromCharCode(codePoint)
+  return String.fromCharCode(codePoint);
 }
 
 function isAlphabetic(character) {
-  if (character.length > 1) {
+  if (character.length !== 1) {
     return null;
   }
-  let codePoint = character.charCodeAt();
-  return codePoint >= CP_UPPER_A && codePoint <= CP_LOWER_Z;
+
+  return /[a-zA-Z]/.test(character);
 }
 
-// let tests = ['a', 'b', 'c', 'z', 'Z', 'X', 'A', '1', '%', 'awef3231awfAA'];
-// for (let test of tests) {
-//   console.log(isAlphabetic(test))
-// }
-
-function isLowercase(string) {
-  return string === string.toLowerCase();
+function isLowercase(character) {
+  return /[a-z]/.test(character);
 }
 
-function isUppercase(string) {
-  return string === string.toUpperCase();
-}
-
-
-// console.log(isLowercase('a'));
-// console.log(isLowercase('o'));
-// console.log(isLowercase('1'));
-// console.log(isLowercase('a'));
-
+// MAIN FUNCTION
 function rot13(string) {
   let result = '';
   for (let idx = 0; idx < string.length; idx++) {
-    let char = string[idx]
-    if (isAlphabetic(char)) {
-      if (isLowercase(char)) {
-        result += rot_13_character(CP_LOWER_A, CP_LOWER_Z, char);
+    let character = string[idx];
+    if (isAlphabetic(character)) {
+      if (isLowercase(character)) {
+        result += rot13Character(CP_LOWER_A, CP_LOWER_Z, character);
       } else {
-        result += rot_13_character(CP_UPPER_A, CP_UPPER_Z, char);
+        result += rot13Character(CP_UPPER_A, CP_UPPER_Z, character);
       }
     } else {
-      result += char;
+      result += character;
     }
   }
   return result;
 }
-
-// console.log(rot_13_character(CP_LOWER_A, CP_LOWER_Z, 'a'))
-// console.log(rot_13_character(CP_LOWER_A, CP_LOWER_Z, 'n'))
-// console.log(rot_13_character(CP_LOWER_A, CP_LOWER_Z, (rot_13_character(CP_LOWER_A, CP_LOWER_Z, 'n'))))
-// // console.log(rot_13_character('A'))
-// // console.log(rot_13_character('N'))
-// console.log(rot_13_character(CP_UPPER_A, CP_UPPER_Z, 'A'))
-// console.log(rot_13_character(CP_UPPER_A, CP_UPPER_Z, 'N'))
-
-
-
-// EXAMPLES
-console.log(rot13('Teachers open the door, but you must enter by yourself.'));
-
-// logs:
-// Grnpuref bcra gur qbbe, ohg lbh zhfg ragre ol lbhefrys.
-
-console.log(rot13(rot13('Teachers open the door, but you must enter by yourself.')));
-
-// logs:
-// Teachers open the door, but you must enter by yourself.
 
 // TESTS
 let test1 = 'Teachers open the door, but you must enter by yourself.';
@@ -130,3 +58,10 @@ let solution1 = 'Grnpuref bcra gur qbbe, ohg lbh zhfg ragre ol lbhefrys.';
 console.log(rot13(test1) === solution1);
 console.log(rot13(rot13(test1)) === test1);
 
+let test2 = '';
+let solution2 = '';
+console.log(rot13(test2) === solution2);
+
+let test3 = '12390%#!#&#abcABC';
+let solution3 = '12390%#!#&#nopNOP';
+console.log(rot13(test3) === solution3);
