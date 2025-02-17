@@ -8,8 +8,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "readline-sync": "^1.4.10"
-  }
+  },
+  "devDependencies": {
+    "eslint": "^9.20.1"
+  },
+  "description": ""
 }

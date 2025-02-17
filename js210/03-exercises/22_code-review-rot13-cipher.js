@@ -1,4 +1,4 @@
-// CODE POINT CONSTANTS
+// CODE POINT CONSTANTS (CP = 'Code Point')
 const CP_UPPER_A = 'A'.charCodeAt(0);
 const CP_UPPER_Z = 'Z'.charCodeAt(0);
 const CP_LOWER_A = 'a'.charCodeAt(0);
@@ -10,6 +10,7 @@ const ROTATION_AMOUNT = 13;
 function rot13Character(minCodePoint, maxCodePoint, character) {
   /*
   Notes:
+  - rotates a single character, without validation
   - 'character' = alphabetic character
   - If the 'maxCodePoint' is exceeded, the result will 'wrap around'
     to the beginning.
@@ -23,9 +24,9 @@ function rot13Character(minCodePoint, maxCodePoint, character) {
 }
 
 function isAlphabetic(character) {
-  if (character.length !== 1) {
-    return null;
-  }
+  // if (character.length !== 1) {
+  //   return null;
+  // }
 
   return /[a-zA-Z]/.test(character);
 }
