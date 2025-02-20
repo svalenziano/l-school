@@ -1,0 +1,1 @@
+https://launchschool.com/exercises?track=javascript#javascript-js210_small_problems

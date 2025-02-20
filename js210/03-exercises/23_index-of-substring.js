@@ -110,26 +110,21 @@ function lastIndexOf(str1, str2) {
 }
 
 function indexOfHelper(str1, str2, reverse=false) {
-  let mismatch;
   let startIndices = createRange(0, str1.length - str2.length + 1);
   if (reverse) {
     startIndices = startIndices.reverse();
   }
   // For each start index, check if str2 is substring of str1
   for (let startIndex of startIndices) {
-    mismatch = false;
-    while (mismatch === false) {
-      for (let str2idx = 0; str2idx < str2.length; str2idx++) {
-        let str2character = str2[str2idx];
-        let str1character = str1[startIndex + str2idx];
-        if (str2character !== str1character) {
-          mismatch = true;
-          break;
-        }
-        // If it's a full match (you've reached the end of the string)
-        if (str2idx === str2.length - 1) {
-          return startIndex;
-        }
+    for (let str2idx = 0; str2idx < str2.length; str2idx++) {
+      let str2character = str2[str2idx];
+      let str1character = str1[startIndex + str2idx];
+      if (str2character !== str1character) {
+        break;
+      }
+      // If it's a full match (you've reached the end of the string)
+      if (str2idx === str2.length - 1) {
+        return startIndex;
       }
     }
   }
