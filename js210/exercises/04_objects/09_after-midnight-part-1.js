@@ -38,15 +38,15 @@ function zeroPadded(int) {
 function timeOfDay(minutes) {
   const MINS_TO_MILLISECONDS = 60 * 1000  // 60 seconds per minute, 1000 milliseconds per second
   // create a date object with time at midnight
-  let x = new Date(Date.UTC(2000, 0, 1, 0, 0, 0));  // use UTC time to avoid confusion
+  let x = new Date(2000, 0, 1, 0, 0, 0);  // use UTC time to avoid confusion
   let timestamp = x.getTime()  // convert to timestamp
   // change the time using the provided argument
   let delta = minutes * MINS_TO_MILLISECONDS;
   timestamp += delta;
   // Create new time and extract hrs and minutes
   let new_time = new Date(timestamp)
-  let hrs = zeroPadded(new_time.getUTCHours())
-  let mins = zeroPadded(new_time.getUTCMinutes())
+  let hrs = zeroPadded(new_time.getHours())
+  let mins = zeroPadded(new_time.getMinutes())
   
   // log the result
   console.log(`${hrs}:${mins}`);
