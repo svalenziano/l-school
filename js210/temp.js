@@ -1,21 +1,9 @@
-function foo() {
-  console.log('Waiting for bar!');
-}
+const name = 'James'
 
-function foo() {
-  function bar() {
-    console.log('bar again');
-  }
-  function bar() {
-    console.log('bar again and again');
-  }
-  
-  console.log(foo);
-  bar();
+const person = {first: name}
 
-}
-console.log(foo());
+console.log(person)
 
-// [Function, foo]
-// bar again and again
-// [undefined]
+const sayHelloLinting = (fName) => {
+console.log(`Hello linting, ${fName}`);
+};
