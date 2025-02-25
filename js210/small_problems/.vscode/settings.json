@@ -1,4 +1,5 @@
 {
+    "eslint.enable": false,
     "[javascript]": {
         "editor.quickSuggestions": {
             "other": false,
@@ -8,7 +9,10 @@
         "editor.suggest.snippetsPreventQuickSuggestions": true,
         "editor.formatOnType": false,
         "editor.suggestOnTriggerCharacters": false,
-        "editor.parameterHints.enabled": false
+        "editor.parameterHints.enabled": false,
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": "never",
+        },
     },
     "workbench.colorCustomizations": {
         "editorError.foreground": "#00000000",
