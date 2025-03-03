@@ -132,30 +132,29 @@ A
       - cleanup: remove the `grades` array
 */
 
-function calcStudentGrade(studentObject) {
+function getStudentScore(studentObject) {
+  // Input: student grades, eg:   
+  //   { exams: [ 90, 95, 100, 80 ], exercises: [ 20, 15, 10, 19, 15 ] }
+  // Output: string describing numeric and letter grade, eg "87 (B)"
+}
+
+function getExamSummary(examGradesArray) {
+  // Input: array of exam grades for one student.  4 ints, 1 column per int.
+  // Output: array of 4 objects
+  //   Each object describes the stats for each of 4 exams
 
 }
 
 function generateClassRecordSummary(scores) {
-  const NUMBER_OF_EXAMS = 4;
-  let result = {
-    studentGrades: [],
-    exams: [],
-  }
-  // Initialize empty exams results
-  for (let i = 0; i < NUMBER_OF_EXAMS; i += 1) {
-    result.exams[i] = {};
-  }
+  // extract score data (disregarding id's)
+  let scoreData = Object.keys(scores).map((studentKey) => scores[studentKey]['scores'])  // scores[studentKey][scores]
+  console.log(scoreData)
+  // extract exam data (disregarding exercise scores)
+  let examData = scoreData.map((scoreObject) => scoreObject['exams'])
+  console.log(examData)
 
-  // for each student
-  for (let student in studentScores) {
-    result.studentGrades.push(calcStudentGrade(studentScores[student]));
-    for (let exam of student.scores.exams) {
-      
-    }
-    console.log(student)
+  return {
+    studentGrades: scoreData.map((scores) => getStudentScore(scores)),
+    exams: getExamSummary(examData),  
   }
-
-
-  // for each exam
 }
