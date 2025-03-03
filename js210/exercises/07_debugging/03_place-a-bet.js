@@ -1,7 +1,7 @@
 function placeABet(guess) {
-  (function generateRandomInt() {
+  const generateRandomInt = function() {
     return Math.floor(Math.random() * 25) + 1;
-  });
+  };
 
   const winningNumber = generateRandomInt();
 

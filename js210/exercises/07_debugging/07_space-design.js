@@ -22,10 +22,11 @@ const team = {};
 team[ceo] = 'Kim';
 team[scrumMaster] = 'Alice';
 team[developer] = undefined;
+console.log(team)
 
 const company = {
   name: 'Space Design',
-  team,
+  team: team,
   projectedRevenue: 500000,
 };
 
@@ -38,3 +39,13 @@ console.log(`Projected revenue: $${company.projectedRevenue}`);
 // CEO: undefined
 // Scrum master: undefined
 // Projected revenue: $500000
+
+
+// my tests
+console.log(company)
+
+/* 
+MY INVESTIGATION
+
+
+ */

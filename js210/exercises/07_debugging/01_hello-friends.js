@@ -2,9 +2,9 @@ function randomGreeting() {
   const words = ['Hello', 'Howdy', 'Hi', 'Hey there', 'What\'s up',
                'Greetings', 'Salutations', 'Good to see you'];
 
-  const idx = Math.floor(Math.random() * words.length);
+  const idx = Math.floor(Math.random() * words.length);  // RED FLAG
 
-  words[idx];
+  return words[idx];
 }
 
 function greet(...args) {
@@ -12,7 +12,7 @@ function greet(...args) {
 
   for (let i = 0; i < names.length; i++) {
     const name = names[i];
-    const greeting = randomGreeting;
+    const greeting = randomGreeting();
 
     console.log(`${greeting}, ${name}!`);
   }

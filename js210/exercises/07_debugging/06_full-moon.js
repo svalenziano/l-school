@@ -16,9 +16,7 @@ for (let index = 0; index < species.length; index++) {
 
   if (isMidnight && isFullmoon && isTransformable(thisSpecies)) {
     newSpecies = transform(thisSpecies);
-  }
-
-  if (newSpecies) {
     console.log(`Beware of the ${newSpecies}!`);
   }
+
 }

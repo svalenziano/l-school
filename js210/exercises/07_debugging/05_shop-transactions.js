@@ -18,7 +18,7 @@ function logTransaction() {
     transactionLog.push(data);
 
     alert('Thank you. Data accepted.');
-  } catch {
+  } catch (error) {                                 // missing (error) argument?
     alert(error.message);
   }
 }
