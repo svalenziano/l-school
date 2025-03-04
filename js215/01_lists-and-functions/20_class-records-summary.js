@@ -142,6 +142,29 @@ function getExamSummary(examGradesArray) {
   // Input: array of exam grades for one student.  4 ints, 1 column per int.
   // Output: array of 4 objects
   //   Each object describes the stats for each of 4 exams
+  /* 
+  algo
+    - transpose matrix (helper)
+      - rows are now per-exam scores!
+    - for each row
+      - get average using `reduce`
+      - get max using Math.max
+      - get min using Math.min
+      - append object to array
+    - 
+  */
+
+  function transposeMatrix(matrix) {
+    /* 
+    result = []
+    Get length of first array
+    For each index (each column)
+      row = []
+      Append the index-th element onto the row
+      append row onto result
+    return result
+    */
+  }
 
 }
 
