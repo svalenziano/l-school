@@ -25,11 +25,11 @@ console.log(multiplyAllPairs([2, 4], [4, 3, 1, 2]));    // [2, 4, 4, 6, 8, 8, 12
 
 function multiplyAllPairs(arr1, arr2) {
   let multiples = [];
-  for (let num1 of arr1) {
-    for (let num2 of arr2) {
+  arr1.forEach((num1) => {
+    arr2.forEach((num2) => {
       multiples.push(num1 * num2);
-    }
-  }
-  return multiples.toSorted((a, b) => a - b);
+    });
+  });
+  return [...multiples].sort((a, b) => a - b);
 }
 

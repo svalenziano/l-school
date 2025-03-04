@@ -73,78 +73,11 @@ let studentScores = {
 
 
 
-generateClassRecordSummary(studentScores);
-
-// returns:
-/* 
-{
-  studentGrades: [ '87 (B)', '73 (D)', '84 (C)', '86 (B)', '56 (F)' ],
-  exams: [
-    { average: 75.6, minimum: 50, maximum: 100 },
-    { average: 86.4, minimum: 70, maximum: 100 },
-    { average: 87.6, minimum: 60, maximum: 100 },
-    { average: 91.8, minimum: 80, maximum: 100 },
-  ],
-}
- */
-
-
-
-
-
-/* 
-
-MY SOLVE
-
-
-P
-  - See top
-E
-  Hypothetical student (from example)
-    Exams: (90 + 80 + 95 + 71) / 4 = 84 exam grade
-
-D
-  ARRAY
-  grades = array of strings
-
-
-  ARRAY
-  exams (array of exam objects, see below)
-
-    OBJECT (one per exam)
-    exam {
-      grades = Array of ints, eg [90, 80, 50, 99, 58]
-      average = undefined
-      minimum = undefined
-      max = undefined
-    }
-
-A
-  v1 high level
-    - for each student:
-      - determine numeric and letter grade
-        - append that value (as string)
-          onto the `grades` array
-      - for each exam (index 0 thru 3)
-        - append exam grade to exams[index][grades]
-    - for each exam:
-      - reduce scores to average, minimum, and maximum
-      - cleanup: remove the `grades` array
-*/
 
 function getStudentScore(studentObject) {
   // Input: student grades, eg:   
   //   { exams: [ 90, 95, 100, 80 ], exercises: [ 20, 15, 10, 19, 15 ] }
   // Output: string describing numeric and letter grade, eg "87 (B)"
-  /* 
-  FORMULA FOR DETERMINING GRADE:
-    - Compute Get averag exam score
-    - compute total exercise score
-    - Apply weights: exam * 0.65 + exercise * 0.35 = final percentage grade
-    - Round to nearest integer
-    - Use the table to lookup grade
-    - Combine percent grade and letter grade into string
-  */
   const EXAM_WEIGHT = 0.65;
   const EXERCISE_WEIGHT = 0.35;
   let examScore = average(studentObject['exams']);
@@ -178,18 +111,6 @@ function getExamSummary(examGradesArray) {
   // Output: array of 4 objects
   //   Each object describes the stats for each of 4 exams
   //   eg: { average: 75.6, minimum: 50, maximum: 100 }
-  /* 
-  algo
-    - transpose matrix (helper)
-      - rows are now per-exam scores!
-    - for each row
-      - create object and append to list:
-        - get average using `reduce`
-        - get max using Math.max
-        - get min using Math.min
-        - append object to array
-    - 
-  */
   // Transpose so that each row represents scores for a single exam
   examGradesArray = transpose(examGradesArray);
   let result = [];
