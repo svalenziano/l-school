@@ -136,42 +136,81 @@ function getStudentScore(studentObject) {
   // Input: student grades, eg:   
   //   { exams: [ 90, 95, 100, 80 ], exercises: [ 20, 15, 10, 19, 15 ] }
   // Output: string describing numeric and letter grade, eg "87 (B)"
+  /* 
+  FORMULA FOR DETERMINING GRADE:
+    - Compute Get averag exam score
+    - compute total exercise score
+    - Apply weights: exam * 0.65 + exercise * 0.35 = final percentage grade
+    - Round to nearest integer
+    - Use the table to lookup grade
+    - Combine percent grade and letter grade into string
+  */
+  const EXAM_WEIGHT = 0.65;
+  const EXERCISE_WEIGHT = 0.35;
+  let examScore = average(studentObject['exams']);
+  let exerciseScore = sum(studentObject['exercises']);
+  let finalScore = (
+    (examScore * EXAM_WEIGHT) + (exerciseScore * EXERCISE_WEIGHT));
+  finalScore = Math.round(finalScore);
+  let letterGrade = getLetterGrade(finalScore);
+  return `${finalScore} ${letterGrade}`;
 }
+
+function getLetterGrade(numericScore) {
+  if (numericScore >= 93) {
+    return 'A';
+  } else if (numericScore >= 85) {
+    return 'B';
+  } else if (numericScore >= 77) {
+    return 'C';
+  } else if (numericScore >= 69) {
+    return 'D';
+  } else if (numericScore >= 60) {
+    return 'E';
+  } else {
+    return 'F';
+  }
+}
+
 
 function getExamSummary(examGradesArray) {
   // Input: array of exam grades for one student.  4 ints, 1 column per int.
   // Output: array of 4 objects
   //   Each object describes the stats for each of 4 exams
+  //   eg: { average: 75.6, minimum: 50, maximum: 100 }
   /* 
   algo
     - transpose matrix (helper)
       - rows are now per-exam scores!
     - for each row
-      - get average using `reduce`
-      - get max using Math.max
-      - get min using Math.min
-      - append object to array
+      - create object and append to list:
+        - get average using `reduce`
+        - get max using Math.max
+        - get min using Math.min
+        - append object to array
     - 
   */
+  // Transpose so that each row represents scores for a single exam
+  examGradesArray = transpose(examGradesArray);
+  let result = [];
+  for (let i = 0; i < examGradesArray.length; i++) {
+    result[i] = {
+      average: average(examGradesArray[i]),
+      minimum: Math.min(...examGradesArray[i]),
+      maximum: Math.max(...examGradesArray[i]),
+    }
+  }
+  return result;
 }
 
-function transposeMatrix(matrix) {
-  /* 
-  result = []
-  Get length of first array
-  For each index (each column)
-    row = []
-    Append the index-th element onto the row
-    append row onto result
-  return result
-  */
+function average(array) {
+  return sum(array) / array.length;
 }
 
-// Using destructing
-/* 
+function sum(array) {
+  return array.reduce((accum, ele) => accum + ele, 0);
+}
 
-
-*/
 function transpose(matrix) {
   let newMatrix = [];
   for (let col = 0; col < matrix[0].length; col++) {
@@ -183,87 +222,17 @@ function transpose(matrix) {
   return newMatrix;
 }
 
-let tests = [
-  [
-    [1,1,1,1,1,],
-    [2,2,2,2,2,],
-    [3,3,3,3,3,],
-  ],
-  [
-    [1,1],
-    [2,2],
-  ],
-  [
-    [1],
-    [2],
-    [3],
-    [4],
-  ],
-]
-
-/* 
-Input:
-[1,1,1,1,1,],
-[2,2,2,2,2,],
-[3,3,3,3,3,]
-Rows = 3
-Cols = 5
-
-expected output:
-[1, 2, 3],
-[1, 2, 3],
-[1, 2, 3],
-[1, 2, 3],
-...and so on
-Rows: 5
-Cols = 3
-
-Building the new array?
-Indexes are from the old array:
-  [
-    [0,0], [1,0], [2,0],
-    [0,1], [1,1], [2,1],
-    [0,2], [1,2], [2,2],
-    ...
-   ]
-
-v5 high level
-Easiest method: 
-  constraints?
-    You must access valid elements of the old array
-    You must build the new array row by row?
-  Algo
-  - for each column of the old array
-  - build the new row
-  -return the new array
-
-v5 low level
-  - for each row of the old array (indexes 0 thru length of array)
-    - for each column of the old array (indexes 0 thru length of row)
-      - newarray[row, col] = 
-    ABORTING: better to access each column from the oldArray in the outer loop
-v6 low level
-  - for each column of the old array (indexes 0 thru length of ROW):
-    - newMatrix[col] = []    // init a new row for the new matrix
-    // then fill that row with elements
-    - for each row of the old array (indexes 0 thru length of ARRAY):
-      - newMatrix[col][row] = matrix[row][col]
-*/
-for (let test of tests) {
-  console.log(transpose(test))
-}
-
 
 function generateClassRecordSummary(scores) {
   // extract score data (disregarding id's)
   let scoreData = Object.keys(scores).map((studentKey) => scores[studentKey]['scores'])  // scores[studentKey][scores]
-  console.log(scoreData)
   // extract exam data (disregarding exercise scores)
   let examData = scoreData.map((scoreObject) => scoreObject['exams'])
-  console.log(examData)
 
   return {
     studentGrades: scoreData.map((scores) => getStudentScore(scores)),
     exams: getExamSummary(examData),  
   }
 }
+
+console.log(generateClassRecordSummary(studentScores))
