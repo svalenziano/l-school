@@ -153,20 +153,106 @@ function getExamSummary(examGradesArray) {
       - append object to array
     - 
   */
-
-  function transposeMatrix(matrix) {
-    /* 
-    result = []
-    Get length of first array
-    For each index (each column)
-      row = []
-      Append the index-th element onto the row
-      append row onto result
-    return result
-    */
-  }
-
 }
+
+function transposeMatrix(matrix) {
+  /* 
+  result = []
+  Get length of first array
+  For each index (each column)
+    row = []
+    Append the index-th element onto the row
+    append row onto result
+  return result
+  */
+}
+
+// Using destructing
+/* 
+
+
+*/
+function transpose(matrix) {
+  let newMatrix = [];
+  for (let col = 0; col < matrix[0].length; col++) {
+    newMatrix[col] = [];
+    for (let row = 0; row < matrix.length; row++) {
+      newMatrix[col][row] = matrix[row][col];
+    }
+  }
+  return newMatrix;
+}
+
+let tests = [
+  [
+    [1,1,1,1,1,],
+    [2,2,2,2,2,],
+    [3,3,3,3,3,],
+  ],
+  [
+    [1,1],
+    [2,2],
+  ],
+  [
+    [1],
+    [2],
+    [3],
+    [4],
+  ],
+]
+
+/* 
+Input:
+[1,1,1,1,1,],
+[2,2,2,2,2,],
+[3,3,3,3,3,]
+Rows = 3
+Cols = 5
+
+expected output:
+[1, 2, 3],
+[1, 2, 3],
+[1, 2, 3],
+[1, 2, 3],
+...and so on
+Rows: 5
+Cols = 3
+
+Building the new array?
+Indexes are from the old array:
+  [
+    [0,0], [1,0], [2,0],
+    [0,1], [1,1], [2,1],
+    [0,2], [1,2], [2,2],
+    ...
+   ]
+
+v5 high level
+Easiest method: 
+  constraints?
+    You must access valid elements of the old array
+    You must build the new array row by row?
+  Algo
+  - for each column of the old array
+  - build the new row
+  -return the new array
+
+v5 low level
+  - for each row of the old array (indexes 0 thru length of array)
+    - for each column of the old array (indexes 0 thru length of row)
+      - newarray[row, col] = 
+    ABORTING: better to access each column from the oldArray in the outer loop
+v6 low level
+  - for each column of the old array (indexes 0 thru length of ROW):
+    - newMatrix[col] = []    // init a new row for the new matrix
+    // then fill that row with elements
+    - for each row of the old array (indexes 0 thru length of ARRAY):
+      - newMatrix[col][row] = matrix[row][col]
+*/
+for (let test of tests) {
+  console.log(transpose(test))
+}
+
 
 function generateClassRecordSummary(scores) {
   // extract score data (disregarding id's)

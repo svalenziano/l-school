@@ -1,0 +1,19 @@
+{
+    "[javascript]": {
+        "editor.quickSuggestions": {
+            "other": false,
+            "comments": false,
+            "strings": false
+        },
+        "editor.suggest.snippetsPreventQuickSuggestions": true,
+        "editor.formatOnType": false,
+        "editor.suggestOnTriggerCharacters": false,
+        "editor.parameterHints.enabled": false
+    },
+    "workbench.colorCustomizations": {
+        "editorError.foreground": "#00000000",
+        "editorWarning.foreground": "#00000000",
+        "editorInfo.foreground": "#00000000"
+    },
+    "problems.autoReveal": false
+}
