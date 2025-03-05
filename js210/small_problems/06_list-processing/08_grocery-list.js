@@ -32,7 +32,6 @@ function repeater(element, quantity) {
 }
 
 function buyFruit(arrayOfFruits) {
-  let result = [];
-  arrayOfFruits.forEach((x) => result.push(...repeater(x[0], x[1])))
-  return result
+  return arrayOfFruits.map((arr) => repeater(arr[0], arr[1]))
+    .reduce((accum, subArray) => accum.concat(subArray))
 }
