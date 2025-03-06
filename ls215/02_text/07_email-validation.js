@@ -42,15 +42,14 @@ A
 
 */
 
+/* more debuggable? */
 function isValidEmail(email) {
   let parts = email.split('@');
   if (parts.length !== 2) {
-    // console.log("Contains more than two parts", parts)
     return false;
   }
   let [localPart, domainPart] = [parts[0], parts[1]];
   if (/[^a-zA-Z0-9]/.test(localPart)) {  // contains non-alphanumerics?
-    // console.log("local part Contains non-alphanumerics ", localPart)
     return false;
   }
   let domainParts = domainPart.split('.');
@@ -65,6 +64,12 @@ function isValidEmail(email) {
   if (domainParts.some((x) => x.length === 0)) {
     return false;
   }
-  // console.log(localPart, domainParts)
   return true
+}
+
+
+/* Trying again with a single regex */
+// built the pattern with regexr, then pasted into this file
+function isValidEmail(email) {
+  return /^[a-zA-Z0-9]+@([a-zA-Z]+\.)+([a-zA-Z])+$/.test(email)
 }
