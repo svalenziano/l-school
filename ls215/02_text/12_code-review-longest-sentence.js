@@ -43,28 +43,56 @@ A
 
 
 // MY SOLUTION
-const SENTENCE_DELIMITER = /[.!?]\s+/;
+
+const WORD_PATTERN = /[^. !?\n]+/g
+const SENTENCE_PATTERN = /\s*([^.!?]+[.!?])/g
 
 // MAIN FUNCTION
 function longestSentence(string) {
+  console.log('---');
   if (containsSentence(string)) {
-    let sentenceObjects = splitIntoSentences(string);
+    let sentenceObjects = splitIntoSentences(string.trim());
     sentenceObjects.forEach((sentenceObject) => analyzeWords(sentenceObject));
     sentenceObjects.sort(sentenceLengthSorter);
     let longest = sentenceObjects[0];
-    console.log('---');
-    console.log(longest['original']);
+    console.log(`"${longest['original']}"`);
     console.log(`The longest sentence has ${longest['words'].length} words.`);
   } else {
-    console.log(`The string you provided does not contain a sentence ☹️: "${string}"`)
+    console.log(`"${string}"\nThe string you provided does not contain a sentence ☹️`)
   }
 }
+
+function longestSentence(string) {
+  console.log('---')
+  let sentences = Array.from(string.matchAll(SENTENCE_PATTERN), (x) => x[1])
+  if (sentences.length < 1) {
+    console.log(`"${string}"\nNo sentences found, cannot provide word cound.`)
+    return;
+  }
+  let longest = sentences.sort(sortByWordCount)[0];
+  console.log(`"${longest}"`);
+    console.log(`The longest sentence has ${wordCount(longest)} words.`);
+}
+
+function getSentences(string) {
+  string.matchAll(SENTENCE_PATTERN);
+}
+
+function wordCount(sentence) {
+  return sentence.match(WORD_PATTERN).length;
+}
+
+// Sorts in descending order
+function sortByWordCount(sentence1, sentence2) {
+  return wordCount(sentence2) - wordCount(sentence1);
+}
+
 
 
 // HELPER FUNCTIONS
 // returns array of 'sentence objects'
 function splitIntoSentences(string) {
-  let sentences = string.split(SENTENCE_DELIMITER);
+  let sentences = string.match(/\S+[.!?]+\s*/);
   let sentencesObjects = sentences.map((str) => ({'original': str}))
   return sentencesObjects;
 }
@@ -83,9 +111,12 @@ function sentenceLengthSorter(sentenceObject1, sentenceObject2) {
 }
 
 function containsSentence(string) {
-  return SENTENCE_DELIMITER.test(string);
+  return /[.!?]/.test(string);
 }
 
+function removeNewlines(string) {
+  return string.replace(/\n/g, ' ');
+}
 
 
 // EXAMPLE
@@ -125,6 +156,8 @@ longestSentence(longText);
 
 longestSentence("To be or not to be? The brown fox is superlative!");
 longestSentence("I! Ow.     Boo hiss.")
+longestSentence("Hello \n world!")  // todo
+longestSentence("Hello world! I said hello!")
 longestSentence("bleep bloop")
 longestSentence("I")
 longestSentence("")
