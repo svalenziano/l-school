@@ -42,6 +42,51 @@ A
 */
 
 
+// MY SOLUTION
+const SENTENCE_DELIMITER = /[.!?]\s+/;
+
+// MAIN FUNCTION
+function longestSentence(string) {
+  if (containsSentence(string)) {
+    let sentenceObjects = splitIntoSentences(string);
+    sentenceObjects.forEach((sentenceObject) => analyzeWords(sentenceObject));
+    sentenceObjects.sort(sentenceLengthSorter);
+    let longest = sentenceObjects[0];
+    console.log('---');
+    console.log(longest['original']);
+    console.log(`The longest sentence has ${longest['words'].length} words.`);
+  } else {
+    console.log(`The string you provided does not contain a sentence ☹️: "${string}"`)
+  }
+}
+
+
+// HELPER FUNCTIONS
+// returns array of 'sentence objects'
+function splitIntoSentences(string) {
+  let sentences = string.split(SENTENCE_DELIMITER);
+  let sentencesObjects = sentences.map((str) => ({'original': str}))
+  return sentencesObjects;
+}
+
+// adds list of words to 'sentence object'
+// mutates the argument
+function analyzeWords(sentenceObject) {
+  let words = sentenceObject['original'].split(/[\s]+/)
+  sentenceObject['words'] = words;
+}
+
+// sorts 'sentence objects' by the length of the 'words' property
+// descending order (longest to shortest)
+function sentenceLengthSorter(sentenceObject1, sentenceObject2) {
+  return sentenceObject2['words'].length - sentenceObject1['words'].length;
+}
+
+function containsSentence(string) {
+  return SENTENCE_DELIMITER.test(string);
+}
+
+
 
 // EXAMPLE
 let longText = 'Four score and seven years ago our fathers brought forth' +
@@ -78,6 +123,11 @@ let longText = 'Four score and seven years ago our fathers brought forth' +
 
 longestSentence(longText);
 
+longestSentence("To be or not to be? The brown fox is superlative!");
+longestSentence("I! Ow.     Boo hiss.")
+longestSentence("bleep bloop")
+longestSentence("I")
+longestSentence("")
 // console output
 //It is rather for us to be here dedicated to the great task remaining before us -- that from these honored dead we take increased devotion to that cause for which they gave the last full measure of devotion -- that we here highly resolve that these dead shall not have died in vain -- that this nation, under God, shall have a new birth of freedom -- and that government of the people, by the people, for the people, shall not perish from the earth.
 
@@ -86,7 +136,7 @@ longestSentence(longText);
 
 // Assuming the last sentence is removed:
 
-longestSentence(longText);
+// nextLongestSentence(longText);
 
 // console output
 //Four score and seven years ago our fathers brought forth on this continent a new nation, conceived in liberty, and dedicated to the proposition that all men are created equal.
@@ -94,6 +144,3 @@ longestSentence(longText);
 //The longest sentence has 30 words.
 
 
-function longestSentence(text) {
-  // ...
-}
