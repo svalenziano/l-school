@@ -44,79 +44,37 @@ A
 
 // MY SOLUTION
 
-const WORD_PATTERN = /[^. !?\n]+/g
-const SENTENCE_PATTERN = /\s*([^.!?]+[.!?])/g
 
 // MAIN FUNCTION
-function longestSentence(string) {
-  console.log('---');
-  if (containsSentence(string)) {
-    let sentenceObjects = splitIntoSentences(string.trim());
-    sentenceObjects.forEach((sentenceObject) => analyzeWords(sentenceObject));
-    sentenceObjects.sort(sentenceLengthSorter);
-    let longest = sentenceObjects[0];
-    console.log(`"${longest['original']}"`);
-    console.log(`The longest sentence has ${longest['words'].length} words.`);
-  } else {
-    console.log(`"${string}"\nThe string you provided does not contain a sentence ☹️`)
-  }
-}
 
 function longestSentence(string) {
-  console.log('---')
+  const SENTENCE_PATTERN = /\s*([^.!?]+[.!?])/g
   let sentences = Array.from(string.matchAll(SENTENCE_PATTERN), (x) => x[1])
   if (sentences.length < 1) {
-    console.log(`"${string}"\nNo sentences found, cannot provide word cound.`)
+    console.log(`"${string}"\nNo sentence-ending punctuation found in the above `
+      + `text, cannot provide word count.\n---`)
     return;
   }
   let longest = sentences.sort(sortByWordCount)[0];
-  console.log(`"${longest}"`);
-    console.log(`The longest sentence has ${wordCount(longest)} words.`);
+  console.log(`Longest sentence: "${longest}"`);
+    console.log(`The longest sentence has ${wordCount(longest)} words.\n---`);
 }
-
-function getSentences(string) {
-  string.matchAll(SENTENCE_PATTERN);
-}
-
-function wordCount(sentence) {
-  return sentence.match(WORD_PATTERN).length;
-}
-
-// Sorts in descending order
-function sortByWordCount(sentence1, sentence2) {
-  return wordCount(sentence2) - wordCount(sentence1);
-}
-
 
 
 // HELPER FUNCTIONS
-// returns array of 'sentence objects'
-function splitIntoSentences(string) {
-  let sentences = string.match(/\S+[.!?]+\s*/);
-  let sentencesObjects = sentences.map((str) => ({'original': str}))
-  return sentencesObjects;
+
+function wordCount(sentence) {
+  const WORD_PATTERN = /[^. !?\n]+/g
+  return sentence.match(WORD_PATTERN).length;
 }
 
-// adds list of words to 'sentence object'
-// mutates the argument
-function analyzeWords(sentenceObject) {
-  let words = sentenceObject['original'].split(/[\s]+/)
-  sentenceObject['words'] = words;
+function sortByWordCount(sentence1, sentence2) {
+  return wordCount(sentence2) - wordCount(sentence1);  // descending order
 }
 
-// sorts 'sentence objects' by the length of the 'words' property
-// descending order (longest to shortest)
-function sentenceLengthSorter(sentenceObject1, sentenceObject2) {
-  return sentenceObject2['words'].length - sentenceObject1['words'].length;
-}
 
-function containsSentence(string) {
-  return /[.!?]/.test(string);
-}
 
-function removeNewlines(string) {
-  return string.replace(/\n/g, ' ');
-}
+
 
 
 // EXAMPLE
