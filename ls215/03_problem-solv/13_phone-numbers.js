@@ -31,6 +31,14 @@ QUESTIONS
 */
 
 
+
+
+
+
+
+
+
+
 /* 
 
 My solution
@@ -56,7 +64,7 @@ Return '00000...'
 */
 
 
-// Tests
+// My Tests
 // 10 digits
 console.log(cleanPhoneNum('0123456789')  === '0123456789');
 console.log(cleanPhoneNum('1112223333')  === '1112223333');
@@ -73,8 +81,11 @@ console.log(cleanPhoneNum('01234567899') === '0000000000');
 console.log(cleanPhoneNum('112345678999') === '0000000000');
 console.log(cleanPhoneNum('112345678') === '0000000000');
 
-// non-digits
+// non-digits within strings of 10 or 11 length
 console.log(cleanPhoneNum('111a223333')  === '0000000000');
+console.log(cleanPhoneNum(' 111223333')  === '0000000000');
+console.log(cleanPhoneNum('1 11223333')  === '0000000000');
+console.log(cleanPhoneNum('111223333 ')  === '0000000000');
 console.log(cleanPhoneNum('1234567a999') === '0000000000');
 
 
