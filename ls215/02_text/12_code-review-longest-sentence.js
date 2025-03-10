@@ -48,23 +48,24 @@ A
 // MAIN FUNCTION
 
 function longestSentence(string) {
-  const SENTENCE_PATTERN = /\s*([^.!?]+[.!?])/g
-  let sentences = Array.from(string.matchAll(SENTENCE_PATTERN), (x) => x[1])
-  if (sentences.length < 1) {
-    console.log(`"${string}"\nNo sentence-ending punctuation found in the above `
-      + `text, cannot provide word count.\n---`)
-    return;
-  }
-  let longest = sentences.sort(sortByWordCount)[0];
-  console.log(`Longest sentence: "${longest}"`);
+  const SENTENCE_PATTERN = /\s*([^.!?]+[.!?])/g;
+  let sentences = Array.from(string.matchAll(SENTENCE_PATTERN), (x) => x[1]);
+  
+  if (sentences.length > 0) {
+    let longest = sentences.sort(sortByWordCount)[0];
+    console.log(`Longest sentence: "${longest}"`);
     console.log(`The longest sentence has ${wordCount(longest)} words.\n---`);
+  } else {
+    console.log(`"${string}"\nI cannot provide a word count because no `
+      + `sentence-ending punctuation was found in the provided text, \n---`);
+  }
 }
 
 
 // HELPER FUNCTIONS
 
 function wordCount(sentence) {
-  const WORD_PATTERN = /[^. !?\n]+/g
+  const WORD_PATTERN = /[^. !?\n]+/g;
   return sentence.match(WORD_PATTERN).length;
 }
 
