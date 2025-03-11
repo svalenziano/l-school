@@ -58,7 +58,7 @@ E
 =================================================
 */
 
-let x = encrypt("WE ARE DISCOVERED FLEE AT ONCE")
+// let x = encrypt("WE ARE DISCOVERED FLEE AT ONCE")
 // console.log(x[0] = 'W   E   C   R   L   T   E')
 // console.log(x[1] = ' E R D S O E E F E A O C ')
 // console.log(x[2] = '  A   I   V   D   E   N  ')
@@ -209,18 +209,8 @@ function zigZagStrings(length, numRows) {
   return arr.map((row) => row.join(''))
 }
 
-// HELPER - get rows from ZigZag
-/* 
-INPUT = array = populated fence rails
-OUTPUT = string
-ALGO = 
-  - create zigzag string with placeholders
-  - for each row
-    - for each index between 0 and the length of the row:
-      - if character other than ' ' is found:
-        - append the character from the input array onto the output string
 
-*/
+
 
 // for (let row of zigZagStrings2(25, 3)) {
 //   console.log(row)
@@ -310,6 +300,57 @@ console.log(decrypt('WECRLTEERDSOEEFEAOCAIVDEN', 3))
     Join strings into one large string
     Extract characters and join 
 */
-function encrypt() {
+function encrypt(stringToEncrypt, numRails) {
+  let chars = stringToEncrypt.split('')
+  let arr = create2DArray(stringToEncrypt.length, numRails);
+  zigZagExecute(arr, (row, col) => arr[row][col] = chars.shift());
+  // console.log(arr)
+  return stringFromArray(arr)
+}
 
+// HELPER - get rows from ZigZag
+/* 
+
+ALGO = 
+  - create zigzag string with placeholders
+  - for each row
+    - for each index between 0 and the length of the row:
+      - if character other than ' ' is found:
+        - append the character from the input array onto the output string
+*/
+function stringFromArray(railsArray) {
+  // INPUT = array = populated fence rails with elements in zig-zag pattern
+  // OUTPUT = string
+  let result = '';
+  let arrWidth = railsArray[0].length
+  let arrHeight = railsArray.length
+  let template = createZigZagRails(arrWidth, arrHeight);
+  for (let rowIdx = 0; rowIdx < arrHeight; rowIdx++) {
+    for (let colIdx = 0; colIdx < arrWidth; colIdx++) {
+      if (template[rowIdx][colIdx] !== ' ') {
+        result += railsArray[rowIdx][colIdx]
+      }
+    }
+  }
+  return result;
+}
+
+// console.log(encrypt('WEAREDISCOVEREDFLEEATONCE', 3))
+
+// console.log(decrypt('WECRLTEERDSOEEFEAOCAIVDEN', 3))
+
+let tests = [
+  'WHATEVERYOUDODONTLOOKUP',
+  'RUUUUUUN',
+  'THE QUICK BROWN FOX',
+  'THE PASSWORD IS !@##@$%%^sgrea%',
+]
+
+for (let test of tests) {
+  console.log();
+  console.log(test, ':')
+  let encrypted = encrypt(test, 3);
+  console.log(encrypted);
+  let success = test === decrypt(encrypted, 3)
+  console.log(`Success? ${success}`);
 }
