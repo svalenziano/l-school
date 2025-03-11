@@ -23,9 +23,6 @@ LS Examples
   "104-2" --> 104, 105, ... 112
   "104-02" --> 104, 105, ... 202
   "545, 64:11" --> 545, 564, 565, .. 611
-
-
-
 */
 
 
@@ -39,7 +36,6 @@ questions:
   - non-string argument?
   - no arguments
 
-
 E
 =========================================
 Indiv. numbers
@@ -47,12 +43,12 @@ Indiv. numbers
 
 Discrete Ranges
   "1-3, 1-2" --> 1, 2, 3, 11, 12
-
-Ranges that share start & stop
-  "1:5:2" --> 1, 2, 3, 4, 5, 6, ... 12
   "104-2" --> 104, 105, ... 112
   "104-02" --> 104, 105, ... 202
   "545, 64:11" --> 545, 564, 565, .. 611
+
+Ranges that share start & stop
+  "1:5:2" --> 1, 2, 3, 4, 5, 6, ... 12
 
 
 
@@ -103,16 +99,31 @@ function rangeArray(low, high) {
   return result;
 }
 
+
+function funnyIncrement(oldNum, newNum) {
+  // input = 2 integers
+  // output = new integer. Always larger than first integer
+  let sigDigits = String(newNum).length
+  let insigDigits = String(oldNum).length - sigDigits;
+  let oldInsig = String(oldNum).slice(0, insigDigits) || 0;
+  let oldSig = String(oldNum).slice(-1 * sigDigits);
+  let newSig = String(newNum)
+  if (Number.parseInt(newSig) <= Number.parseInt(oldSig)) {
+    oldInsig = String(Number.parseInt(oldInsig) + 1)
+  }
+  return Number.parseInt(oldInsig + newSig, 10);
+}
+
 function shortHand(str) {
   const rangeSeparators = [':', '..', '-'];
+  // split string into list of tokens (numbers and separators)
   let tokens = [...str.matchAll(/([0-9]+)|([,:-]|\.\.){1}/g)].map((x) => x[0])
-  // console.log(tokens);
   let currentNum = Number.parseInt(tokens.shift());
   let result = [currentNum];
+  // Process all tokens, one separator and one number at a time
   while (tokens.length > 0) {
     let nextSeparator = tokens.shift();
     let nextNum = tokens.shift();
-    // console.log(`cur = ${currentNum} => nextSep = ${nextSeparator} =>` nextNum = ${nextNumber}`)
     if (nextSeparator === ',') {
       currentNum = funnyIncrement(currentNum, nextNum);
       result.push(currentNum);
@@ -127,35 +138,18 @@ function shortHand(str) {
   return result;
 }
 
+
+// MY TESTS
 console.log(shortHand("1, 3, 7, 2, 4 , 1"))
 console.log(shortHand("1-3, 1-2"))
-// console.log(shortHand("1, 3, 7"))
-// console.log(shortHand("9, 8, 7"))
-// console.log(shortHand("1, 3:7"))
-// console.log(shortHand("1, 3..7"))
-// console.log(shortHand("1, 3-7"))
-// console.log(shortHand("1:3:7"))
-// console.log(shortHand("104-02"))
-// console.log(shortHand("545, 64:11"))
-
-
-function funnyIncrement(oldNum, newNum) {
-  // input = 2 integers
-  // output = new integer
-  let sigDigits = String(newNum).length
-  let insigDigits = String(oldNum).length - sigDigits;
-  let oldInsig = String(oldNum).slice(0, insigDigits) || 0;
-  let oldSig = String(oldNum).slice(-1 * sigDigits);
-  let newSig = String(newNum)
-  if (Number.parseInt(newSig) <= Number.parseInt(oldSig)) {
-    oldInsig = String(Number.parseInt(oldInsig) + 1)
-  }
-  return Number.parseInt(oldInsig + newSig, 10);
-}
-
-
-
-
+console.log(shortHand("1, 3, 7"))
+console.log(shortHand("9, 8, 7"))
+console.log(shortHand("1, 3:7"))
+console.log(shortHand("1, 3..7"))
+console.log(shortHand("1, 3-7"))
+console.log(shortHand("1:3:7"))
+console.log(shortHand("104-02"))
+console.log(shortHand("545, 64:11"))
 
 
 // FOLLOW UP
