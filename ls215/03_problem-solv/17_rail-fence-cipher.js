@@ -17,6 +17,8 @@ EXAMPLE
     Each rail fence is compressed and then all fences are appended, one after the other:
     WECRLTE + ERDSOEEFEAOC + AIVDEN = WECRLTEERDSOEEFEAOCAIVDEN
 
+
+
   Decrypted:
     WE ARE DISCOVERED FLEE AT ONCE
 
@@ -143,6 +145,10 @@ V2
 
 */
 
+// HELPERS
+// ============================================================================
+
+
 function create2DArray(length, numRows) {
   let arr = [];
   for (let i = 0; i < numRows; i++) {
@@ -151,16 +157,7 @@ function create2DArray(length, numRows) {
   return arr;
 }
 
-function rowsToStrings(nestedArray) {
-  // for each row, create string and append to array
-  // map: joins the array into a string
-}
-
-/* 
-For each index between 0 and (length - 1):
-  execute callback, passing in the row, column, value (zigzag pattern)
-
-*/
+// Iterate over zig-zag array and invoke callback on each element of the zigzag
 function zigZagExecute(array, callback) {
   const LAST_ROW_INDEX = array.length - 1;
   let rowLength = array[0].length
@@ -179,10 +176,7 @@ function zigZagExecute(array, callback) {
   }
 }
 
-/* 
-Callback:
-   - rowidx, colidx -> mutate the arr
-*/
+// Create 2D array and fill it with placeholder elements in zig-zag pattern
 function createZigZagRails(length, numRows) {
   let arr = create2DArray(length, numRows);
   zigZagExecute(arr, (row, col) => arr[row][col] = '?')
@@ -190,140 +184,33 @@ function createZigZagRails(length, numRows) {
 }
 
 
-function zigZagStrings(length, numRows) {
-  const LAST_ROW_INDEX = numRows - 1;
-  let arr = create2DArray(length, numRows);
-  let moveDown = true;
-  let rowIndex = 0;
-  let colIndex = 0;
-  while (colIndex < length) {
-    arr[rowIndex][colIndex] = '?';
-    if (rowIndex === LAST_ROW_INDEX && moveDown) {
-      moveDown = false;
-    } else if (rowIndex === 0 && !moveDown) {
-      moveDown = true;
-    }
-    moveDown ? rowIndex += 1 : rowIndex -= 1;
-    colIndex += 1;
-  }
-  return arr.map((row) => row.join(''))
-}
-
-
-
-
-// for (let row of zigZagStrings2(25, 3)) {
-//   console.log(row)
-// }
-
-/* 
-Algo:
-  - split `replaceWith` into array
-  - for each row:
-    - while currentRow contains '?'
-      - if `replaceWith` length > 0:
-        - REASSIGN STRING at `currentRow`: 
-            replace first instance of '?' with char shifted from left side of `replaceWith`
-      - else:
-        - REASSIGN STRING:
-            replace '?' with ' '
-*/
-
-function replaceRailPlaceholders(arrayOfStrings, replaceWith) {
-  // input = 
-  //    array of strings
+function replaceRailPlaceholders(array, replaceWith) {
+  // inputs: 
+  //    array of rows (strings)
   //    string of characters to use as replacement
   // side effect = mutate array of strings, '?' replaced with a character from `replaceWith`
   // return = none
+  console.log(array)
   const PLACEHOLDER = '?'
   replaceWith = replaceWith.split('');
-  for (let i = 0; i < arrayOfStrings.length; i++) {
-    while (arrayOfStrings[i].includes(PLACEHOLDER)) {
+  for (let i = 0; i < array.length; i++) {
+    while (array[i].includes(PLACEHOLDER)) {
       if (replaceWith.length > 0) {
-        arrayOfStrings[i] = arrayOfStrings[i].replace('?', replaceWith.shift());
+        array[i] = array[i].replace('?', replaceWith.shift());
       } else {
-        arrayOfStrings[i] = arrayOfStrings[i].replace('?', ' ');
+        array[i] = array[i].replace('?', ' ');
       }
     }
   }
 }
-// console.log(zigZagStrings2(12, 3))
-// let test = zigZagStrings2(12, 3);
-// console.log(test)
-// replaceQuestionMarks(test, '1234')
-// console.log(test)
 
-
-/* 
-
-    For each index of the string:
-    Setup rails with appropriate number of placeholders
-?   ?   ?   ?   ?
- ? ? ? ? ? ? ? ? 
-  ?   ?   ?   ?  
-    - split string into encryptedChars
-    - replace question marks: HELPER for each character in encryptedChars:
-      - replace question marks with char, filling row 1 before proceeding to row 2
-    - result = emptry string
-    - Smoosh the rails back together using zigZagHelper
-      - callback:
-        - get value of character at rowIdx, colIdx, concatenate onto 'result'
-    
-*/
-function decrypt(encryptedString, numRails) {
-  let rails = createZigZagRails(encryptedString.length, numRails)
-  replaceRailPlaceholders(rails, encryptedString)
-  let result = [];
-  zigZagExecute(rails, (row, col) => result.push(rails[row][col]))
-  return result.join('')
-}
-
-// for (let rail of decrypt('WECRLTEERDSOEEFEAOCAIVDEN', 3)) {
-//   console.log(rail)
-// }
-console.log(decrypt('WECRLTEERDSOEEFEAOCAIVDEN', 3))
-
-
-
-
-/* 
-    SHIFT and append to 2d array FROM INPUT STRING IN ZIGZAG PATTERN
-      Shift and append to rail 0 (use .replace method)
-      Shift and append to rail 1
-      Shift and append to rail 2
-      Shift and append to rail 1
-      Shift and append to rail 0
-    ...
-    let characters = Find value at positions (HELPER) (get characters )
-
-    Squash Rail 0 into string, append squashed rail 1, and then squashed rail 2
-    Join strings into one large string
-    Extract characters and join 
-*/
-function encrypt(stringToEncrypt, numRails) {
-  let chars = stringToEncrypt.split('')
-  let arr = create2DArray(stringToEncrypt.length, numRails);
-  zigZagExecute(arr, (row, col) => arr[row][col] = chars.shift());
-  // console.log(arr)
-  return stringFromArray(arr)
-}
-
-// HELPER - get rows from ZigZag
-/* 
-
-ALGO = 
-  - create zigzag string with placeholders
-  - for each row
-    - for each index between 0 and the length of the row:
-      - if character other than ' ' is found:
-        - append the character from the input array onto the output string
-*/
-function stringFromArray(railsArray) {
+function squashRailsRows(railsArray) {
   // INPUT = array = populated fence rails with elements in zig-zag pattern
-  // OUTPUT = string
+  // OUTPUT = string (row 1 chars + row 2 chars + ...)
   let result = '';
   let arrWidth = railsArray[0].length
   let arrHeight = railsArray.length
+  // Create a template and use it to select characters from the input array
   let template = createZigZagRails(arrWidth, arrHeight);
   for (let rowIdx = 0; rowIdx < arrHeight; rowIdx++) {
     for (let colIdx = 0; colIdx < arrWidth; colIdx++) {
@@ -335,12 +222,40 @@ function stringFromArray(railsArray) {
   return result;
 }
 
-// console.log(encrypt('WEAREDISCOVEREDFLEEATONCE', 3))
 
-// console.log(decrypt('WECRLTEERDSOEEFEAOCAIVDEN', 3))
+// MAIN FUNCTION
+// ============================================================================
+function decrypt(encryptedString, numRails) {
+  let result = [];
+  let rails = createZigZagRails(encryptedString.length, numRails);
+
+  // populate the rails
+  replaceRailPlaceholders(rails, encryptedString);
+
+  // extract the decrypted string from the rails
+  zigZagExecute(rails, (row, col) => result.push(rails[row][col]));
+  return result.join('')
+}
+
+function encrypt(stringToEncrypt, numRails) {
+  let chars = stringToEncrypt.split('')
+
+  // create empty rails and populate them with chars from the string
+  let arr = create2DArray(stringToEncrypt.length, numRails);
+  zigZagExecute(arr, (row, col) => arr[row][col] = chars.shift());
+
+  // create a string from the rails and return the result
+  return squashRailsRows(arr)
+}
+
+
+// TESTS
+// ============================================================================
+
 
 let tests = [
-  'WHATEVERYOUDODONTLOOKUP',
+  'WEAREDISCOVEREDFLEEATONCE',
+  'WHATEVER YOU DO DON\'T LOOK UP',
   'RUUUUUUN',
   'THE QUICK BROWN FOX',
   'THE PASSWORD IS !@##@$%%^sgrea%',

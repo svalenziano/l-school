@@ -1,12 +1,7 @@
-let lipsum = `the quick brown \
-fox jumps over the \
-yellow dog.`
+"use strict";
 
-console.log(lipsum)
+function foo() {
+  console.log(this);
+}
 
-/* 
-PRINTS:
-the quick brown
-fox jumps over the
-yellow dog. 
-*/
+foo(); // undefined
