@@ -89,26 +89,15 @@ function listsAreIdentical(lst1, lst2) {
   console.log(JSON.stringify(lst1) === JSON.stringify(lst2));
 }
 
+
 function lightsOn(numSwitches) {
   let switches = Array(numSwitches).fill(true);
   for (let round = 2; round <= numSwitches; round++) {
-    switches = switches.map((val, idx, arr) => {
-      let switchNo = idx + 1;
-      if (switchNo % round === 0) {
-        return !val
-      } else {
-        return val
-      }
-    });
+    switches = switches.map((val, idx) => (idx + 1) % round === 0 ? !val : val);
   }
-  // console.log(switches)
-  // build array of lights that are on
-  let on = [];
-  for (let idx = 0; idx < switches.length; idx ++) {
-    let switchNo = idx + 1;
-    if (switches[idx] === true) {
-      on.push(switchNo)
-    }
-  }
-  return on;
+  let result = switches.reduce(
+    (accum, val, idx) => val ? accum.concat([idx + 1]) : accum,
+    [],
+  );
+  return result
 }
