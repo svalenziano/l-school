@@ -1,14 +1,1 @@
-/*
-P
-E
-D
-A
-*/
-
-// TESTS
-
-
-
-// MY SOLUTION
-
-
+// I already solved this problem, see LS215-3
