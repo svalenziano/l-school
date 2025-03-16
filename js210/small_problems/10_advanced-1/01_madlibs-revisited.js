@@ -76,6 +76,7 @@ MAIN FUNCTION
 
 const template1 = "The %adjective brown %noun %adverb %verb the %adjective "
   + "yellow %noun, who %adverb %verb his %noun and looks around."
+
 const template2 = "The %noun %verb the %noun %noun"
 
 function madlibs(template) {
