@@ -5,6 +5,8 @@ D
 A
 */
 
+name = 'blah'
+
 // Picks n random elements from an array,
 // and returns a new array with those elements.
 function random(array, n) {
@@ -47,6 +49,13 @@ const secondNoun = ['Mix', 'Delight', 'Bowl', 'Chunk', 'Surprise', 'Bliss'];
 
 const dishName = random(adjective) + random(firstNoun) + random(secondNoun);
 const dish = random(ingredients, 3) + random(spices, 2) + random(extras, 1);
+
+//sv block
+console.log(typeof dishName)
+dishName = [random(adjective), random(firstNoun), random(secondNoun)];
+dish = [random(ingredients, 3), random(spices, 2), random(extras, 1)];
+
+
 
 console.log(`How about: ${dishName.join(' ')}`);
 console.log(`You need: ${dish.join(', ')}`);
