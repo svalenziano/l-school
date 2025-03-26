@@ -14,16 +14,31 @@ class Queue {
     // Returns the value of the top most element without removing it.
 
     // If the queue is empty, it returns `null`.
+    return this.front;
   }
 
   enqueue(value) {
     // Adds an item to the queue
+    // create a new node
+    // If there's a back of the line
+      // point that node towards the new node
+    // set the new node as the `back` (regardless)
+    // if there's not a front of the line,
+      // set the new node as the `front`, too
   }
 
   dequeue() {
     // Removes the item from the queue and returns it
-
-    // If the queue is empty, it returns `null`.
+    // if `front`:
+      // create `oldFront` to hold current `front` value
+      // if `front` has a `next` value:
+        // point `front` towards 2nd-in-line
+      // else:
+        // set `front` to `null`
+        // set `back` to `null`
+      // return `oldFront`
+    // Else:
+      // returns `null`.
   }
 }
 
