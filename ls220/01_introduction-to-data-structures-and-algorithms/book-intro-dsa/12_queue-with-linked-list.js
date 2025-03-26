@@ -11,48 +11,27 @@ class Queue {
     this.back = null;
   }
   peek() {
-    // Returns the value of the top most element without removing it.
-
-    // If the queue is empty, it returns `null`.
-    if (this.front) return this.front.val
-    return null;
+    return this.front ? this.front.val : null;
   }
 
   enqueue(value) {
-    // Adds an item to the queue
-    // create a new node
     let n = new ListNode(value)
-    // If there's a back of the line
-    if (this.back) {
-      // point that node towards the new node
-      this.back.next = n;
-    }
-    // set the new node as the `back` (regardless)
-    this.back = n;
-    // if there's not a front of the line,
-    if (!this.front) {
-      // set the new node as the `front`, too
-      this.front = n;
-    }
+    if (this.back) this.back.next = n; // update pointer
+    this.back = n;  // update queue object
+    if (!this.front) this.front = n;
   }
 
   dequeue() {
     // Removes the item from the queue and returns it
     // if `front`:
-    if (this.front) {
-      // create `oldFront` to hold current `front` value
-      let oldFront = this.front;
-      // if `front` has a `next` value:
-      if (this.front.next) {
-        // point `front` towards 2nd-in-line
-        this.front = this.front.next;
-      } else {
-        this.front = null;
-        this.back = null;
-      }
-      return oldFront.val;
+    if (!this.front) {
+      return null;
     }
-    return null;
+    let oldFront = this.front;
+    // Update the queue object to use the 2nd element as new `front`
+    this.front = this.front.next;
+    if (!this.front) this.back = null;
+    return oldFront.val;
   }
 }
 
