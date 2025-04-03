@@ -1,3 +1,4 @@
+
 // A puppy named Chaos is eager to reach a bowl of
 // treats at the top of a series of n stacks of
 // crates. Each stack is higher by one crate than
@@ -50,53 +51,23 @@ console.log(hoppingChaos(21) === 17711);
 console.log(hoppingChaos(50) === 20365011074);
 // All test cases should log true.
 
+function hoppingChaos(n) {
+  const memo = new Map();
 
-/* 
-MY SOLVE
-See Obsidian for PEDAC: "### Demo: Hopping Chaos I"
-
-*/
-
-// RECURSIVE VERSION (NON-MEMOIZED)
-// function hoppingChaos(rows) {
-//   if (rows <= 2) {
-//     return rows;
-//   } else {
-//     return hoppingChaos(rows - 1) + hoppingChaos(rows - 2);
-//   }
-// }
-
-// MEMOIZED VERSION
-/* 
-- create cache
-- call hoppingChaos
-  - If rows <= 2, return rows
-  - If rows -1 and rows -2 are in the cache, return the sum of those rows
-  - 
-
-  - Will there be a situation in which only one row is cached?
-
-
-*/
-
-
-function hoppingChaos(rows) {
-  let cache = new Map();
-  return fibonacci(rows);
-
-  function fibonacci(n) {
+  function waysToN(n) {
     if (n === 1) {
       return 1;
     }
     if (n === 2) {
-      return 2
+      return 2;
     }
-    if (cache.has(n)) {
-      return cache.get(n);
+    if (memo.has(n)) {
+      return memo.get(n);
     }
-    let x = fibonacci(n - 1) + fibonacci(n - 2);
-    cache.set(n, x)
-    return x;
+    const result = waysToN(n - 1) + waysToN(n - 2);
+    memo.set(n, result);
+    return result;
   }
-}
 
+  return waysToN(n);
+}
