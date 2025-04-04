@@ -23,13 +23,13 @@ function testPermutations(input, expectedLength) {
 // Test Cases:
 
 console.log(testPermutations([1,2,3], 6));
-// console.log(testPermutations([0,1], 2));
-// console.log(testPermutations([1], 1));
-// console.log(testPermutations([1,2,3,4], 24));
-// console.log(testPermutations([1,2,3,4,5], 120));
-// console.log(testPermutations([1,2,3,4,5,6], 720));
-// console.log(testPermutations([1,2,3,4,5,6,7], 5040));
-// console.log(testPermutations([1,2,3,4,5,6,7,8], 40320));
+console.log(testPermutations([0,1], 2));
+console.log(testPermutations([1], 1));
+console.log(testPermutations([1,2,3,4], 24));
+console.log(testPermutations([1,2,3,4,5], 120));
+console.log(testPermutations([1,2,3,4,5,6], 720));
+console.log(testPermutations([1,2,3,4,5,6,7], 5040));
+console.log(testPermutations([1,2,3,4,5,6,7,8], 40320));
 // console.log(testPermutations([0,1,2,3,4,5,6,7,8,9], 3628800));
 
 // Note: The order of permutations in the output doesn't matter,
@@ -88,4 +88,29 @@ function permutations(candidates) {
   backtrack(candidates, candidate, result);
   console.log(result)
   return result;
+}
+
+// v2 non-slice solution
+// tktk
+
+
+// LS Slice solution
+function permutations(candidates) {
+  function backtrack(candidates) {
+    if (candidates.length === 0) {
+      results.push([...candidate]);
+      return;
+    }
+
+    for (let elem of candidates) {
+      const filteredCandidates = candidates.filter((e) => e !== elem);
+      candidate.push(elem);
+      backtrack(filteredCandidates);
+      candidate.pop();
+    }
+  }
+  const results = [];
+  const candidate = [];
+  backtrack(candidates, candidate, results);
+  return results;
 }

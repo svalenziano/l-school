@@ -81,23 +81,3 @@ MY SOLVE
 //   return result;
 // }
 
-// LS Slice solution
-function permutations(candidates) {
-  function backtrack(candidates) {
-    if (candidates.length === 0) {
-      results.push([...candidate]);
-      return;
-    }
-
-    for (let elem of candidates) {
-      const filteredCandidates = candidates.filter((e) => e !== elem);
-      candidate.push(elem);
-      backtrack(filteredCandidates);
-      candidate.pop();
-    }
-  }
-  const results = [];
-  const candidate = [];
-  backtrack(candidates, candidate, results);
-  return results;
-}
