@@ -166,14 +166,18 @@ A
 */
 
 function numOfForests(grid) {
+  if (!grid || grid.length === 0) return 0;
+  
   const discovered = new Set();
   let forestCount = 0;
+  const numRows = grid.length;
+  const numCols = grid[0].length;
 
   // Make string to store x & y grid coordinates
   let makeCoordStr = (row, col) => `${row},${col}`
 
-  for (let row = 0; row < grid.length; row++) {
-    for (let col = 0; col < grid[row].length; col++) {
+  for (let row = 0; row < numRows; row++) {
+    for (let col = 0; col < numCols; col++) {
       if (grid[row][col] === 'T' && 
           !discovered.has(makeCoordStr(row, col))) {
         forestCount++;
@@ -195,7 +199,7 @@ function numOfForests(grid) {
         let newCol = col + y;
         // SKIP, if coords are invalid or if the coord is already processed
         if (newRow < 0 || newCol < 0 ||
-            newRow >= grid.length || newCol >= grid[0].length ||
+            newRow >= numRows || newCol >= numCols ||
             discovered.has(makeCoordStr(newRow, newCol))) continue;
         // Otherwise, record the location in `discovered`
         if (grid[newRow][newCol] === 'T') {
