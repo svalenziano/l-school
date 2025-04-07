@@ -55,19 +55,15 @@ console.log(rooms([[1, 4], [1, 3], [1, 2], [1, 5]]) === 4);
 
 MY RULES
   - How to determine the number of overlapping meetings?
-  - iF 
+  - Two meetings are overlapping if the end time of the first meeting is after the start time of the second meeting
+
 
 E
 //////////////////////////////////////////////////////
 My examples & tests:
 
 console.log(rooms([[20, 25], [10, 15], [0, 25]]) === 2);
-  [[20, 25], [10, 15], [0, 25]]
-  [[0, 25], [10, 15], [20, 25]]  2 rooms!
-      ^         ^ 
-  [[0, 25], [10, 15], [20, 25]]  3 rooms?!?!  (incorrect)
-      ^                   ^ 
-
+  [[10, 15], [20, 25], , [0, 25]]
 
 
 console.log(rooms([[1, 5], [2, 3], [4, 6], [5, 7]]) === 2);
@@ -114,7 +110,7 @@ D
 A
 //////////////////////////////////////////////////////
 v1
-  - sort meetings by start time (sort nested arrays by first element)
+  - sort meetings by END time (sort nested arrays by first element)
   - currentNeed = 1 (start w 1)
   - minRoomsNeeded = 1 (start w 1)
   - anchor at first mtg
@@ -130,24 +126,33 @@ v1
   - overlap (HELPER)
     - given mtg1 and mtg2, mtg2 overlaps mtg1 if:
       - end time of mtg1 is greater than beginning of mtg2
+
+v2
+  - use pointer-based "queue" to keep track of meetings (use indices from orig list)
+  - sort by end time
+  - if leftmost element end time is less than rightmost element start time
+    - shift leftmost (move pointer right)
+  - 3 meetings are overlapping 
 */
 
 // LS TESTS
-// console.log(rooms([[20, 25], [10, 15], [0, 25]]) === 2);
-// console.log(rooms([[5, 9], [1, 3]]) === 1);
-// console.log(rooms([[1, 2], [3, 4], [5, 6]]) === 1);
-// console.log(rooms([[1, 4], [2, 5], [3, 6]]) === 3);
-// console.log(rooms([[1, 3], [3, 6], [6, 8]]) === 1);
-// console.log(rooms([[1, 10]]) === 1);
-// console.log(rooms([[1, 3], [2, 4], [4, 6]]) === 2);
-// console.log(rooms([[1, 5], [2, 3], [4, 6], [5, 7]]) === 2);
-// console.log(rooms([[0, 5], [1, 3], [2, 6], [4, 7], [5, 9], [8, 10]]) === 3);
-// console.log(rooms([[1, 2], [2, 3], [3, 4], [4, 5]]) === 1);
-// console.log(rooms([[1, 20], [5, 10], [11, 15], [16, 18]]) === 2);
-// console.log(rooms([[1, 4], [1, 3], [1, 2], [1, 5]]) === 4);
+console.log(rooms([[20, 25], [10, 15], [0, 25]]) === 2);
+console.log(rooms([[5, 9], [1, 3]]) === 1);
+console.log(rooms([[1, 2], [3, 4], [5, 6]]) === 1);
+console.log(rooms([[1, 4], [2, 5], [3, 6]]) === 3);
+console.log(rooms([[1, 3], [3, 6], [6, 8]]) === 1);
+console.log(rooms([[1, 10]]) === 1);
+console.log(rooms([[1, 3], [2, 4], [4, 6]]) === 2);
+console.log(rooms([[1, 5], [2, 3], [4, 6], [5, 7]]) === 2);
+console.log(rooms([[0, 5], [1, 3], [2, 6], [4, 7], [5, 9], [8, 10]]) === 3);
+console.log(rooms([[1, 2], [2, 3], [3, 4], [4, 5]]) === 1);
+console.log(rooms([[1, 20], [5, 10], [11, 15], [16, 18]]) === 2);
+console.log(rooms([[1, 4], [1, 3], [1, 2], [1, 5]]) === 4);
 
+
+// my solution
 function meetingsOverlap(mtg1, mtg2) {
-  // assumes mtg1 start time is early than mtg2 start time
+  // assumes meetings are sorted by end time, ascending
   // if end time of mtg1 is greater than start time of mtg2, they overlap
   return mtg1[1] > mtg2[0]
 }
@@ -160,21 +165,44 @@ function meetingsOverlap(mtg1, mtg2) {
 // console.log(meetingsOverlap([1,3], [1,3]) === true);
 
 function rooms(meetingsList) {
-  // sort mtgs by start time
-  let sorted = meetingsList.toSorted((a, b) => a[0] - b[0])
-  let minRoomsNeeded = 1;
-  let anchor = 0;
-  let runner = 1;
-  while (runner < sorted.length) {
-    if (meetingsOverlap(sorted[anchor], sorted[runner])) {
-      let currentNeed = runner - anchor + 1;
-      minRoomsNeeded = Math.max(currentNeed, minRoomsNeeded);
-      runner += 1;
+  // sort mtgs by end time
+  let sorted = meetingsList.toSorted((a, b) => a[1] - b[1])
+
+  let roomsNeeded = 1, s = 0, e = 1;
+
+  while (e < sorted.length) {
+    if (meetingsOverlap(sorted[s], sorted[e])) {
+      let currentNeed = e - s + 1;
+      roomsNeeded = Math.max(currentNeed, roomsNeeded);
+      e += 1;
     } else {
-      anchor += 1;
-      if (anchor === runner) runner += 1;
+      s += 1;
+      if (s === e) e += 1;
     }
   }
-  console.log(minRoomsNeeded);
-  return minRoomsNeeded;
+  return roomsNeeded;
+}
+
+
+// LS solution
+function rooms(intervals) {
+  if (!intervals || intervals.length === 0) {
+    return 0;
+  }
+
+  const startTimes = intervals.map(interval => interval[0]).sort((a, b) => a - b);
+  const endTimes = intervals.map(interval => interval[1]).sort((a, b) => a - b);
+
+  let s = 0, e = 0, roomCount = 0;
+
+  while (s < intervals.length) {
+    if (startTimes[s] >= endTimes[e]) {
+      e += 1;
+    } else {
+      roomCount += 1;
+    }
+    s += 1;
+  }
+
+  return roomCount;
 }
