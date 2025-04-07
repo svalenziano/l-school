@@ -82,24 +82,54 @@ backtrack(possibilities) (HELPER)
       - pop a breadcrumb 'on your way out'
 */
 
-function combinations(nums, k) {
+// function combinations(nums, k) {
+//   const result = [];
+//   const breadcrumbs = [];
+//   backtrack(nums);
+//   return result;
+
+//   function backtrack(possibles) {
+//     if (breadcrumbs.length === k) {
+//       result.push([...breadcrumbs]);
+//       return;
+//     }
+//     for (let p of possibles) {
+//       const filtered = possibles.filter((x) => x !== p && x > p);
+//       breadcrumbs.push(p);
+//       backtrack(filtered);
+//       breadcrumbs.pop();
+//     }
+//   }
+// }
+
+
+/* 
+A MORE OPTIMIZED SOLUTION?
+Rather than using multiple comparison operations, use a pointer
+Success criteria is still `breadcrumbs.length === k`
+Iterate through possibles using the pointer
+  - pointer = 0 thru length - k
+  - pointer 2 = 
+  - Push the value of possibles (at pointer) to breadcrumbs
+  - Increment the pointer
+ */
+
+ function combinations(nums, k) {
   const result = [];
   const breadcrumbs = [];
   backtrack(nums);
-  // console.log(result)
+  console.log(result)
   // console.log(result.length)
   return result;
 
-  function backtrack(possibles) {
+  function backtrack(possibles, pointer = 0) {
     if (breadcrumbs.length === k) {
       result.push([...breadcrumbs]);
       return;
     }
-    for (let p of possibles) {
-      const filtered = possibles.filter((x) => x !== p && x > p);
-      breadcrumbs.push(p);
-      backtrack(filtered);
-      breadcrumbs.pop();
-    }
+    if (pointer > possibles.length - k) return;
+    breadcrumbs.push(possibles[pointer]);
+    backtrack(possibles, pointer + 1);
+    breadcrumbs.pop();
   }
 }
