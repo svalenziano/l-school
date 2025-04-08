@@ -56,6 +56,8 @@ console.log(longestSubstringLength("dvdf") === 3);
 
 My examples & tests:
 */
+console.log(longestSubstringLength("abcabcbb") === 3);
+console.log(longestSubstringLength("tmmzuxt") === 5);
 
 /*
 
@@ -90,22 +92,22 @@ containsDuplicate() (HELPER)
 */
 
 function longestSubstringLength(str) {
-  console.log(str)
-  let s = 0, e = 0, max = 0;
+  // console.log(str)
+  let a = 0, r = 0, max = 0;  // a = anchor, r = runner
   let chars = new Set();
-  while (e < str.length) {
-    chars.add(str[e]);
+  while (r < str.length) {
+    chars.add(str[r]);
     max = Math.max(max, chars.size);
     // console.log(chars.keys())
     // console.log(str.slice(s, e + 1), chars)
-    e++;
+    r++;
     /* 
     THIS IS THE PROBLEM - I NEED TO RETURN BOTH S AND E TO THE CHARACTER AFTER THE FIRST INSTANCE OF THE DUPLICATED CHARACTER!!! */
-    if (chars.has(str[e])) {
-      s = str.indexOf(str[e], s) + 1;
-      e = s;
+    if (chars.has(str[r])) {
+      a = str.indexOf(str[r], a) + 1;  // O(n) time complexity 😬
+      r = a;
       chars.clear();
-      // chars.add(str[e]);
+      // chars.add(...str.slice(s, e + 1));
     }
   }
   // console.log('returning', max)
@@ -132,4 +134,22 @@ console.log(longestSubstringLength("abcdefghijklmnopqrstuvwxyz") === 26);
 // console.log(longestSubstringLength("abc"))
 
 
+
+// LS Solution
+// function longestSubstringLength(string) {
+//   let charMap = new Map();
+//   let result = 0;
+//   let a = 0;
+
+//   for (let r = 0; r < string.length; r++) {
+//     let char = string[r];
+//     if (charMap.has(char) && charMap.get(char) >= a) {
+//       a = charMap.get(char) + 1;
+//     }
+//     const currLen = r - a + 1;
+//     result = Math.max(result, currLen);
+//     charMap.set(char, r);
+//   }
+//   return result;
+// }
 
