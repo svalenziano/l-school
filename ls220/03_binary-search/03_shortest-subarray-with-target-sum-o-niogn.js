@@ -17,9 +17,7 @@
 //              the target sum of 10. The length of this subarray is 2.
 
 
-function minLengthForTargetSum(nums, target) {
-  // implementation goes here
-}
+
 
 console.log(minLengthForTargetSum([1, 2, 3], 5) === 2);
 console.log(minLengthForTargetSum([1, 1, 1], 4) === 0);
@@ -37,11 +35,26 @@ console.log(minLengthForTargetSum([4, 2, 2, 1, 5, 2], 14) === 5);
 /*
 P
 //////////////////////////////////////////////////////
+RULES
+  - contiguous subarray = one or more contiguous elements from the orig. array that summs to >= `target`
+  - Order matters!  You may not sort the array.
+  - if a num greater than the target is found, return 1:
+    - otherwise, you must visit every element, because it's possible that the last element is greater than the target, leading to 
+
+  - Return
+    - 0 if no subarray meets the requirements
+    - integer = length of shortest subarray that exceeds `target`
+    - 
 
 
 E
 //////////////////////////////////////////////////////
 My examples & tests:
+
+  console.log(minLengthForTargetSum([1, 2, 3], 5) === 2);
+    [1, 2, 3]   t:5
+
+
 */
 
 /*
@@ -53,11 +66,87 @@ D
 
 A
 //////////////////////////////////////////////////////
+- v1 
+  - min = 0
+  - for each `anchor` index between 0 and end
+    - Get the midpoint (of the remaining elements)
+    - if the num is >= target, return 1
+    - if the sum is greater than or equal to the target, 
+      - `min` = the minimum btw `min` & the number of elements (anchor - runner + 1)
+      - move the `runner` edge of the window left 
+    - else
+      - move the `runner` edge of the window right
 
-
+  - how to get the sum with constant, aka O(1), complexity?
+    - O(n) option: move back towards anchor, adding as you go
 */
 
-// LS TESTS
+
+
+function minLengthForTargetSum(nums, target) {
+  let min = 0;
+  let r = nums.length - 1;
+  for (let l = 0; l < nums.length; l++) {
+    r = Math.floor((l + r) / 2);
+    if (nums[r] >= target) return 1;
+    if (sumExceedsTarget()) {
+
+    }
+  }
+
+  function sumExceedsTarget() {
+    runner = r;
+    sum = nums[l] + nums[r];
+    while (sum < target && runner > l) {
+      sum += nums[runner]
+      if (sum > target) return true
+    }
+    return false;
+  }
+}
 
 
 
+// LS solution
+function isValidLength(k, target, nums) {
+  let a = 0;
+  let r = 0;
+  let sum = 0;
+
+  while (r < k) {
+    sum += nums[r];
+    r++;
+  }
+  if (sum >= target) {
+    return true;
+  }
+
+  while (r < nums.length) {
+    sum -= nums[a];
+    a++;
+    sum += nums[r];
+    r++;
+    if (sum >= target) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function minLengthForTargetSum(nums, target) {
+  let result = 0;
+  let left = 1;
+  let right = nums.length;
+
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    if (isValidLength(mid, target, nums)) {
+      result = mid;
+      right = mid - 1;
+    } else {
+      left = mid + 1;
+    }
+  }
+  return result;
+}
