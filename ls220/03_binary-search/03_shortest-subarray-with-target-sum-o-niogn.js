@@ -108,24 +108,27 @@ function minLengthForTargetSum(nums, target) {
 
 
 // LS solution
+// Comments are SV's
 function isValidLength(k, target, nums) {
-  let a = 0;
-  let r = 0;
+  let a = 0;  // anchor
+  let r = 0;  // runner
   let sum = 0;
 
+  // build initial window size of k
   while (r < k) {
     sum += nums[r];
     r++;
   }
+  // check if initial window meets target
   if (sum >= target) {
     return true;
   }
 
   while (r < nums.length) {
-    sum -= nums[a];
-    a++;
-    sum += nums[r];
-    r++;
+    sum -= nums[a];  // Remove leftmost element
+    a++;             // Move `a` boundary right
+    sum += nums[r];  // Add new rightmost element
+    r++;             // Move `r` boundary right
     if (sum >= target) {
       return true;
     }
@@ -135,6 +138,7 @@ function isValidLength(k, target, nums) {
 }
 
 function minLengthForTargetSum(nums, target) {
+  // conduct binary search thru possible array lengths
   let result = 0;
   let left = 1;
   let right = nums.length;
