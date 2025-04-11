@@ -97,7 +97,7 @@ E
         - make the load bigger (move runner)
         - if the load exceeds the truck, you'll break outa this loop
       - increment trips
-      - If trips exceeds maxTrips, and runner isn't at end, return false
+      - If trips > maxTrips, return false
       - get the next load (reset loadSize & increment the anchor)
     - Return true
 
@@ -119,7 +119,7 @@ A
 */
 
 
-
+// MY SOLUTION  - NOT WORKING
 
 function findTruckCapacity(orderVolumes, maxTrips) {
   // Set upper and lower bounds for binary search
@@ -142,7 +142,6 @@ function findTruckCapacity(orderVolumes, maxTrips) {
 }
 
 function isTruckBigEnough(orderVolumes, truckSize, maxTrips) {
-  let a = 0;      // anchor
   let r = 0;      // runner
   let loadSize = 0;   // keep track of stuff that's currently in the truck
   let trips = 0;      // trips so far
@@ -151,16 +150,15 @@ function isTruckBigEnough(orderVolumes, truckSize, maxTrips) {
   while (r < orderVolumes.length) {
     // expand the window
     while (loadSize < truckSize) {
-      if (orderVolumes[r] > truckSize) return false;
       loadSize += orderVolumes[r];
       // console.log('loadSize', loadSize)
-      r++;
+      if (loadSize + orderVolumes[r] > truckSize) break;
+      r += 1;
     }
     // console.log('Trip:', orderVolumes.slice(a, r - 1), ', r =', r)
-    trips++;
-    if ((trips >= maxTrips && (r > orderVolumes.length))) return false;  // 
+    trips += 1;
+    if ((trips > maxTrips)) return false;  // 
     // Move the window right / reset the window and get the next load:
-    a = r;
     loadSize = 0;
   }
   // console.log('Returning true')
@@ -183,4 +181,35 @@ console.log(isTruckBigEnough([1000, 1000, 1000, 1000], 2000, 3) === true);
 console.log(isTruckBigEnough([3, 2, 5, 8, 4], 8, 3) === false)
 console.log(isTruckBigEnough([3, 2, 5, 8, 4], 10, 3) === true)
 
+// LS solution
+function canTransport(trips, capacity, orderVolumes) {
+  let idx = 0;
+  let currVolume = 0;
 
+  while (trips > 0 && idx < orderVolumes.length) {
+    if (currVolume + orderVolumes[idx] <= capacity) {
+      currVolume += orderVolumes[idx];
+      idx += 1;
+    } else {
+      currVolume = 0;
+      trips -= 1;
+    }
+  }
+  return idx === orderVolumes.length;
+}
+
+function findTruckCapacity(orderVolumes, maxTrips) {
+  let left = 1;
+  let right = orderVolumes.reduce((accumulator, current) => accumulator + current);
+  let result = 0;
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    if (canTransport(maxTrips, mid, orderVolumes)) {
+      result = mid;
+      right = mid - 1;
+    } else {
+      left = mid + 1;
+    }
+  }
+  return result;
+}
