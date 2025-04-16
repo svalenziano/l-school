@@ -50,6 +50,17 @@ console.log(hoppingChaos(21) === 17711);
 console.log(hoppingChaos(50) === 20365011074);
 // All test cases should log true.
 
+// sv tests
+// console.log(hoppingChaos(2));  // === 2);
+// console.log(hoppingChaos(3));  // === 3);
+// console.log(hoppingChaos(4));  // === 5);
+// console.log(hoppingChaos(8));  // === 34);
+// console.log(hoppingChaos(13));  // === 377);
+// console.log(hoppingChaos(17));  // === 2584);
+// console.log(hoppingChaos(21));  // === 17711);
+// console.log(hoppingChaos(50));  // === 20365011074);
+
+
 
 /* 
 MY SOLVE
@@ -80,23 +91,55 @@ See Obsidian for PEDAC: "### Demo: Hopping Chaos I"
 */
 
 
-function hoppingChaos(rows) {
-  let cache = new Map();
-  return fibonacci(rows);
+// function hoppingChaos(rows) {
+//   let cache = new Map();
+//   return fibonacci(rows);
 
-  function fibonacci(n) {
-    if (n === 1) {
-      return 1;
+//   function fibonacci(n) {
+//     if (n === 1) {
+//       return 1;
+//     }
+//     if (n === 2) {
+//       return 2
+//     }
+//     if (cache.has(n)) {
+//       return cache.get(n);
+//     }
+//     let x = fibonacci(n - 1) + fibonacci(n - 2);
+//     cache.set(n, x)
+//     return x;
+//   }
+// }
+
+
+// 2025-04-15 solve
+/* 
+base case = n <= 2, return n
+recursive def = the number of hops it takes to get to the top of n stacks is the number of hops it takes to get to the top of n-1 stacks plus the num of hops it takes to get to the top of n-2 stacks
+
+memoization = 
+  - check to see if value for `n` is in the cache
+  - if it isn't:
+    - calc the value and store in cache (array, use `n` for index)
+  - if it is:
+    - return the value
+
+*/
+
+function hoppingChaos(rows) {
+  let cache = [];
+  return fib(rows);
+
+  function fib(n) {
+    if (n <= 2) {
+      return n;
     }
-    if (n === 2) {
-      return 2
+    if (n in cache) {
+      return cache[n];
+    } else {
     }
-    if (cache.has(n)) {
-      return cache.get(n);
-    }
-    let x = fibonacci(n - 1) + fibonacci(n - 2);
-    cache.set(n, x)
-    return x;
+    let result = fib(n - 1) + fib(n - 2)
+    cache[n] = result;
+    return result;
   }
 }
-

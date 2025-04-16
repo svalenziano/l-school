@@ -51,10 +51,10 @@ let list4 = createLinkedList([1, 1, 1, 1, 1]);
 let list5 = createLinkedList([1, 2, 2, 3, 3, 3, 4, 4, 5, 5, 5]);
 
 printLinkedList(removeDuplicates(list1)); // Expected: 1 -> 4 -> null
-// printLinkedList(removeDuplicates(list2)); // Expected: 2 -> 3 -> null
-// printLinkedList(removeDuplicates(list3)); // Expected: 1 -> 2 -> 3 -> 4 -> 5 -> null
-// printLinkedList(removeDuplicates(list4)); // Expected: null
-// printLinkedList(removeDuplicates(list5)); // Expected: 1 -> null
+printLinkedList(removeDuplicates(list2)); // Expected: 2 -> 3 -> null
+printLinkedList(removeDuplicates(list3)); // Expected: 1 -> 2 -> 3 -> 4 -> 5 -> null
+printLinkedList(removeDuplicates(list4)); // Expected: null
+printLinkedList(removeDuplicates(list5)); // Expected: 1 -> null
 
 
         
@@ -140,33 +140,98 @@ A
   - 
 */
 
+// MY ATTEMPT 1
+// function removeDuplicates(head) {
+//   let dummy = new ListNode('dummy');
+//   dummy.next = head;
+//   let current = dummy;
+//   let dupe;
+//   while (current !== null 
+//       && current.next !== null) {
+//     // printLinkedList(dummy)
+//     console.log(current.val)
+//     if (current.next.val === dupe) {
+//       current.next = current.next.next ?? null;
+//     } else {
+//       if (isDupe(current)) {
+//         dupe = current.val;
+//         console.log('found dupe', dupe)
+//       }
+//     }
+//     current = current.next;
+//   }
+//   return dummy.next; // return the head
+// }
+
+// function isDupe(node) {
+//   if (node.next !== null && (node.next.val === node.val)) {
+//     return true;
+//   }
+//   return false;
+// }
+
+
+// MY ATTEMPT 2 - WORKING!
 function removeDuplicates(head) {
-  let dummy = new ListNode('dummy');
-  dummy.next = head;
-  let current = dummy;
-  let dupe;
-  while (current !== null 
-      && current.next !== null) {
-    // printLinkedList(dummy)
-    console.log(current.val)
-    if (current.next.val === dupe) {
-      current.next = current.next.next ?? null;
-    } else {
-      if (isDupe(current)) {
-        dupe = current.val;
-        console.log('found dupe', dupe)
-      }
+  let curr = head;
+  let dummy = new ListNode('dummy', curr);
+  let prev = dummy;
+  let valToRemove = null;
+
+  while (curr !== null) {
+    if (curr.next !== null && curr.val === curr.next.val) {
+      valToRemove = curr.val;
     }
-    current = current.next;
+    if (curr.val === valToRemove) {
+      prev.next = curr.next;
+    } else {
+      prev = curr;
+    }
+    curr = curr.next;
   }
-  return dummy.next; // return the head
+
+  return dummy.next;
 }
 
-function isDupe(node) {
-  if (node.next !== null && (node.next.val === node.val)) {
-    return true;
+// SV v3? -DOESN'T WORK!  Simplified from LS solution
+// function removeDuplicates(head) {
+//   let dummy = new ListNode();
+//   let prev = dummy;
+//   let curr = head;
+//   dummy.next = head;
+
+//   while (curr !== null && curr.next !== null) {
+//     while (curr.next && curr.val === curr.next.val) {
+//       curr = curr.next;
+//     }
+//     curr = curr.next;
+//     // This won't work bc you're not incrementing the `prev`,
+//     // you're only pointing it to the new curr. 
+//     // Put another way: the next line deletes nodes from the list with each iteration.
+//     prev.next = curr;
+//   }
+//   return dummy.next;
+// }
+
+// LS SOLUTION
+function removeDuplicates(head) {
+  let dummy = new ListNode();
+  let prev = dummy;
+  let curr = head;
+  dummy.next = head;
+
+  while (curr !== null && curr.next !== null) {
+    if (curr.val !== curr.next.val) {
+      prev = curr;
+      curr = curr.next;
+    } else {
+      while (curr.next && curr.val === curr.next.val) {
+        curr = curr.next;
+      }
+      curr = curr.next;
+      prev.next = curr;
+    }
   }
-  return false;
+
+  return dummy.next;
 }
-
-

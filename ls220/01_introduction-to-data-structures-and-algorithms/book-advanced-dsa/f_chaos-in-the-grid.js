@@ -25,9 +25,6 @@ const grid = [
 // 2. Right -> Down -> Right
 // 3. Down -> Right -> Right
 
-function chaosInTheGrid(grid) {
-  // implementation
-}
 
 // Test cases
 
@@ -54,9 +51,112 @@ const grid5 = [
   ["", "", "", "", "", ""],
   ["", "", "", "", "", ""],
 ];
-console.log(chaosInTheGrid(grid1) === 1);
-console.log(chaosInTheGrid(grid2) === 2);
+// console.log(chaosInTheGrid(grid1) === 1);
+// console.log(chaosInTheGrid(grid2) === 2);
 console.log(chaosInTheGrid(grid3) === 6);
-console.log(chaosInTheGrid(grid4) === 15);
-console.log(chaosInTheGrid(grid5) === 252);
+// console.log(chaosInTheGrid(grid4) === 15);
+// console.log(chaosInTheGrid(grid5) === 252);
 // All test cases should log true
+
+
+
+// My top-down solution (recursive)
+// function chaosInTheGrid(grid) {
+//   let cols = grid[0].length;
+//   let rows = grid.length;
+//   let result = pathsToCoord(cols - 1, rows - 1);
+//   // console.log(x, y)
+//   // console.log('result', result);
+//   return result;
+
+//   function pathsToCoord(x, y) {
+//     if (x === 0 || y === 0) return 1;
+//     return (
+//       pathsToCoord(x - 1, y) + pathsToCoord(x, y - 1)
+//     );
+//   }
+// }
+
+// ls solution
+// function chaosInTheGrid(grid) {
+//   const rows = grid.length;
+//   const cols = grid[0].length;
+
+//   function pathsToCoord(row, col) {
+//     if (row === 0 || col === 0) {
+//       return 1;
+//     }
+//     return pathsToCoord(row - 1, col) + pathsToCoord(row, col - 1);
+//   }
+
+//   return pathsToCoord(rows - 1, cols - 1);
+// }
+
+
+// SV practice, brute force - works!
+// function chaosInTheGrid(grid) {
+//   let rows = grid.length;
+//   let cols = grid[0].length;
+//   return helper(rows - 1, cols - 1);  
+  
+//   function helper(row, col) {
+//     if (row === 0 || col === 0) {
+//       return 1;
+//     }
+//     return helper(row - 1, col) + helper(row, col - 1); 
+//   }
+// }
+
+// SV practice, cache with array
+function chaosInTheGrid(grid) {
+  let rows = grid.length;
+  let cols = grid[0].length;
+
+  // initialize cache with 1's in 1st row and column
+  // There are many ways to do this, BUT...
+  // ...Be careful to avoid building the cache with shallow-copied rows!
+  let row = Array(cols).fill(undefined)
+  console.log('row', row)
+  let cache = Array(rows).fill().map(() => row.slice());
+  // Fill first col with 1's
+  for (let r = 0; r < rows; r++) {
+    cache[r][0] = 1;
+  }
+  // Fill first row with 1's
+  // cache[0].fill(1);
+  for (let c = 0; c < cols; c++) {
+    cache[0][c] = 1;
+  }
+  // cache[0] = ['hi','hi','hi']
+
+
+  console.log('before: ', cache)
+  let result = helper(rows - 1, cols - 1);  
+  console.log(cache)
+  return result
+  
+  function helper(row, col) {
+    if (row === 0 || col === 0) {
+      return 1;
+    }
+    
+    // if cache has value for requested row and col
+    if (cache[row][col] !== undefined) {
+      return cache[row][col];
+    }
+    // otherwise: calculate, cache, and return
+    let result = helper(row - 1, col) + helper(row, col - 1);
+    cache[row][col] = result;
+    return result;
+  }
+}
+
+
+let grid99 = [
+  [1, 2, 3, 4],
+  [1, 2, 3, 4],
+  [1, 2, 3, 4],
+  [1, 2, 3, 4],
+]
+
+// console.log(chaosInTheGrid(grid99))
