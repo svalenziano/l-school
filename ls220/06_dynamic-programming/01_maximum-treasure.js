@@ -96,10 +96,34 @@ D
 
 A
 //////////////////////////////////////////////////////
-v1 high level
+v1 high level (ABORTED)
   - Use recursion and memoization to calculate all possible routes from top-left to bottom-right
   - Use max to keep track of the max treasure, thus far
   - Return max
+
+  - How to enumerate all paths?
+    - For each point in the grid, there are one or two possible directions, similar to a tree
+    - If this were a tree, you could use a stack, or use recursion
+
+  - maxTreasure(grid)
+    - max = 0;
+    - buildPath(row, col, path, count)  Preorder (NLR) Recursive approach:
+      - Base case = you're at the bottom-right cell?  Return `max`
+      - Process node:
+        - Cache stuff:
+          - path = build path string "[0,0], [0,1], [1,1] ..."
+          - Check cache: If path has already been visited (already in cache), return
+        - Add path to this point to cache
+        - Return value
+      - If you're not at the bottom, traverse down
+      - If you're not at the right, traverse right
+    - 
+  Grid A ******************
+      0 1
+      2 3
+    2 possible routes:
+      0 -> 1 -> 3
+      0 -> 2 -> 3
 
 v1 low level 
   - 

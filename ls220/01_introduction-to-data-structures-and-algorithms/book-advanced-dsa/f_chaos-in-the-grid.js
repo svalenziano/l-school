@@ -51,11 +51,11 @@ const grid5 = [
   ["", "", "", "", "", ""],
   ["", "", "", "", "", ""],
 ];
-// console.log(chaosInTheGrid(grid1) === 1);
-// console.log(chaosInTheGrid(grid2) === 2);
+console.log(chaosInTheGrid(grid1) === 1);
+console.log(chaosInTheGrid(grid2) === 2);
 console.log(chaosInTheGrid(grid3) === 6);
-// console.log(chaosInTheGrid(grid4) === 15);
-// console.log(chaosInTheGrid(grid5) === 252);
+console.log(chaosInTheGrid(grid4) === 15);
+console.log(chaosInTheGrid(grid5) === 252);
 // All test cases should log true
 
 
@@ -115,25 +115,13 @@ function chaosInTheGrid(grid) {
   // initialize cache with 1's in 1st row and column
   // There are many ways to do this, BUT...
   // ...Be careful to avoid building the cache with shallow-copied rows!
-  let row = Array(cols).fill(undefined)
-  console.log('row', row)
-  let cache = Array(rows).fill().map(() => row.slice());
-  // Fill first col with 1's
+  let cache = Array(rows).fill().map(() => Array(cols).fill(undefined));
   for (let r = 0; r < rows; r++) {
     cache[r][0] = 1;
   }
-  // Fill first row with 1's
-  // cache[0].fill(1);
-  for (let c = 0; c < cols; c++) {
-    cache[0][c] = 1;
-  }
-  // cache[0] = ['hi','hi','hi']
+  cache[0].fill(1);
 
-
-  console.log('before: ', cache)
-  let result = helper(rows - 1, cols - 1);  
-  console.log(cache)
-  return result
+  return helper(rows - 1, cols - 1);  
   
   function helper(row, col) {
     if (row === 0 || col === 0) {

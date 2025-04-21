@@ -133,3 +133,25 @@ Iterate through possibles using the pointer
     breadcrumbs.pop();
   }
 }
+
+// LS solution
+function combinations(candidates, k) {
+  function backtrack(candidates, candidate, result, position) {
+    if (candidate.length === k) {
+      result.push([...candidate]);
+      return;
+    }
+    for (let idx = position; idx < candidates.length; idx++) {
+      const elem = candidates[idx];
+      candidate.push(elem);
+      backtrack(candidates, candidate, result, idx + 1);
+      candidate.pop();
+    }
+  }
+
+  const result = [];
+  const candidate = [];
+  let position = 0;
+  backtrack(candidates, candidate, result, position);
+  return result;
+}
