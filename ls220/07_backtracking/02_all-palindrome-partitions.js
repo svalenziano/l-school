@@ -135,53 +135,96 @@ D
 A
 //////////////////////////////////////////////////////
 Success criteria:
-  - all letters of the orig string have been consumed
-  - 
-Dead end(s):
-  - Candidate string is NOT a palindrome
+  - all letters of the orig string have been consumed (pointer >= length of string)
   - 
 Iteration: 
   - For each string length?
-Setup:
-  - 
-  - 
-Explore:
-  - 
-  - 
-Cleanup:
-  - 
-  - 
+  Dead end(s):
+    - Candidate substring is NOT a palindrome.  Skip that string, keep expanding the candidate string
+    - 
+  Setup:
+    - add substring to `candidate`
+    - 
+  Explore:
+    - recurse, incrementing the start index index
+    - 
+  Cleanup:
+    - 
+    - 
 
 */
 
 // LS TESTS
 
 
-
-// ls solution
+// MY SOLUTION
 function isPalindrome(str) {
-    return str === str.split('').reverse().join('');
+  return str === str.split('').reverse().join('');
 }
 
+// console.log(isPalindrome('aba') === true);
+// console.log(isPalindrome('ababa') === true);
+// console.log(isPalindrome('BoB') === true);
+// console.log(isPalindrome('a') === true);
+// console.log(isPalindrome('') === true);
+// console.log(isPalindrome('aab') === false);
+// console.log(isPalindrome('Bab') === false);
+
+
 function allPalindromePartitions(str) {
-  function backtrack(str, candidate, result) {
-    if (str.length === 0) {
+  let candidate = [];
+  let result = [];
+  backtrack();
+  // console.log(result)
+  return result;
+
+  function backtrack(start=0) {
+    if (str.length <= start) {
       result.push([...candidate]);
       return;
     }
-
-    for (let idx = 0; idx < str.length; idx++) {
-      let substring = str.substring(0, idx + 1)
-      if (isPalindrome(substring)) {
-        candidate.push(substring);
-        backtrack(str.slice(idx + 1), candidate, result);
-        candidate.pop();
+    // Iterate from endIdx = start + 1 to endIdx str.length
+    for (let end=start + 1; end <= str.length; end++) {
+      let substr = str.slice(start, end)
+      if (isPalindrome(substr)) {
+        candidate.push(substr);
+        backtrack(end);
+        candidate.pop()
       }
     }
   }
-
-  const result = [];
-  const candidate = [];
-  backtrack(str, candidate, result);
-  return result;
 }
+
+
+// ls solution
+// function isPalindrome(str) {
+//     return str === str.split('').reverse().join('');
+// }
+
+// function allPalindromePartitions(str) {
+//   function backtrack(str, candidate, result, position) {
+//     // success
+//     if (position === str.length) {
+//       result.push([...candidate]);
+//       return;
+//     }
+//     // iterate
+//     for (let idx = position; idx < str.length; idx++) {
+//       // dead-end / prune
+//       let substring = str.substring(position, idx + 1)
+//       // Every single-char string will be pushed to `candidate` and the remaining chars will be recursively explored
+//       // If the substring isn't a palindrome, it will be expanded until a palindrome is found, or the chars are exhausted, whichever comes first
+//       // If the chars are exhausted, there is an implicit return of `undefined`
+//       if (isPalindrome(substring)) {
+//         candidate.push(substring);
+//         backtrack(str, candidate, result, idx + 1);
+//         candidate.pop();
+//       }
+//     }
+//   }
+
+//   const result = [];
+//   const candidate = [];
+//   backtrack(str, candidate, result, 0);
+//   return result;
+// }
