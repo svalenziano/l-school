@@ -147,10 +147,14 @@ P
 //////////////////////////////////////////////////////
 
 Rules:
-  - New tree is linked together with only RIGHT nodes.  Left nodes are all blank
+  - New tree is linked together with only RIGHT children.  No left children.
   - Order of traversal = NLR
+  - 
 E
 //////////////////////////////////////////////////////
+
+
+
 My examples & tests:
 */
 
@@ -163,7 +167,7 @@ D
 
 A
 //////////////////////////////////////////////////////
-
+Base case: 
 
 */
 
@@ -171,3 +175,46 @@ A
 
 
 
+// // Nathan's solution
+// function transform(root) {
+//   let current = root;
+
+//   while (current) {
+//     if (current.left) {
+//       if (current.right) {
+//         let scout = current.left;
+//         while (scout.right) {
+//           scout = scout.right;
+//         }
+//         scout.right = current.right;
+//       }
+
+//       current.right = current.left;
+//       current.left = null;
+//     }
+
+//     current = current.right;
+//   }
+// }
+
+// LS solution
+function transform(root) {
+  if (root === null || (root.left === null && root.right === null)) {
+    return;
+  }
+
+  let left = root.left;
+  let right = root.right;
+  root.left = null;
+  root.right = left;
+
+  rightMost = root;
+  while (rightMost.right) {
+    rightMost = rightMost.right;
+  }
+
+  rightMost.right = right;
+
+  transform(left);
+  transform(right);
+}

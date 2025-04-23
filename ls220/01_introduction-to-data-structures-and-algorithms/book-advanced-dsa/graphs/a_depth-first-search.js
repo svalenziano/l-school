@@ -100,3 +100,51 @@ function dfs(adjList, source) {
 // LS: simpler solution!
 //  No need for helper function!
 // default return value of `Map.proto.get` provides safe handling of the base case without hand-coded logic
+function dfs(adjList, source, visited = new Set()) {
+  console.log(source);
+  visited.add(source);
+
+  let neighbors = adjList.get(source);
+  for (let neighbor of neighbors) {
+    if (!visited.has(neighbor)) {
+      dfs(adjList, neighbor, visited);
+    }
+  }
+}
+
+
+// my attempt 2025-04-22 - FAIL!
+// Never adds `source` to `visited`!
+
+/*
+SV SCRATCH
+- neighbors = get neighbors from adjacencies list
+- for each neighbor:
+  - If the neighbor isn't in `visited`:
+    - Add the neighbor to `visited`
+    - Do stuff (now's your chance to process the vertex)
+    - traverse neighbor (recursive call)
+*/
+// function dfs(adjList, source, visited=new Set()) {
+//   neighbors = adjList.get(source);
+//   for (let n of neighbors) {
+//     if (!visited.has(n)) {
+//       visited.add(n);
+//       console.log(source)  // do stuff to vertex
+//       dfs(adjList, n, visited);
+//     }
+//   }
+// }
+
+
+// my attempt 2025-04-23
+function dfs(adjList, source, visited = new Set([source])) {
+  console.log(source);
+
+  for (let neighbor of adjList.get(source)) {
+    if (!visited.has(neighbor)) {
+      visited.add(neighbor);
+      dfs(adjList, neighbor, visited);
+    }
+  }
+}
