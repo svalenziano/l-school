@@ -67,15 +67,15 @@ function coordinateSetsEqual(set1, set2) {
 
 // // Test Cases:
 
-const grid1 = [
-  [1, 2, 1, 3, 6], // 0
-  [2, 2, 3, 4, 4], // 1
-  [2, 3, 5, 2, 1], // 2  
-  [9, 8, 1, 3, 5], // 3 
-  [5, 1, 2, 2, 3]  // 4
-];
-const expected1 = [[0,4],[1,3],[1,4],[2,2],[3,0],[3,1],[4,0]];  // my solve is missing [1,4], [3,0]
-console.log(coordinateSetsEqual(waterFlow(grid1), expected1));
+// const grid1 = [
+//   [1, 2, 1, 3, 6], // 0
+//   [2, 2, 3, 4, 4], // 1
+//   [2, 3, 5, 2, 1], // 2  
+//   [9, 8, 1, 3, 5], // 3 
+//   [5, 1, 2, 2, 3]  // 4
+// ];
+// const expected1 = [[0,4],[1,3],[1,4],[2,2],[3,0],[3,1],[4,0]];  // my solve is missing [1,4], [3,0]
+// console.log(coordinateSetsEqual(waterFlow(grid1), expected1));
 
 // const grid2 = [[1]];
 // const expected2 = [[0,0]];
@@ -91,13 +91,13 @@ console.log(coordinateSetsEqual(waterFlow(grid1), expected1));
 // const expected3 = [[0,0],[0,1],[0,2],[0,3],[0,4],[1,0],[1,4],[2,0],[2,4],[3,0],[3,4],[4,0],[4,1],[4,2],[4,3],[4,4]];
 // console.log(coordinateSetsEqual(waterFlow(grid3), expected3));
 
-// const grid4 = [
-//   [1, 2, 3],
-//   [8, 9, 4],
-//   [7, 6, 5]
-// ];
-// const expected4 = [[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]];
-// console.log(coordinateSetsEqual(waterFlow(grid4), expected4));
+const grid4 = [
+  [1, 2, 3],
+  [8, 9, 4],
+  [7, 6, 5]
+];
+const expected4 = [[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]];
+console.log(coordinateSetsEqual(waterFlow(grid4), expected4));
 
 // const grid5 = [
 //   [10, 10, 10, 10],
@@ -214,27 +214,21 @@ function waterFlow(heights) {
     }
 
   function getFlowableNeighbors(row, col) {
-    // Input = integers = row and column coordinates
-    // Return = nested array of ints = filtered row and column coords.  Only points that are equal or lower in height
-    // No validation! Assumes that (x, y) isn't at the edge of the matrix
-
-    // Algo:
-    /* 
-    - Create list of neighboring coords
-    - Filter that list: height at coord must be lower than `current` height
-    */
-
+    let neighbors = [];
+    const directions = [[-1, 0], [1, 0], [0, 1], [0, -1]]; // north, south, east, west
     
-    // list of neighboring coords:
-    let north = [row - 1, col    ];
-    let south = [row + 1, col    ];
-    let east =  [row,     col + 1];
-    let west =  [row,     col - 1];
-
-    let currentHeight = heights[row][col];
-    let flowableNeighbors = [north, south, east, west]
-      .filter((coords) => currentHeight >= heights[coords[0]][coords[1]]);
-
-    return flowableNeighbors;
+    for (let [dr, dc] of directions) {
+      let newRow = row + dr;
+      let newCol = col + dc;
+      
+      // Check if within bounds
+      if (newRow >= 0 && newRow <= LAST_ROW && 
+          newCol >= 0 && newCol <= LAST_COL && 
+          heights[row][col] >= heights[newRow][newCol]) {
+        neighbors.push([newRow, newCol]);
+      }
+    }
+    
+    return neighbors;
   }
 }
