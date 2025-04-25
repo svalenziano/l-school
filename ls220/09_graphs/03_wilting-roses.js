@@ -61,7 +61,8 @@ console.log(wiltedRoses([[0,0,0],[0,1,0],[0,0,2]]) === -1);
 console.log(wiltedRoses([[2,1,1],[1,1,1],[0,1,2]]) === 2);
         
         
-        
+// SV SOLUTION
+// NOT PRETTY BUT IT WORKS!!!        
 /*
 P
 //////////////////////////////////////////////////////
@@ -134,7 +135,7 @@ IDEA: for each neighboring coord, if that coord is not in `visited`, and the pla
 function wiltedRoses(garden) {
   if (garden.length === 0) return -1;
   
-  let daysCounter = 0;
+  let daysCounter = -1;
   let wiltNext = []; // queue
   let visited = new Set();
   let healthy = new Set();
@@ -152,7 +153,7 @@ function wiltedRoses(garden) {
     for (let col = 0; col < COLUMNS; col++) {
       let plant = garden[row][col];
       if (plant === WILTED) {
-        wiltNext.push([row, col]);
+        wiltNext.push(encode(row, col));
         visited.add(encode(row, col))
       }
       if (plant === HEALTHY) healthy.add(encode(row, col));
@@ -164,10 +165,14 @@ function wiltedRoses(garden) {
     let levelSize = wiltNext.length;
     for (let i = 0; i < levelSize; i++) {
       // wilting happens by dequeuing each vertex and updating 'healthy'
-      let [row, col] = wiltNext.shift();
+      let [row, col] = decode(wiltNext.shift());
       healthy.delete(encode(row, col));
 
-      enqueueWiltableNeighbors(row, col)
+      let healthyNeighbors = getHealthyNeighbors(row, col)
+      healthyNeighbors.forEach((encodedCoordinate) => {
+        wiltNext.push(encodedCoordinate);
+        visited.add(encodedCoordinate)
+      })
     }
     daysCounter += 1;
   }
@@ -178,7 +183,9 @@ function wiltedRoses(garden) {
   }
   return daysCounter;
 
-  function enqueueWiltableNeighbors(row, col) {
+  function getHealthyNeighbors(row, col) {
+    // return nested array of rows and columns that are wiltable
+    const result = [];
     const NEIGHBORS = [
       [1, 0],
       [-1, 0],
@@ -192,10 +199,60 @@ function wiltedRoses(garden) {
       const neighborValue = garden[row + tRow][col + tCol]
       const neighborCoords = encode(row + tRow, col + tCol)
       if (neighborValue === HEALTHY && !visited.has(neighborCoords)) {
-        wiltNext.push([row + tRow, col + tCol])
+        // result.push(neighborCoords)
+        wiltNext.push(neighborCoords)
         visited.add(neighborCoords)
+      }
+    }
+    return result;
+  }
+
+}
+
+
+// LS SOLUTION
+function wiltedRoses(garden) {
+  const rows = garden.length;
+  if (rows === 0) {
+    return -1;
+  }
+
+  const cols = garden[0].length;
+
+  let healthyRoses = 0;
+  let queue = [];
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (garden[r][c] === 2) {
+        queue.push([r, c]);
+      } else if (garden[r][c] === 1) {
+          healthyRoses++;
       }
     }
   }
 
+  let days = 0;
+
+  while (queue.length > 0 && healthyRoses > 0) {
+    let currentWiltedCount = queue.length;
+    for (let i = 0; i < currentWiltedCount; i++) {
+      const [x, y] = queue.shift();
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const xx = x + dx;
+        const yy = y + dy;
+        if (xx < 0 || xx >= rows || yy < 0 || yy >= cols) {
+          continue;
+        }
+        if (garden[xx][yy] === 0 || garden[xx][yy] === 2) {
+          continue;
+        }
+        garden[xx][yy] = 2;
+        healthyRoses--;
+        queue.push([xx, yy]);
+      }
+    }
+    days++;
+  }
+  return healthyRoses > 0 ? -1 : days;
 }
