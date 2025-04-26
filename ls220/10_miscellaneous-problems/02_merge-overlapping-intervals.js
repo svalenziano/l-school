@@ -26,23 +26,23 @@
 console.log(mergeIntervals([[2,5], [4,8], [10,12], [13,16]]));
 // Expected: [[2,8], [10,12], [13,16]]
 
-// console.log(mergeIntervals([[3,6], [3,4], [5,8], [7,9]]));
-// // Expected: [[3,9]]
+console.log(mergeIntervals([[3,6], [3,4], [5,8], [7,9]]));
+// Expected: [[3,9]]
 
-// console.log(mergeIntervals([[1,3], [5,7], [9,11]]));
-// // Expected: [[1,3], [5,7], [9,11]]
+console.log(mergeIntervals([[1,3], [5,7], [9,11]]));
+// Expected: [[1,3], [5,7], [9,11]]
 
-// console.log(mergeIntervals([[1,4], [0,4]]));
-// // Expected: [[0,4]]
+console.log(mergeIntervals([[1,4], [0,4]]));
+// Expected: [[0,4]]
 
-// console.log(mergeIntervals([[1,4], [2,3]]));
-// // Expected: [[1,4]]
+console.log(mergeIntervals([[1,4], [2,3]]));
+// Expected: [[1,4]]
 
-// console.log(mergeIntervals([]));
-// // Expected: []
+console.log(mergeIntervals([]));
+// Expected: []
 
-// console.log(mergeIntervals([[1,4], [4,5]]));
-// // Expected: [[1,5]]
+console.log(mergeIntervals([[1,4], [4,5]]));
+// Expected: [[1,5]]
         
         
 /*
@@ -87,23 +87,60 @@ function mergeIntervals(intervals) {
   let anchor = 0;
   let runner = 1;
 
-  // merge
-  let aStart = intervals[anchor][0];
-  let aEnd = intervals[anchor][intervals[anchor].length - 1]
-  let rStart = intervals[runner][0];
-  let rEnd = intervals[runner][intervals[runner].length - 1]
 
 
-  if (aStart >= rStart && aStart <= rEnd ||  // end of first >=  beginning of second
-      rStart >= aStart && rStart <= aEnd) {
-    console.log("overlap!")
-    let min = Math.min(aStart, rStart);
-    let max = Math.max(aEnd, rEnd);
-    intervals.splice(anchor, 1);
-    intervals.splice(runner - 1, 1);
-    intervals.unshift([min, max]);
+  while (anchor < intervals.length - 1) {
+      // merge
+    let aStart = intervals[anchor][0];
+    let aEnd = intervals[anchor][intervals[anchor].length - 1]
+    let rStart = intervals[runner][0];
+    let rEnd = intervals[runner][intervals[runner].length - 1]
+
+    if (aStart >= rStart && aStart <= rEnd ||  // end of first >=  beginning of second
+        rStart >= aStart && rStart <= aEnd) {
+      let min = Math.min(aStart, rStart);
+      let max = Math.max(aEnd, rEnd);
+      intervals.splice(anchor, 1);
+      intervals.splice(runner - 1, 1);
+      intervals.unshift([min, max]);
+      anchor = 0;
+      runner = 1;
+      } else {
+    runner++;
+    } 
+    if (runner === intervals.length) {
+      anchor += 1;
+      runner = anchor + 1;
     }
-  return intervals
+  }
+  return intervals;
+} 
+
+
+// LS solution with SV comments
+/* 
+
+result[result.length - 1] = 'end' number of last eleement of result
+
+ */
+function mergeIntervals(intervals) {
+  if (!intervals.length) {
+    return [];
+  }
+
+  intervals.sort((a, b) => a[0] - b[0]);
+
+  const result = [intervals[0]];
+  // iterate thru elements of intervals
+  for (let i = 1; i < intervals.length; i++) {
+    // if there's an overlap (if 'end' number of last ele. of result >= the start number )
+    if (result[result.length - 1][1] >= intervals[i][0]) {
+      // Update `result` to reflect the larger interval
+      result[result.length - 1][1] = Math.max(result[result.length - 1][1], intervals[i][1]);
+    // Otherwise (no overlap), simply push the interval to result
+    } else {
+      result.push(intervals[i]);
+    }
+  }
+  return result;
 }
-
-
