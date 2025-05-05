@@ -197,7 +197,7 @@ function calculator(expression) {
       }
       // update the operator for the next iteration
       op = char;
-      num = 0;
+      num = '';
     }
   }
 

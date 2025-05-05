@@ -98,20 +98,22 @@ v2 - after looking at the hint - "YOU CAN USE START-END POINTER STRATEGY"
 
 // LS TESTS
 
-// console.log(maxRainwater([1, 1]) === 1);
-// console.log(maxRainwater([1, 3]) === 1);
-// console.log(maxRainwater([1, 2, 1]) === 2);
-// console.log(maxRainwater([2, 3, 4, 2]) === 6);
-// console.log(maxRainwater([2, 2, 2, 2, 2]) === 8);
-// console.log(maxRainwater([2, 9, 5, 10, 5, 6]) === 24);
-// console.log(maxRainwater([5, 4, 3, 2, 9, 10, 3, 4, 5]) === 40);
-// console.log(maxRainwater([3, 1, 2, 5, 2, 4, 2, 5, 6, 1, 5, 3, 2, 3, 4, 1, 2]) === 44);
-// console.log(maxRainwater([2, 2, 13, 9, 1, 15, 2, 5, 9, 7, 5, 3, 6, 3, 4, 1, 4, 5]) === 75);
+console.log(maxRainwater([1, 1]) === 1);
+console.log(maxRainwater([1, 3]) === 1);
+console.log(maxRainwater([1, 2, 1]) === 2);
+console.log(maxRainwater([2, 3, 4, 2]) === 6);
+console.log(maxRainwater([2, 2, 2, 2, 2]) === 8);
+console.log(maxRainwater([2, 9, 5, 10, 5, 6]) === 24);
+console.log(maxRainwater([5, 4, 3, 2, 9, 10, 3, 4, 5]) === 40);
+console.log(maxRainwater([3, 1, 2, 5, 2, 4, 2, 5, 6, 1, 5, 3, 2, 3, 4, 1, 2]) === 44);
+console.log(maxRainwater([2, 2, 13, 9, 1, 15, 2, 5, 9, 7, 5, 3, 6, 3, 4, 1, 4, 5]) === 75);
 
 
 // MY TESTS
 console.log(maxRainwater([1, 2, 3, 4, 5]) === 6);
 console.log(maxRainwater([1, 8, 6, 2, 5, 4, 8, 3, 7]) === 49)
+console.log(maxRainwater([1, 20, 20, 1, 1, 1, 1, 1, 1]) === 20);
+console.log(maxRainwater([1, 10, 10, 1, 1, 1, 8, 1]) === 40);
 
 
 
