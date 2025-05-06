@@ -68,7 +68,7 @@ printLinkedList(removeSecondToLast(list2)); // Expected: 2 -> null
 printLinkedList(removeSecondToLast(list3)); // Expected: 3 -> 1 -> null
 printLinkedList(removeSecondToLast(list4)); // Expected: 1 -> 2 -> 4 -> null
 printLinkedList(removeSecondToLast(list5)); // Expected: 10 -> 20 -> 30 -> 40 -> 60 -> null
-        
+
         
         
 /*
