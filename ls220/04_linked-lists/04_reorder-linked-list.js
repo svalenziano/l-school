@@ -132,7 +132,7 @@ function reorderOddEven(head) {
 // ls solve
 function reorderOddEven(head) {
   if (!head || !head.next) {
-    return head;
+    return head; 
   }
   let odd = head;
   let even = head.next;

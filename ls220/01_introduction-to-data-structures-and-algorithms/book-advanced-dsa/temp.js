@@ -1,73 +1,60 @@
-
-// A puppy named Chaos is eager to reach a bowl of
-// treats at the top of a series of n stacks of
-// crates. Each stack is higher by one crate than
-// the previous one, forming a structure similar
-// to stairs. Each time, Chaos can hop either one
-// stack or two stacks upward in his excitement. In
-// how many distinct ways can Chaos reach the bowl?
-
-// Write a function `hoppingChaos` that, given a
-// number `N` as the input, determines the number
-// of distinct ways Chaos can reach the bowl.
-
-// The minimum amount of stacks is one, and the maximum is 50.
-
-// Example 1:
-
-    // Input: 2
-    // Output: 2
-
-    // Chaos can reach the top of the stack in two distinct ways:
-
-    // 1. Hop 1 stack, then hop 1 more stack.
-    // 2. Hop 2 stacks in one go.
-
-// Example 2:
-
-    // Input: 4
-    // Output: 5
-
-    // Chaos can reach the top of the stack in five distinct ways:
-
-    // 1. Hop 1 stack, hop 1 stack, hop 1 stack, then hop 1 stack.
-    // 2. Hop 1 stack, hop 1 stack, then hop 2 stacks in one go.
-    // 3. Hop 1 stack, then hop 2 stacks in one go, then hop 1 stack.
-    // 4. Hop 2 stacks in one go, hop 1 stack, then hop 1 stack.
-    // 5. Hop 2 stacks in one go, then hop 2 stacks in one go again.
-
-function hoppingChaos(n) {
-  // implementation
-}
+"use strict";
+/* 
+From McDowell p.95
 
 
-console.log(hoppingChaos(2) === 2);
-console.log(hoppingChaos(3) === 3);
-console.log(hoppingChaos(4) === 5);
-console.log(hoppingChaos(8) === 34);
-console.log(hoppingChaos(13) === 377);
-console.log(hoppingChaos(17) === 2584);
-console.log(hoppingChaos(21) === 17711);
-console.log(hoppingChaos(50) === 20365011074);
-// All test cases should log true.
+Input: linked list, each node containing a single digit.  Digits are stored in 'reverse order'
 
-function hoppingChaos(n) {
-  const memo = new Map();
+Rules: You 
+*/
 
-  function waysToN(n) {
-    if (n === 1) {
-      return 1;
-    }
-    if (n === 2) {
-      return 2;
-    }
-    if (memo.has(n)) {
-      return memo.get(n);
-    }
-    const result = waysToN(n - 1) + waysToN(n - 2);
-    memo.set(n, result);
-    return result;
+class ListNode {
+  constructor(val = 0, next = null) {
+    this.val = val;
+    this.next = next;
   }
-
-  return waysToN(n);
 }
+
+function printLinkedList(head) {
+  let currentNode = head;
+  let listStr = '';
+  while (currentNode !== null) {
+    listStr += currentNode.val + ' -> ';
+    currentNode = currentNode.next;
+  }
+  listStr += 'null';
+  console.log(listStr);
+}
+
+function createLinkedList(arr) {
+  let dummy = new ListNode(0);
+  let cur = dummy;
+  arr.forEach(val => {
+    cur.next = new ListNode(val);
+    cur = cur.next;
+  });
+  return dummy.next;
+}
+
+
+
+let list1 = createLinkedList([3, 5, 8, 5, 10, 2, 1]);
+list1 = partition(list1, 5)
+
+let list2 = createLinkedList([1, 2, 3]);
+list2 = partition(list2, 5)
+
+let list3 = createLinkedList([4, 5, 6, 7, 1, 2, 3]);
+list3 = partition(list3, 3)
+
+printLinkedList(list1); // Expected (order may vary, partition indicated by =>): 
+                        // 3 -> 1 -> 2 => 10 -> 5 -> 5 -> 8
+printLinkedList(list2); // Expected: 1 -> 2 -> 3
+printLinkedList(list3); // Expected: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
+
+
+
+/* 
+my solve
+
+*/

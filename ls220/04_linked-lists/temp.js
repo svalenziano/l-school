@@ -80,8 +80,6 @@ my solve
 */
 
 function reorderOddEven(head) {
-  
-
   if (head === null || head.next === null || head.next.next === null) {
     return head;
   }
@@ -91,22 +89,22 @@ function reorderOddEven(head) {
   let even = odd.next;
   let firstEven = even;
 
-  odd.next = even.next;
-  odd = odd.next;
+  while (even.next && odd.next) {
+    odd.next = even.next;
+    odd = odd.next;
 
-  if (odd.next === null) {
-    even.next = null;
-    odd.next = firstEven;
-    return firstOdd;
+    if (odd.next === null) {
+      even.next = null;
+      odd.next = firstEven;
+      return firstOdd;
+    }
+
+    even.next = odd.next;
+    even = even.next;
+
+    if (even.next === null) {
+      odd.next = firstEven;
+      return firstOdd;
+    }
   }
-
-  even.next = odd.next;
-  even = even.next;
-
-  if (even.next === null) {
-    odd.next = firstEven;
-    return firstOdd;
-  }
-  return firstOdd
-  console.log('UH OH')
 }
