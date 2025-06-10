@@ -1,60 +1,94 @@
-"use strict";
-/* 
-From McDowell p.95
+// Implement a function `findNodeInBST` that, given
+// the root node of a binary search tree and a value,
+// returns true if the value exists in the tree or
+// false if it does not.
 
-
-Input: linked list, each node containing a single digit.  Digits are stored in 'reverse order'
-
-Rules: You 
-*/
-
-class ListNode {
-  constructor(val = 0, next = null) {
-    this.val = val;
-    this.next = next;
+class Node {
+  constructor(value) {
+    this.val = value;
+    this.left = null;
+    this.right = null;
   }
 }
 
-function printLinkedList(head) {
-  let currentNode = head;
-  let listStr = '';
-  while (currentNode !== null) {
-    listStr += currentNode.val + ' -> ';
-    currentNode = currentNode.next;
+// Helper function for test cases
+function buildTree(arr) {
+  if (arr.length === 0) {
+    return null;
   }
-  listStr += 'null';
-  console.log(listStr);
+
+  const nodes = [];
+
+  const val = arr.shift();
+  const root = new Node(val);
+  nodes.push(root);
+
+  while (arr.length > 0) {
+    const curr = nodes.shift();
+
+    const leftVal = arr.shift();
+    if (leftVal !== null) {
+      curr.left = new Node(leftVal);
+      nodes.push(curr.left);
+    }
+
+    if (arr.length > 0) {
+      const rightVal = arr.shift();
+      if (rightVal !== null) {
+        curr.right = new Node(rightVal);
+        nodes.push(curr.right);
+      }
+    }
+  }
+
+  return root;
 }
 
-function createLinkedList(arr) {
-  let dummy = new ListNode(0);
-  let cur = dummy;
-  arr.forEach(val => {
-    cur.next = new ListNode(val);
-    cur = cur.next;
-  });
-  return dummy.next;
-}
+// Test cases
+const tree1 = buildTree([4, 2, 7, 1, 3]);
+console.log(findNodeInBST(tree1, 2) === true);
+console.log(findNodeInBST(tree1, 5) === false);
 
+const tree2 = buildTree([5, 3, 8, 1, 4, 7, 9]);
+console.log(findNodeInBST(tree2, 7) === true);
+console.log(findNodeInBST(tree2, 10) === false);
 
+const tree3 = buildTree([10]);
+console.log(findNodeInBST(tree3, 10) === true);
+console.log(findNodeInBST(tree3, 5) === false);
 
-let list1 = createLinkedList([3, 5, 8, 5, 10, 2, 1]);
-list1 = partition(list1, 5)
-
-let list2 = createLinkedList([1, 2, 3]);
-list2 = partition(list2, 5)
-
-let list3 = createLinkedList([4, 5, 6, 7, 1, 2, 3]);
-list3 = partition(list3, 3)
-
-printLinkedList(list1); // Expected (order may vary, partition indicated by =>): 
-                        // 3 -> 1 -> 2 => 10 -> 5 -> 5 -> 8
-printLinkedList(list2); // Expected: 1 -> 2 -> 3
-printLinkedList(list3); // Expected: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
-
+const tree4 = buildTree([]);
+console.log(findNodeInBST(tree4, 1) === false);
+// All test cases should log true
 
 
 /* 
 my solve
 
+- while node !== null:
+  - If value === target:
+    - return true
+  - if value > target:
+    - search left
+  - else
+    - search right
+-return false
 */
+
+function findNodeInBST(root, target) {
+  return traverse(root);
+
+  function traverse(node) {
+    if (node === null) return false;
+
+    if (node.val === target) {
+      return true;
+    }
+    if (node.val > target) {
+      return traverse(node.left);
+    } else {
+      return traverse(node.right)
+    }
+  }
+}
+

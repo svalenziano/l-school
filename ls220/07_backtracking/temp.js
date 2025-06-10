@@ -1,100 +1,80 @@
-// Create a function `permutations` that takes an array of unique integers, `nums`, and
-// returns all possible arrangements (permutations) of these numbers.
-
-// The input array will contain at most 8 numbers.
+"use strict";
+// Write a function `removeDuplicates` that removes all
+// nodes with duplicate values from a sorted linked list,
+// leaving only distinct values from the original list.
+// The function should take the head of the sorted linked
+// list as input and return the modified list. The list
+// should remain sorted after removing duplicates. If the
+// list becomes empty after removing all duplicates,
+// return null.
 
 // Example:
+// Input: head = [1, 2, 2, 3, 3, 4, 5, 5]
+// Output: [1, 4]
+// Explanation: The values 2, 3, and 5 appear multiple times, so
+//              they are removed. Only 1 and 4 remain as unique
+//              values.
 
-  // Input: [1,2,3]
-  // Output: [
-  //          [1, 2, 3],[1, 3, 2],[2, 1, 3],
-  //          [2, 3, 1], [3, 1, 2], [3, 2, 1]
-  //                                          ]
-
-function testPermutations(input, expectedLength) {
-  const result = permutations(input);
-  if (result.length !== expectedLength) return false;
-
-  const stringifiedPerms = result.map(JSON.stringify);
-  const uniquePerms = new Set(stringifiedPerms);
-  return uniquePerms.size === expectedLength;
-}
-
-// Test Cases:
-
-console.log(testPermutations([1,2,3], 6));
-console.log(testPermutations([1, 1, 1], 6));
-// console.log(testPermutations([0,1], 2));
-// console.log(testPermutations([1], 1));
-// console.log(testPermutations([1,2,3,4], 24));
-// console.log(testPermutations([1,2,3,4,5], 120));
-// console.log(testPermutations([1,2,3,4,5,6], 720));
-// console.log(testPermutations([1,2,3,4,5,6,7], 5040));
-// console.log(testPermutations([1,2,3,4,5,6,7,8], 40320));
-// console.log(testPermutations([0,1,2,3,4,5,6,7,8,9], 3628800));
-
-// Note: The order of permutations in the output doesn't matter,
-// as long as all permutations are present.
-
-// Don't run the last case for the naive-branch solution.
-// If you do and your machine seems "stuck" press `CTRL+Z`
-
-
-/* 
-VARS:
-- candidate [] (stack)
-- visited - empty Set
-- result []
-
-SUCCESS
-  - length of solution = length of input array
-
-ITERATION
-  - for each index
-  DEAD-END / PRUNING
-    - if requested index is in `visited` set?
-      - return 
-    SETUP
-      - push element at index to `candidate` stack
-      - add index to set so it's not revisited by any recursive calls
-    RECURSE
-      - recursive call!
-    CLEANUP
-      - pop element off `candidate` stack
-      - remove index from `visited` set
-      - 
-
- */
-
- // my solution
-function permutations(arr) {
-  let candidate = [];
-  let visited = new Set();
-  let result = [];
-
-  backtrack();
-  console.log(result)
-  return result;
-
-  function backtrack() {
-    if (candidate.length === arr.length) {
-      result.push([...candidate]);
-    }
-    for (let idx = 0; idx < arr.length; idx++) {
-      if (visited.has(idx)) {
-        continue;
-      }
-      // setup
-      visited.add(idx);
-      candidate.push(arr[idx])
-      // recurse
-      backtrack();
-      // cleanup
-      candidate.pop()
-      visited.delete(idx)
-    }
+class ListNode {
+  constructor(val = 0, next = null) {
+    this.val = val;
+    this.next = next;
   }
+}
 
+function printLinkedList(head) {
+  let currentNode = head;
+  let listStr = '';
+  while (currentNode !== null) {
+    listStr += currentNode.val + ' -> ';
+    currentNode = currentNode.next;
+  }
+  listStr += 'null';
+  console.log(listStr);
+}
+
+function createLinkedList(arr) {
+  let head = new ListNode(0);
+  let current = head;
+  arr.forEach(val => {
+    current.next = new ListNode(val);
+    current = current.next;
+  });
+  return head.next;
 }
 
 
+let list1 = createLinkedList([1, 2, 2, 3, 3, 4, 5, 5]);
+let list2 = createLinkedList([1, 1, 1, 2, 3]);
+let list3 = createLinkedList([1, 2, 3, 4, 5]);
+let list4 = createLinkedList([1, 1, 1, 1, 1]);
+let list5 = createLinkedList([1, 2, 2, 3, 3, 3, 4, 4, 5, 5, 5]);
+
+printLinkedList(removeDuplicates(list1)); // Expected: 1 -> 4 -> null
+printLinkedList(removeDuplicates(list2)); // Expected: 2 -> 3 -> null
+printLinkedList(removeDuplicates(list3)); // Expected: 1 -> 2 -> 3 -> 4 -> 5 -> null
+printLinkedList(removeDuplicates(list4)); // Expected: null
+printLinkedList(removeDuplicates(list5)); // Expected: 1 -> null
+
+
+/*
+P
+/////////////////////////////////////
+
+
+E
+/////////////////////////////////////
+
+1, 2, 2, 3, 3, 4, 5, 5
+
+
+D
+/////////////////////////////////////
+
+
+A
+/////////////////////////////////////
+
+
+
+*/

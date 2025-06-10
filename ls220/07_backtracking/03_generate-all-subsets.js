@@ -45,98 +45,38 @@ console.log(testGenerateSubsets([1,2,3,4,5], [
 ]));
         
         
-        
-/*
+/* 
 P
-//////////////////////////////////////////////////////
-Possible subsets = for every `k` between 0 and the length of the array, the list of possible subsets is every possible COMBINATION (not permutation) of `k` integers
+////////////////////////////////////////////
+
+
 
 E
-//////////////////////////////////////////////////////
-My examples & tests:
-*/
+////////////////////////////////////////////
 
-/*
 
 
 D
-//////////////////////////////////////////////////////
-candidates = stack (array) of candidates
+////////////////////////////////////////////
+
+
 
 A
-//////////////////////////////////////////////////////
-v1 high level
-- for every length `k` between 0 and nums.length:
-  - for every startIndex between 0 and nums.length minus `length`
-    - create array of length `k` and append to `result`
-- return `result`
+////////////////////////////////////////////
 
-v1 low level
-- result = []
-- candidate = []
-- for every length `k` btw 0 and nums.length:
-  - helper(k)
-- return result
+realm of possibilities: elements in the array / set (unique elements)
+pruning: remove the element from the set
 
-HELPER FUNCTION(k = 0)
-  SUCCESS
-    - candidate length === `k`?
-      - push candidate to result
-  ITERATION - for every starting idx btw 0 and nums.length minus `k`
-    - DEAD END / PRUNING:
-      - startIdx = current startIdx + 1
-    - SETUP
-      - push candidate
-    - RECURSE
-      - PASS startIdx + 1
-    - CLEANUP
-      - pop Candidate
+IDEA 1:
+  - result = []
+  - possibilities = new Set([arr])
+  - candidate = []
+  - for each length between 0 and arr.length:
+    - 
+
+
+
+
 
 */
 
-// LS TESTS
-
-
-// my solve
-
-// function generateSubsets(nums) {
-//   let result = [];
-//   let candidate = [];
-//   for (len = 0; len <= nums.length; len++) {
-//     backtrack(start=0);
-//   }
-//   // console.log(result)
-//   return result;
-
-//   function backtrack(start=0) {
-//     if (candidate.length === len) {
-//       result.push([...candidate]);
-//       return;
-//     }
-//     for (let idx = start; idx < nums.length; idx++) {
-//       candidate.push(nums[idx]);
-//       backtrack(start = start + 1)
-//       candidate.pop()
-//     }
-//   }
-// }
-
-//ls solution
-function generateSubsets(nums) {
-  function backtrack(candidates, candidate, result, position) {
-    result.push([...candidate]);
-
-    for (let idx = position; idx < candidates.length; idx++) {
-      const elem = candidates[idx];
-      candidate.push(elem);
-      backtrack(candidates, candidate, result, idx + 1);
-      candidate.pop();
-    }
-  }
-
-  const result = [];
-  const candidate = [];
-  backtrack(nums, candidate, result, 0);
-  // console.log(result)
-  return result;
-}
