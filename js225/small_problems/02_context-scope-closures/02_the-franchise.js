@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 
 
 
@@ -26,6 +26,16 @@ A
 */
 
 // LS TESTS
+const franchise = {
+  name: 'How to Train Your Dragon',
+  allMovies() {
+    return [1, 2, 3].map(function(n) {
+      return `${this.name} ${n}`
+    }.bind(this));
+  },
+};
 
+
+console.log(franchise.allMovies())
 
 

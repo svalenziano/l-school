@@ -1,30 +1,47 @@
-let invoices = {
-  unpaid: [],
-  paid: [],
+class Animal {
+  #fname;
+  
+  constructor(fname) {
+    this.#fname = fname;  // private field
+    Animal.instances.push(this);
+  }
 
-  add(company, amount) {
-    this.unpaid.push({company, amount})
-  },
+  static instances = [];
 
-  totalDue() {
-    return this.unpaid.reduce((accum, ele) => accum + ele.amount, 0)
-  },
+  static rollCall() {
+    console.log(`${this.name}s: ${this.instances
+      .map((i) => i.fname)
+      .join(', ')}`)
+  }
 
-  getIdx(collection, companyName) {
-    for (let i = 0; i < collection.length; i++) {
-      if (collection[i].company === companyName) {
-        return i;
-      }
-    }
-    return -1;
-  },
-
-  payInvoice(company) {
-    let idx = this.getIdx()
+  get fname() {
+    return this.#fname;
   }
 }
 
-invoices.add("Starbucks", 300)
-invoices.add("Weeblewoble", 123)
-// console.dir(invoices)
-console.log(invoices.totalDue())
+class Doggo extends Animal {
+  constructor(fname, friends) {
+    super(fname);
+    this.friends = friends;
+    Doggo.instances.push(this);
+  }
+
+  static greet = "Woof"
+  static instances = [];
+
+  greeting() {
+    console.log(`${Doggo.greet}! I'm ${this.fname}`)
+  }
+}
+
+// USAGE
+let steven = new Animal("Steven")
+let mel = new Animal("Moops")
+
+let hanna = new Doggo('Hanna', 'Felix')
+hanna.greeting()
+
+let felix = new Doggo('Felix', 'Hanna');
+
+Animal.rollCall();
+Doggo.rollCall();
