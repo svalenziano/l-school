@@ -29,3 +29,14 @@ A
 
 
 
+
+const greeter = {
+  name: 'Naveed',
+  greeting: 'Hello',
+};
+
+greeter.sayGreetings = (function() {
+    console.log(`${this.greeting} ${this.name}!`);
+  }).bind(greeter);
+
+greeter.sayGreetings();
