@@ -1,3 +1,8 @@
+function makeSchool() {
+  let students = [];
+  
+}
+
 const school = {
   students: [],
   addStudent(name, year) {
