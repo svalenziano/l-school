@@ -58,7 +58,6 @@ function multiMultiply(prefix='', suffix='') {
   });
 }
 
-let boundToTest = myBind(multiMultiply, test, prefix='x=');
+let boundToTest = myBind(multiMultiply, test, 'x=');
 
-console.log(boundToTest(suffix="!!!"));
-
+console.log(boundToTest("!!!"));
