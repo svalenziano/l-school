@@ -1,16 +1,12 @@
 class Animal {
-  static kingdom = 'Animalia';
+  static #kingdom = 'Animalia';
 
-  static #sayHi() {
-    console.log("Hi!")
-  }
-
-  static public() {
-    this.#sayHi();
+  static accessPrivateProp() {
+    console.log(this.#kingdom);
   }
 }
 
 class Doggo extends Animal {}
 
-Animal.public();
-console.log(Animal.kingdom);
+Animal.accessPrivateProp();
+Doggo.accessPrivateProp();

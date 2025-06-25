@@ -27,21 +27,38 @@ const ItemManager = {
   update(sku, itemObj) {
     // use itemObj to update properties of existing item referenced by SKU
     
-    // find object by sku
-    let objToModify;
-    for (let item of this.items) {
-      if (item.sku === sku) {
-        objToModify = item;
-        break;
-      }
-    }
+    let objToModify = this.returnItem(sku)
+    
     // for each property in itemObj, set object property
     for (let prop in itemObj) {
       objToModify[prop] = itemObj[prop];
     }
   },
 
+  delete(sku) {
+    // Delete item with matching sku
+    let itemToDelete = this.returnItem(sku);
+
+    if (itemToDelete) {
+      this.items.splice(this.items.indexOf(itemToDelete), 1);
+      return;
+    }
+
+    throw new Error(sku + " not found in `items`.")
+  },
+
   // HELPERS ------------------------------------------------------------------
+
+  returnItem(sku) {
+    // find and return object with matching `sku`
+    for (let item of this.items) {
+      if (item.sku === sku) {
+        // console.log(item.sku + ' === ' + sku)
+        return item;
+      }
+    }
+  },
+
   validItemName(n) {
     return (typeof n === 'string' && n.replace(' ', '').length > 4);
   },
@@ -53,6 +70,17 @@ const ItemManager = {
 
 // my tests
 let tests;
+
+function runTests(fn, thisArg, argsMatrix) {
+  for (let args of argsMatrix) {
+    try {
+      fn.apply(thisArg, args);
+      console.log(args + " -> Success!")
+    } catch (e) {
+      console.log(args + " -> " + e.name + ': ' + e.message)
+    }
+  }
+}
 
 tests = [
   // valids
@@ -68,22 +96,34 @@ tests = [
   ['basket ball', 'sports', -99],    // Invalid qty
 ]
 
-for (let args of tests) {
-  try {
-    ItemManager.create(...args);
-    console.log(args + " -> Success!")
-  } catch (e) {
-    console.log(args + " -> " + e.name + ': ' + e.message)
-  }
-}
+runTests(ItemManager.create, ItemManager, tests);
 console.log(ItemManager.items);
 
 tests = [
   // valids
-  ['BASSP', {category: 'balls', qty: 99}],
   ['AWESP', {name: 'AWESOME BIKE'}],
+  ['BASSP', {category: 'balls', qty: 99}],
+  ['RADKI', {}],  // no change
   ['PERSU', {category: 'Submersible', qty: 99}],
 ]
+
+runTests(ItemManager.update, ItemManager, tests);
+console.log(ItemManager.items);
+
+tests = [
+  // Valid
+  ['RADKI'],
+  ['BASSP'],
+  // Invalid
+  ['FAKE SKU'],
+  ['BASSP'],  // Already deleted
+  ['persu'],  // test case-sensitivity
+  [''],
+]
+
+runTests(ItemManager.delete, ItemManager, tests);
+console.log(ItemManager.items);
+
 
 // // LS TESTS
 // ItemManager.create('basket ball', 'sports', 0);           // valid item
