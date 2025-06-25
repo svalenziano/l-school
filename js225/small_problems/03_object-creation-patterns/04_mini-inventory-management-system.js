@@ -8,17 +8,17 @@ See Obsidian for process
 
 const ItemManager = {
   items: [],
-  create(item, category, qty) {
+  create(name, category, qty) {
     if ((qty ?? -1) < 0) throw new Error("qty must be > 0");
-    if (!this.validItemName(item)) throw new Error("Invalid item name");
+    if (!this.validItemName(name)) throw new Error("Invalid item name");
     if (!this.validCategoryName(category)) throw new Error("Invalid category name");
     
-    const itemCode = item.replace(' ', '').slice(0, 3).toUpperCase();
+    const itemCode = name.replace(' ', '').slice(0, 3).toUpperCase();
     const catCode = category.replace(' ', '').slice(0, 2).toUpperCase();
 
     this.items.push({
       sku: itemCode + catCode,
-      name: item,
+      name: name,
       category,
       qty,
     });
@@ -47,6 +47,21 @@ const ItemManager = {
     throw new Error(sku + " not found in `items`.")
   },
 
+  inStock() {
+    let i = this.items.filter((item) => item.qty > 0)
+                     .map((item) => item.sku);
+    console.log(i);
+    return i;
+  },
+
+  itemsInCategory(category) {
+    // category = string
+    let i = this.items.filter((item) => item.category === category)
+                      .map((item) => item.name)
+    console.log(`Items for ${category}: ${i}`);
+    return i;  
+  },
+
   // HELPERS ------------------------------------------------------------------
 
   returnItem(sku) {
@@ -68,10 +83,20 @@ const ItemManager = {
   },
 }
 
+/* 
+PLANNING REPORT MANAGER 
+*/
+
+function ReportManager() {
+  
+}
+
+
 // my tests
 let tests;
 
 function runTests(fn, thisArg, argsMatrix) {
+  console.log("\nNOW TESTING: ", fn.name)
   for (let args of argsMatrix) {
     try {
       fn.apply(thisArg, args);
@@ -82,6 +107,7 @@ function runTests(fn, thisArg, argsMatrix) {
   }
 }
 
+// CREATE
 tests = [
   // valids
   ['basket ball', 'sports', 1],  
@@ -110,6 +136,7 @@ tests = [
 runTests(ItemManager.update, ItemManager, tests);
 console.log(ItemManager.items);
 
+// DELETE
 tests = [
   // Valid
   ['RADKI'],
@@ -123,6 +150,27 @@ tests = [
 
 runTests(ItemManager.delete, ItemManager, tests);
 console.log(ItemManager.items);
+
+// INSTOCK
+runTests(ItemManager.create, ItemManager, [
+  ['kong - large', 'doggostuffs', 5],
+  ['new doggo', 'doggostuffs', 2],
+  ['squeaky racoon', 'doggostuffs', 2],
+  ['house', 'habitat', 1],
+  ['tent', 'habitat', 0],
+  ['yurt', 'habitat', 0],
+  ['soddy', 'habitat', 0],
+  ['victorian mansion', 'habitat', 0],
+  ['bungalow', 'habitat', 0],
+  ['golf clubs', 'silly', 0],
+  ['spinning rims', 'radical', 0],
+])
+console.log(ItemManager.items);
+
+runTests(ItemManager.inStock, ItemManager, [[]])
+
+// itemsInCategory
+runTests(ItemManager.itemsInCategory, ItemManager, [['habitat'], ['doggostuffs']]);
 
 
 // // LS TESTS
