@@ -1,41 +1,77 @@
 'use strict';
 
-
-
-/*
-Algo:
-- set func to value of ownerObj[method]
-- call func(...args) using ownerObj as the context (use call or apply)
-*/
-
-// my solve
-function delegate(ownerObj, method, ...args) {
-  return function delegatedFunction() {
-    return (() => {
-      let func = ownerObj[method];
-      if (!func) throw new Error(`${ownerObj}[${method}] doesn't exist!`);
-      return func.call(ownerObj, args);
-    })();
-  }
+function Person(fname, lname, age, gender) {
+  this.fname = fname;
+  this.lname = lname;
+  this.age = age;
+  this.gender = gender;
 }
 
-
-// LS TESTS
-
-const foo = {
-  name: 'test',
-  bar(greeting) {
-    console.log(`${greeting} ${this.name}`);
+Person.prototype = {
+  fullName() {
+    return this.fname + ' ' + this.lname;
+  },
+  communicate() {
+    console.log('Helooooooo');
+  },
+  eat() {
+    console.log('Yummmm');
+  },
+  sleep() {
+    console.log('ZZZZZzzzzzzz');
   },
 };
 
-const baz = {
-  qux: delegate(foo, 'bar', 'hello'),
-};
+Person.prototype.constructor = Person;
 
-baz.qux();   // logs 'hello test';
+function Doctor(fname, lname, age, gender, specialization) {
+  super(fname, lname, age, gender);
+  this.specialization = specialization;
+}
 
-foo.bar = () => { console.log('changed'); };
+Doctor.prototype = Object.create(Person.prototype)
 
-baz.qux();          // logs 'changed'
+Doctor.prototype.diagnose = function diagnose() {
+  console.log("It's not a tumor!");
+}
+
+Doctor.prototype.constructor = Doctor;
+
+
+function Professor(fname, lname, age, gender, subject) {
+  super(fname, lname, age, gender);
+  this.subject = subject;
+}
+
+Professor.prototype = Object.create(Person.prototype);
+Professor.prototype.constructor = Professor;
+
+Professor.prototype.teach = function teach() {
+  console.log("Here's some knowledge ya'll.");
+}
+
+
+function Student(fname, lname, age, gender, degree) {
+  super(fname, lname, age, gender);
+  this.degree = degree;
+}
+
+Student.prototype = Object.create(Person);
+Student.prototype.constructor = Student;
+
+Student.prototype.study = () => console.log("Head down, keep on studying.");
+
+
+
+function GraduateStudent(fname, lname, age, gender, degree, graduateDegree) {
+  super(fname, lname, age, gender, degree);
+  this.graduateDegree = graduateDegree;
+}
+
+GraduateStudent.prototype = Object.create(Student);
+GraduateStudent.prototype.constructor = GraduateStudent;
+
+GraduateStudent.prototype.reseach = () => console.log("Oh wow, look at this!");
+
+
 
