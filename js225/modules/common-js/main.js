@@ -1,6 +1,5 @@
-const logIt = require("./logit");
+const {Doggo: myDoggo, fname} = require("./doggos.js");
 
 
-logIt("You rock!")
-console.log(__dirname);
-console.log(__filename);
+let h = new myDoggo(fname)
+h.bark();

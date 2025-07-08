@@ -1,3 +1,3 @@
-import {echo} from "./util.js";
+import * as util from "./util.js";
 
-echo("Hello world!")
+util.echo(util.str)
