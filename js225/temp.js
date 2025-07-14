@@ -1,47 +1,7 @@
-class Animal {
-  #fname;
-  
-  constructor(fname) {
-    this.#fname = fname;  // private field
-    Animal.instances.push(this);
-  }
+console.log(this); 
+// coderpad logsthe global obj
+// nodde logs module.exports (aka "Empty object" per LS)
 
-  static instances = [];
-
-  static rollCall() {
-    console.log(`${this.name}s: ${this.instances
-      .map((i) => i.fname)
-      .join(', ')}`)
-  }
-
-  get fname() {
-    return this.#fname;
-  }
-}
-
-class Doggo extends Animal {
-  constructor(fname, friends) {
-    super(fname);
-    this.friends = friends;
-    Doggo.instances.push(this);
-  }
-
-  static greet = "Woof"
-  static instances = [];
-
-  greeting() {
-    console.log(`${Doggo.greet}! I'm ${this.fname}`)
-  }
-}
-
-// USAGE
-let steven = new Animal("Steven")
-let mel = new Animal("Moops")
-
-let hanna = new Doggo('Hanna', 'Felix')
-hanna.greeting()
-
-let felix = new Doggo('Felix', 'Hanna');
-
-Animal.rollCall();
-Doggo.rollCall();
+console.log(this === module.exports)
+global.myprop = 123;
+console.log(global.myprop)
