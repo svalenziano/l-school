@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <body>
+    <p>The time is: <span id="time"></span></p>
+    <p>The year is: <span id="year"></span></p>
+    <p id="hello"></p>
+  <script>
+  let t = new Date(Date.now());
+
+  document.querySelector("#time").textContent = t.toTimeString();
+
+  document.querySelector("#year").textContent = t.getFullYear();
+
+  document.querySelector("#hello").innerHTML = "Hello <em>World!</em>";
+  </script>
+  </body>
+</html>
