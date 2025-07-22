@@ -3,8 +3,8 @@ html, body {
   margin: 0;
   font: normal 16px Helvetica, Arial, sans-serif;
   text-align: center;
-  color: #16997c;
-  background: #5bccb3;
+  color: #929292;
+  background: #c9c9c9;
 }
 
 main {
@@ -17,7 +17,7 @@ main {
 }
 
 h1 {
-  color: #CC183E;
+  color: #000000;
 }
 
 fieldset {
@@ -44,10 +44,10 @@ input[type="submit"] {
   font: normal 20px Helvetica, Arial, sans-serif;
   color: #ffffff;
   text-shadow: 1px 1px 5px rgba(80, 80, 80, .8);
-  border: 1px solid #91112C;
-  box-shadow: 0 0 1px 1px #780e24;
+  border: 1px solid #8b8b8b;
+  box-shadow: 0 0 1px 1px #666666;
   border-radius: 11px;
-  background: linear-gradient(to bottom, #CC183E 0%, #780E24 100%);
+  background: linear-gradient(to bottom, #c5c5c5 0%, #707070 100%);
 }
 
-a { color: #cc183e; }
+a { color: #4d4d4d; }
