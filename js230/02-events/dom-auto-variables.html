@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>
+      "use strict";
+      document.addEventListener("DOMContentLoaded", (e) => {
+        p1.addEventListener('click', (e) => {
+          p1.textContent = Math.random();
+          container.style.background = 'yellow';
+        })
+      })
+    </script>
+  </head>
+  <body>
+    <main>
+      <div id="container">
+        <p id="p1">Div 1</p>
+      </div>
+    </main>
+  </body>
+</html>

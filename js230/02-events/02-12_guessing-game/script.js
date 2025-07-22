@@ -1,9 +1,12 @@
+"use strict";
+
 const SUCCESS = 0;
 const TOO_HIGH = 1;
 const TOO_LOW = -1;
 
 class Game {
   
+
   static randomIntInclusive(low, high) {
     // returns random integer, inclusive of `low` and high` args
     if (typeof low !== 'number' || typeof high !== 'number') {
@@ -19,10 +22,22 @@ class Game {
     this.guessCount = 0;
     this.secretNumber = Game.randomIntInclusive(1, 100);
     this.gameOver = false;
-    // this.guessBox = document.querySelector("#guessBox");
-    // this.guessButton = document.querySelector("#guessButton");
-    // this.message = document.querySelector("#message")
+    this.guessBox = document.querySelector("#guessBox");
+    this.guessButton = document.querySelector("#guessButton");
+    this.messageDisplay = document.querySelector("#message");
     console.log(`NEW GAME! Secret number = ${this.secretNumber}.`)
+  }
+
+
+  handleGuessClick() {
+    let result = this.checkGuess(this.guessBox.value);
+    if (result === 0) {
+      this.messageDisplay.textContent = `Wow! ${this.guessCount} guesses and you win!`
+    } else if (result === -1) {
+      this.messageDisplay.textContent = 'Too low.  Try again...'
+    } else {
+      this.messageDisplay.textContent = 'Too high.  Try again...'
+    }
   }
 
   checkGuess(guess) {
@@ -40,27 +55,13 @@ class Game {
 }
 
 
-// GAMEPLAY
+// EVENTS & GAMEPLAY
 document.addEventListener("DOMContentLoaded", (e) => {
   let game = new Game();
 
-  let guessBox = document.querySelector("#guessBox");
-  let guessButton = document.querySelector("#guessButton");
-  let message = document.querySelector("#message")
 
   guessButton.addEventListener("click", (e) => {
     e.preventDefault();
-    console.log(`guess = ${guessBox.value}`)
-    let result = game.checkGuess(guessBox.value);
-    console.log(result)
-    if (result === 0) {
-      message.textContent = `Wow! ${game.guessCount} guesses and you win!`
-    } else if (result === -1) {
-      message.textContent = 'Too low.  Try again...'
-    } else {
-      message.textContent = 'Too high.  Try again...'
-    }
+    game.handleGuessClick();
   })
-
-
 })
