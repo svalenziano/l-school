@@ -50,4 +50,9 @@ input[type="submit"] {
   background: linear-gradient(to bottom, #8b8b8b 0%, #505050 100%);
 }
 
+input[disabled=""] {
+  /* background: rgb(211, 211, 211) */
+  opacity: 0.2;
+}
+
 a { color: #4d4d4d; }
