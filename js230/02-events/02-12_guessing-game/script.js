@@ -19,9 +19,15 @@ class Game {
     this.guessCount = 0;
     this.secretNumber = Game.randomIntInclusive(1, 100);
     this.gameOver = false;
+    // this.guessBox = document.querySelector("#guessBox");
+    // this.guessButton = document.querySelector("#guessButton");
+    // this.message = document.querySelector("#message")
+    console.log(`NEW GAME! Secret number = ${this.secretNumber}.`)
   }
 
   checkGuess(guess) {
+    guess = Number(guess);
+    this.guessCount += 1;
     if (guess === this.secretNumber) {
       this.gameOver = true;
       return SUCCESS;
@@ -33,19 +39,27 @@ class Game {
   }
 }
 
-let game = new Game();
 
 // GAMEPLAY
 document.addEventListener("DOMContentLoaded", (e) => {
-  console.log("hello world!")
+  let game = new Game();
 
   let guessBox = document.querySelector("#guessBox");
   let guessButton = document.querySelector("#guessButton");
+  let message = document.querySelector("#message")
 
   guessButton.addEventListener("click", (e) => {
     e.preventDefault();
     console.log(`guess = ${guessBox.value}`)
-
+    let result = game.checkGuess(guessBox.value);
+    console.log(result)
+    if (result === 0) {
+      message.textContent = `Wow! ${game.guessCount} guesses and you win!`
+    } else if (result === -1) {
+      message.textContent = 'Too low.  Try again...'
+    } else {
+      message.textContent = 'Too high.  Try again...'
+    }
   })
 
 
