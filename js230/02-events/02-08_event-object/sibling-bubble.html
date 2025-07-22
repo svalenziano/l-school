@@ -20,15 +20,20 @@
     </style>
 
     <script>
+      // SELECT THE MODE YOU WISH TO USE (Todo: add this to the UI)
+      const TEST_MODE = 4;
+
+      const testModes = {
+        1: "Bubble: Attach listener to outer-most div",
+        2: "Bubble: Attach listener to every div",
+        3: "Capture: Attach listener to outer-most div",
+        4: "Capture: Attach listener to every div",
+      }
+
       function printTargets(e, node) {
         node.textContent += `target = ${e.target.id}, currentTarget = ${e.currentTarget.id}\n`
       }
 
-      const testModes = {
-        1: "Bubble: Attach listener to outer-most div",
-        2: "Bubble: Attach listener to every div"
-      }
-      const TEST_MODE = 2;
       const DIV_IDS = ['d1', 'd2a', 'd2b', 'd3'];
       document.addEventListener("DOMContentLoaded", () => {
         // Setup the text labels
@@ -40,8 +45,11 @@
         }
         let output = document.getElementById("results");
         output.textContent = `TEST MODE: "${testModes[TEST_MODE]}"\n`;
+
+        let outermost = document.getElementById(DIV_IDS[0]);
+        // Define test modes
         if (TEST_MODE === 1) {
-          document.getElementById(DIV_IDS[0]).addEventListener('click', (e) => {
+          outermost.addEventListener('click', (e) => {
             printTargets(e, output);
           })
         } else if (TEST_MODE === 2) {
@@ -50,13 +58,25 @@
               printTargets(e, output);
             })
           })
+        } else if (TEST_MODE === 3) {
+          outermost.addEventListener(
+            'click', 
+            (e) => printTargets(e, output), 
+            true);  // note the `true` argument!
+        } else if (TEST_MODE === 4) {
+          DIV_IDS.forEach((id) => {
+            document.getElementById(id).addEventListener(
+              'click', 
+              (e) => printTargets(e, output), 
+              true);
+          })
         }
       });
     </script>
   </head>
 
   <body>
-    <p>Hint: refresh to clear output (F5)</p>
+    <p>Hint: refresh to clear output (F5).  What happens when you click in each box, or directly on a text element?</p>
     <div id="d1">
       <div id="d2a">
         <div id="d3"></div>
