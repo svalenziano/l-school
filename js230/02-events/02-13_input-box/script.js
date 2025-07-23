@@ -1,6 +1,6 @@
 
 // EVENTS AND APP LOGIC
-document.addEventListener("DOMContentLoaded", (e) => {
+document.addEventListener("DOMContentLoaded", () => {
   const textField = document.querySelector(".text-field");
   const contentField = document.querySelector(".content");
   let cursorID;
@@ -20,14 +20,17 @@ document.addEventListener("DOMContentLoaded", (e) => {
       }
 
       function flashCursor() {
-        cursorID = setInterval(() => {
-          textField.classList.toggle("cursor");
-        }, 500);
+        if (!cursorID) {
+          cursorID = setInterval(() => {
+            textField.classList.toggle("cursor");
+          }, 500);
+        }
       }
 
       function unfocusTextBox() {
-        textField.classList.remove("focused");
         clearInterval(cursorID);
+        cursorID = null;
+        textField.classList.remove("focused");
         textField.classList.remove("cursor");
       }
 
@@ -42,33 +45,14 @@ document.addEventListener("DOMContentLoaded", (e) => {
       return;
     }
 
-    if (keyShouldBeIgnored()) {
+    if (e.key.length === 1) {
       contentField.textContent += e.key;
     }
 
     // HELPERS
-    function keyShouldBeIgnored() {
-      const keysToIgnore = [
-        'Shift', 
-        'Control', 
-        'Unidentified', 
-        'Meta', 
-        'Alt', 
-        'CapsLock',
-        'Home',
-        'End',
-        'Insert',
-        'Delete',
-        'Backspace'
-        ];
-      return !keysToIgnore.includes(e.key)
-    }
 
     function textBoxIsFocused() {
       return textField.classList.contains("focused");
     }
   });
-
-  
-
-})
+});
