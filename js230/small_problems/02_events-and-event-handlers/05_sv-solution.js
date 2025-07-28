@@ -43,36 +43,38 @@ const animalClassificationOptions = {
 
 document.addEventListener("DOMContentLoaded", (e) => {
 
-  const classDropdown = document.querySelector("#animal-classifications");
-  const animalDropdown = document.querySelector("#animals");
+  const classDrop = document.querySelector("#animal-classifications");
+  const animalDrop = document.querySelector("#animals");
 
-  classDropdown.addEventListener('change', (e) => {
-    // console.log(e)
-    // console.log(classification.value);
-    let selected = classDropdown.value;
-    let validKeys = Object.keys(animalOptions);
-    if (validKeys.includes(selected)) {
-      let filteredOptions = animalOptions[selected];
-      console.log(filteredOptions);
-      addDropdownFilter(animalDropdown, filteredOptions);
-    } else {
-      removeDropdownFilter(animalDropdown);
-    }
-  }); 
-});
+  classDrop.addEventListener('change', (e) => {
+    dualFilter(classDrop, animalDrop, animalOptions);
+  });
+
+}); 
+
+function dualFilter(driver, follower, fOptions) {
+  /*
+  INPUTS = 
+    1) Driver = Dropdown that drives the other dropdown
+    2) Follower = Dropdown to be driven
+    3) fOptions = Object.  Each key represents valid options 
+      Each value is an array of options to enable in the follower
+  SIDE EFFECTS = mutate the follower - show/hide options based on `fOptions`
+  */
+  if (Object.keys(fOptions).includes(driver.value)) {
+    addDropdownFilter(follower, fOptions[driver.value]);
+  } else {
+    removeDropdownFilter(follower)
+  }
+} 
 
 function addDropdownFilter(dropdown, keysToEnable) {
-  /*
-  Iterate through all contained `option` elements and add/remove 'hidden' attribute, as appropriate
-  Select the first enabled attribute
-  */
-  // all other keys will be disabled
   let firstValidOption;
   for (let entry of dropdown.options) {
-    const content = entry.textContent.trim();
-    
-    if (keysToEnable.includes(content)) {
-      if (!firstValidOption) firstValidOption = content;
+    const text = entry.textContent.trim();
+
+    if (keysToEnable.includes(text)) {
+      if (!firstValidOption) firstValidOption = text;
       show(entry)
     } else {
       hide(entry);
