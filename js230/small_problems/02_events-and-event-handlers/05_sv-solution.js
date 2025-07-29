@@ -22,9 +22,16 @@ A
     - if user selects Classification:
       - filter animals (add / remove `hidden`... ditto)
 
+  v2 algo:
+    - get valid keys from `follower`
+  - if selected `driver` option is valid:
+    - add filter to `follower`
+  - else:
+    - remove filter from `follower`
 */
 
 
+// CONFIG
 const animalOptions = {
   'Vertebrate': ['Bear', 'Turtle', 'Whale', 'Salmon', 'Ostrich'],
   'Warm-blooded': ['Bear', 'Whale', 'Ostrich'],
@@ -41,17 +48,8 @@ const animalClassificationOptions = {
   'Ostrich': ['Vertebrate', 'Warm-blooded', 'Bird']
 };
 
-document.addEventListener("DOMContentLoaded", (e) => {
 
-  const classDrop = document.querySelector("#animal-classifications");
-  const animalDrop = document.querySelector("#animals");
-
-  classDrop.addEventListener('change', (e) => {
-    dualFilter(classDrop, animalDrop, animalOptions);
-  });
-
-}); 
-
+// HELPER FUNCTIONS
 function dualFilter(driver, follower, fOptions) {
   /*
   INPUTS = 
@@ -64,12 +62,14 @@ function dualFilter(driver, follower, fOptions) {
   if (Object.keys(fOptions).includes(driver.value)) {
     addDropdownFilter(follower, fOptions[driver.value]);
   } else {
-    removeDropdownFilter(follower)
+    removeDropdownFilter(follower);
   }
 } 
 
 function addDropdownFilter(dropdown, keysToEnable) {
   let firstValidOption;
+  const currentOptionIsValid = keysToEnable.includes(dropdown.value);
+
   for (let entry of dropdown.options) {
     const text = entry.textContent.trim();
 
@@ -80,7 +80,7 @@ function addDropdownFilter(dropdown, keysToEnable) {
       hide(entry);
     }
   }
-  dropdown.value = firstValidOption;
+  if (!currentOptionIsValid) dropdown.value = firstValidOption;
 }
 
 function removeDropdownFilter(dropdown) {
@@ -98,3 +98,31 @@ function show(element) {
 }
 
 
+// EVENTS AND APP LOGIC
+let classDrop;
+let animalDrop;
+let clearButton;
+
+document.addEventListener("DOMContentLoaded", (_) => {
+
+  classDrop = document.querySelector("#animal-classifications");
+  animalDrop = document.querySelector("#animals");
+  clearButton = document.querySelector("#clear");
+
+  document.addEventListener('change', (e) => {
+    if (e.target === classDrop) {
+      dualFilter(classDrop, animalDrop, animalOptions);
+    } else if (e.target === animalDrop) {
+      dualFilter(animalDrop, classDrop, animalClassificationOptions);
+    } 
+  });
+
+  clearButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    for (let d of [classDrop, animalDrop]) {
+      removeDropdownFilter(d);
+      d.selectedIndex = 0;
+    }
+  })
+
+}); 

@@ -6,8 +6,6 @@ P
   - Return = None
   - Side effect = mutate DOM -> apply .generation-color to elements in that generation
 
-
-  
 E
 D
 A
@@ -33,59 +31,102 @@ A
       - apply .generation-color class
 */
 
-function colorGeneration(targetGeneration) {
-  if (targetGeneration <= 0) return;
-  
-  let currentGeneration = 1;
-  const topNode = document.getElementById("1");
-  const queue = [topNode];
-  while (queue.length > 0 && currentGeneration < targetGeneration) {
-    const length = queue.length
-    for (let i = 0; i < length; i++) {
-      const node = queue.pop();
-      for (let child of node.children) {
-        queue.unshift(child);
-      }
-    }
-    currentGeneration += 1;
+
+class GenerationController {
+
+  constructor() {
+    this.randomizeGen();
+    this.applyColor(this.currentGen);
   }
-  for (let node of queue) {
-    node.classList.add("generation-color");
+
+  randomizeGen() {
+    this.currentGen = Math.floor(Math.random() * 7)
   }
-}
 
-function clearColors() {
-  for (let node of document.querySelectorAll(".generation-color")) {
-    node.classList.remove("generation-color");
+  increaseGeneration() {
+    this.currentGen += 1;
+    this.clearColors();
+    this.applyColor();
+    console.log(this.currentGen);
   }
-}
 
-/*
-on 500
-off 1000
-on 1500
-off 2000
-
-formula: 
-  on: (i * 1000 ) + 500
-  off: (i * 1000) + 1000
-*/
-function cycleDemo() {
-  for (let i = 1; i < 9; i++) {
-    setTimeout(colorGeneration, (i * 1000 + 500), i);
-    setTimeout(clearColors, (i * 1000 + 1000));
+  decreaseGeneration() {
+    this.currentGen -= 1;
+    this.clearColors();
+    this.applyColor();
+    console.log(this.currentGen);
   }
-}
 
-cycleDemo();
-// class Generation
-
-document.addEventListener("keydown", (e) => {
-  if (e.key === "," || e.key === "<") {
+  applyColor(targetGeneration = this.currentGen) {
+    if (targetGeneration <= 0) return;
     
+    let currentGeneration = 1;
+    const topNode = document.getElementById("1");
+    const queue = [topNode];
+    while (queue.length > 0 && currentGeneration < targetGeneration) {
+      const length = queue.length
+      for (let i = 0; i < length; i++) {
+        const node = queue.shift();
+        for (let child of node.children) {
+          queue.push(child);
+        }
+      }
+      currentGeneration += 1;
+    }
+    for (let node of queue) {
+      node.classList.add("generation-color");
+    }
   }
-})
+
+  clearColors() {
+    for (let node of document.querySelectorAll(".generation-color")) {
+      node.classList.remove("generation-color");
+    }
+  }
+
+  demoAnimation() {
+    this.clearColors();
+    const FULL_INTERVAL = 750;
+    const HALF_INTERVAL = FULL_INTERVAL / 2;
+    const GENERATIONS_TO_DEMO = 9;
+    for (let i = 1; i < GENERATIONS_TO_DEMO; i++) {
+      setTimeout(() => this.applyColor(i), (i * FULL_INTERVAL + HALF_INTERVAL));
+      setTimeout(() => this.clearColors(), (i * FULL_INTERVAL + FULL_INTERVAL));
+    }
+    // Schedule final reset after last animation
+    setTimeout(() => {
+      this.clearColors();
+      this.randomizeGen();
+      this.applyColor();
+    }, GENERATIONS_TO_DEMO * FULL_INTERVAL + FULL_INTERVAL);
+  }
+
+  displayHelp() {
+    const instructionText = "< and > keys change which generation is highlighted, \
+'d' key runs a demo."
+    const instructions = document.createElement("PRE");
+    instructions.textContent = instructionText;
+    document.body.appendChild(instructions);
+  }
 
 
-// setInterval(colorGeneration, 500, 3);
-// setInterval(clearColors, 1000);
+}
+
+
+// APP LOGIC
+let gen;
+
+document.addEventListener("DOMContentLoaded", (_) => {
+  gen = new GenerationController();
+  gen.displayHelp();
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "," || e.key === "<") {
+      gen.decreaseGeneration();
+    } else if (e.key === "." || e.key === ">") {
+      gen.increaseGeneration();
+    } else if (e.key.toLowerCase() === 'd') {
+      gen.demoAnimation();
+    }
+  });
+});
