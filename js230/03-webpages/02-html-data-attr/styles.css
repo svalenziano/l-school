@@ -1,0 +1,20 @@
+body {
+  padding: 10px;
+}
+
+article[data-block] {
+  min-height: 200px;
+  border-color: black;
+  border-width: 1px;
+  border-style: dotted;
+}
+
+ul {
+  margin-left: 0px;
+  padding-inline-start: 0px;
+}
+
+li {
+  display: inline-block;
+  padding: 10px;
+}
