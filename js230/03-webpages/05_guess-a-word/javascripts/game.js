@@ -63,35 +63,52 @@ class Game {
 }
 
 class UI {
-  
+  constructor(game) {
+    this.game = game;
+    
+    for (let id of ['tree', 'apples', 'message', 'spaces', 'guesses']){
+      this[id] = document.getElementById(id);
+    }
+  }
+
+  removeSpans(parentElement) {
+    for (let spanNode of parentElement.querySelectorAll("span")) {
+      spanNode.remove();
+    }
+  }
+
+  addSpan(parentElement, content) {
+    
+  }
+
+  updateSpaces() {
+    this.removeSpans(this.spaces);  // start with a clean slate
+    for (let letter of this.game.spaces) {
+      const s = document.createElement("SPAN");
+      s.textContent = letter;
+      this.spaces.appendChild(s);
+    }
+  }
+
+  updateGuesses() {
+    this.removeSpans(this.guesses);
+
+  }
 }
 
 // EVENTS and logic
 
-let game = new Game();
+const game = new Game();
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  const [
-    tree, 
-    apples, 
-    message, 
-    spaces, 
-    guesses
-    ] = ['tree', 'apples', 'message', 'spaces', 'guesses'].map((x) => {
-      return document.getElementById(x);
-    })
+  const ui = new UI(game);
 
   document.addEventListener("keyup", (e) => {
     if (Game.notALetter(e.key)) return;
     game.makeGuess(e.key);
+    ui.updateSpaces();
 
-    /*
-    Display word?
-    Remove all spans
-    For each letter:
-      Add a new span
-    */
     game.word
     game.spaces
   })
