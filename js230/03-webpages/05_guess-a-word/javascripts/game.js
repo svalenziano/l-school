@@ -65,6 +65,8 @@ class Game {
 class UI {
   constructor(game) {
     this.game = game;
+    this.guessCount = 0;
+    this.maxGuessCount = Game.maxGuessCount;
     
     for (let id of ['tree', 'apples', 'message', 'spaces', 'guesses']){
       this[id] = document.getElementById(id);
@@ -77,22 +79,33 @@ class UI {
     }
   }
 
-  addSpan(parentElement, content) {
-    
+  addSpan(parentElement, text) {
+    const s = document.createElement("SPAN");
+    s.textContent = text;
+    parentElement.appendChild(s);
   }
 
   updateSpaces() {
     this.removeSpans(this.spaces);  // start with a clean slate
-    for (let letter of this.game.spaces) {
-      const s = document.createElement("SPAN");
-      s.textContent = letter;
-      this.spaces.appendChild(s);
-    }
+    this.game.spaces.forEach((letter) => this.addSpan(this.spaces, letter));
   }
 
   updateGuesses() {
     this.removeSpans(this.guesses);
+    this.game.lettersGuessed.forEach((letter) => {
+      this.addSpan(this.guesses, letter);
+    });
+  }
 
+  updateTree(incorrectGuessQty) {
+    if (incorrectGuessQty === 0) return;
+
+    if (incorrectGuessQty >= this.maxGuessCount) {
+      this.apples.classList = ['guess_6'];
+      return;
+    }
+
+    this.apples.classList = [`guess_${incorrectGuessQty}`];
   }
 }
 
@@ -103,14 +116,22 @@ const game = new Game();
 document.addEventListener("DOMContentLoaded", () => {
 
   const ui = new UI(game);
+  console.log(game.word.join(""))
 
   document.addEventListener("keyup", (e) => {
     if (Game.notALetter(e.key)) return;
+
+    
     game.makeGuess(e.key);
     ui.updateSpaces();
+    ui.updateGuesses();
+    ui.updateTree(game.incorrectGuesses);
 
-    game.word
-    game.spaces
+    // Lost?
+    // Display "You're out of guesses"
+    // Disallow input
+    // Display "play again" text
+    console.log(game.showState());
   })
 })
 
