@@ -18,13 +18,47 @@ HELPER FUNCTIONS
   - show that element
 */
 
-document.addEventListener('DOMContentLoaded', (e) => {
+document.addEventListener('DOMContentLoaded', (_) => {
 
   let [gold, silver, bronze] = ['gold', 'silver', 'bronze'].map((metal) => {
     return document.querySelector(`a[data-block="${metal}"]`)
   });
 
+  const tabs = [gold, silver, bronze]
+
+  highlightTab(gold)
+  showBlock(gold.dataset.block)
+
   document.addEventListener('click', (e) => {
-    console.log(e.target);
-  })
+    
+    if (tabs.includes(e.target)) {
+      e.preventDefault();
+      highlightTab(e.target)
+      showBlock(e.target.dataset.block)
+      // console.log(e.target.dataset.block);
+    }
+  });
 })
+
+function showBlock(dataBlockValue) {
+  hideAllBlocks();
+  const element = document.querySelector(`article[data-block="${dataBlockValue}"`)
+  element.classList.remove("hidden");
+}
+
+function hideAllBlocks() {
+  for (let block of document.querySelectorAll("article[data-block]")) {
+    block.classList.add("hidden");
+  }
+}
+
+function highlightTab(element) {
+  resetTabs();
+  element.classList.add("highlight")
+}
+
+function resetTabs() {
+  for (let tab of document.querySelectorAll("a[data-block]")) {
+    tab.classList.remove("highlight");
+  }
+}
