@@ -68,9 +68,17 @@ class UI {
     this.guessCount = 0;
     this.maxGuessCount = Game.maxGuessCount;
     
-    for (let id of ['tree', 'apples', 'message', 'spaces', 'guesses']){
+    for (let id of ['tree', 'apples', 'message', 'spaces', 'guesses', 'replay']){
       this[id] = document.getElementById(id);
     }
+  }
+
+  reset() {
+    this.hideReplayButton();
+    this.message.textContent = "";
+    this.updateSpaces();
+    this.updateGuesses();
+    this.updateTree();
   }
 
   removeSpans(parentElement) {
@@ -107,10 +115,28 @@ class UI {
 
     this.apples.classList = [`guess_${incorrectGuessQty}`];
   }
+
+  messageLoss() {
+    this.message.textContent = "Sorry! You're out of guesses ☹️"
+  }
+
+  messageWin() {
+    this.message.textContent = "You win! 😃"
+  }
+
+  showReplayButton() {
+    this.replay.classList.add('visible');
+  }
+
+  hideReplayButton() {
+    this.replay.classList.remove('visible');
+  }
 }
 
-// EVENTS and logic
 
+
+
+// EVENTS and logic
 const game = new Game();
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -119,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log(game.word.join(""))
 
   document.addEventListener("keyup", (e) => {
-    if (Game.notALetter(e.key)) return;
+    if (Game.notALetter(e.key) || game.hasWon() || game.hasLost()) return;
 
     
     game.makeGuess(e.key);
@@ -127,16 +153,24 @@ document.addEventListener("DOMContentLoaded", () => {
     ui.updateGuesses();
     ui.updateTree(game.incorrectGuesses);
 
-    // Lost?
-    // Display "You're out of guesses"
-    // Disallow input
-    // Display "play again" text
+    if (game.hasLost()) {
+      ui.messageLoss();
+      ui.showReplayButton();
+    } else if (game.hasWon()) {
+      ui.messageWin();
+      ui.showReplayButton();
+    }
     console.log(game.showState());
+  });
+
+  /*
+    if Play another is clicked:
+     - prevent default
+     - reset `game`
+     - reset `ui`
+  */
+  ui.replay.addEventListener("click", (e) => {
+    e.preventDefault();
+    game.reset();
   })
-})
-
-function displayWord(letters) {
-  for (let l of letters) {
-
-  }
-}
+});
