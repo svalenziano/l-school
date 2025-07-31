@@ -15,6 +15,8 @@ class Game {
 
     this.word = this.word.split("");
     this.spaces = Array(this.word.length).fill(' ');
+    
+    console.log(this.word.join(""));
   }
 
   static getRandomWord() {
@@ -76,8 +78,8 @@ class UI {
   reset() {
     this.hideReplayButton();
     this.message.textContent = "";
-    this.updateSpaces();
-    this.updateGuesses();
+    this.removeSpans(this.spaces);
+    this.removeSpans(this.guesses);
     this.updateTree();
   }
 
@@ -131,18 +133,23 @@ class UI {
   hideReplayButton() {
     this.replay.classList.remove('visible');
   }
+
+  gameOver() {
+    this.message.textContent = "I'm out of words!  \
+    You should probably go outside..."
+    this.hideReplayButton();
+  }
 }
 
 
 
 
 // EVENTS and logic
-const game = new Game();
+let game = new Game();
 
 document.addEventListener("DOMContentLoaded", () => {
 
   const ui = new UI(game);
-  console.log(game.word.join(""))
 
   document.addEventListener("keyup", (e) => {
     if (Game.notALetter(e.key) || game.hasWon() || game.hasLost()) return;
@@ -171,6 +178,12 @@ document.addEventListener("DOMContentLoaded", () => {
   */
   ui.replay.addEventListener("click", (e) => {
     e.preventDefault();
-    game.reset();
+    try {
+      game = new Game();
+      ui.game = game;
+      ui.reset();
+    } catch (e) {
+      ui.gameOver();
+    }
   })
 });
