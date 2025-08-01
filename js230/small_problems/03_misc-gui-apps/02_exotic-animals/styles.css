@@ -4,13 +4,25 @@ body {
 
 div.gallery.grid {
   display: grid;
+  /* gap: 1px; */
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: auto;
   align-content: start;
 }
 
-figure {
+div.gallery figure {
   max-width: 100%;
+  position: relative;
+}
+
+div.gallery figcaption {
+  position: absolute;
+  z-index: 1;
+  background-color: rgba(209, 208, 185, 1);
+  padding: 1rem;
+  left: 1rem;
+  font-size: 0.6rem;
+  overflow: auto;
 }
 
 img {
