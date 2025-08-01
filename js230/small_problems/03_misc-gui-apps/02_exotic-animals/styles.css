@@ -1,9 +1,12 @@
+body {
+  font-family: 'Courier New', Courier, monospace;
+}
+
 div.gallery.grid {
   display: grid;
-  grid-template-columns: repeat(3, 30%);
+  grid-template-columns: repeat(3, 1fr);
   grid-template-rows: auto;
-  place-items: center;
-  justify-items: center;
+  align-content: start;
 }
 
 figure {
@@ -11,6 +14,11 @@ figure {
 }
 
 img {
+  display: block;
   max-width: 100%;
   max-height: 100%;
+}
+
+.hidden {
+  display: none;
 }
