@@ -1,20 +1,27 @@
 "use strict";
 
 class MagicCaption {
-  timer = null;
+  timerID = null;
   visibleCaption = null;
   HIDDEN_CSS_CLASS = "hidden";
 
   constructor(parent) {
     this.parent = parent;
     this.hideAll();
+    this.addListeners();
+  }
 
-    for (let img of parent.querySelectorAll("img")) {
+  addListeners() {
+    for (let img of this.parent.querySelectorAll("img")) {
       img.addEventListener("mouseenter", (e) => {
-        this.show(this.getFigcaptionSibling(e.target));
+        this.timerID = setTimeout(() => {
+          this.show(this.getFigcaptionSibling(e.target));
+        }, 1000);
       })
 
       img.addEventListener("mouseleave", (e) => {
+        clearTimeout(this.timerID)
+        this.timerID = null;
         this.hide(this.getFigcaptionSibling(e.target));
       })
     }

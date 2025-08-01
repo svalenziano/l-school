@@ -4,7 +4,7 @@ body {
 
 div.gallery.grid {
   display: grid;
-  /* gap: 1px; */
+  gap: 1px;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: auto;
   align-content: start;
