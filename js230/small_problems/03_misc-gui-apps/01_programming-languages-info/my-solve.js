@@ -1,68 +1,7 @@
 import {languages} from "./ls-data.js"
 
 class SummaryDisplay {
-  /*
-  P
-    Summary: Display a summary for each object in an array.
-    Inputs: 
-    Output: 
-    Return: 
-    Side Effects: 
-    Requirements: 
-      - create all elements within a container with id `programming-languages"
-      - Create one H2 for the `name` key
-      - Create one <p> for the `description` key
-      - Truncate the <p> display to 120 characters
-      - `Show More` button shows all text in the <description>
 
-  E
-  D
-    - array of langs
-      [
-        {
-          name:
-          description:
-          folded: (boolean)
-          domButton:  (DOM ele reference)
-          domDescription: (DOM ele)
-        }
-      ]
-  A
-    Idea 1:
-    Algo 1:
-      - SummaryDisplay class
-        props:
-          - languages = array of objects
-        methods:
-          - constructor(parentID, languages)
-            - get containing div using parentID
-            - for each language (each obj in this.languages)
-              - create a <section> container div within parent
-              - create <h2> and append to container
-              - create <p> and append to container
-              - create `button` key, append to `buttons` Map?
-                - key = button object
-                - value = <p> to modify
-              - append all to container
-            - attach 'click' listener to PARENT div, and delegate to each button
-              - for each lang in `languages`:
-                - if e.target === lang.button:
-                 - this.toggleFold(lang)
-          - toggleFold(language):
-            - input = language object from `languages` array
-            - return = none
-            - sideeffect = 
-              - if currently folded, then unfold(language)
-              - if currently unfolded, then fold(language)
-          - fold(language):
-            - set <p> text to truncated value
-            - change textContent on button to "Show more"
-            - toggle `languages` -> lang.folded = true
-          - unfold(language):
-            - set <p> text to unabridged value
-            - change textContent on button to "Show less"
-            - set lang.folded = false
-  */
   FOLD_CHARACTER_LIMIT = 120;
 
   constructor(parentEle, languages) {
