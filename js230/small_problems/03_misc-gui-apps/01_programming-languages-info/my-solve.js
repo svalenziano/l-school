@@ -1,32 +1,126 @@
-const languages = [
-  {
-    name: 'Ruby',
-    description: 'Ruby is a dynamic, reflective, object-oriented, ' +
-                 'general-purpose programming language. It was designed and developed in the mid-1990s ' +
-                 'by Yukihiro Matsumoto in Japan. According to its creator, Ruby was influenced by Perl, ' +
-                 'Smalltalk, Eiffel, Ada, and Lisp. It supports multiple programming paradigms, ' +
-                 'including functional, object-oriented, and imperative. It also has a dynamic type ' +
-                 'system and automatic memory management.'
-  },
+import {languages} from "./ls-data.js"
 
-  {
-    name: 'JavaScript',
-    description: 'JavaScript is a high-level, dynamic, untyped, and interpreted ' +
-                 'programming language. It has been standardized in the ECMAScript language ' +
-                 'specification. Alongside HTML and CSS, JavaScript is one of the three core ' +
-                 'technologies of World Wide Web content production; the majority of websites employ ' +
-                 'it, and all modern Web browsers support it without the need for plug-ins. JavaScript ' +
-                 'is prototype-based with first-class functions, making it a multi-paradigm language, ' +
-                 'supporting object-oriented, imperative, and functional programming styles.'
-  },
+class SummaryDisplay {
+  /*
+  P
+    Summary: Display a summary for each object in an array.
+    Inputs: 
+    Output: 
+    Return: 
+    Side Effects: 
+    Requirements: 
+      - create all elements within a container with id `programming-languages"
+      - Create one H2 for the `name` key
+      - Create one <p> for the `description` key
+      - Truncate the <p> display to 120 characters
+      - `Show More` button shows all text in the <description>
 
-  {
-    name: 'Lisp',
-    description: 'Lisp (historically, LISP) is a family of computer programming languages ' +
-                 'with a long history and a distinctive, fully parenthesized prefix notation. ' +
-                 'Originally specified in 1958, Lisp is the second-oldest high-level programming ' +
-                 'language in widespread use today. Only Fortran is older, by one year. Lisp has changed ' +
-                 'since its early days, and many dialects have existed over its history. Today, the best ' +
-                 'known general-purpose Lisp dialects are Common Lisp and Scheme.'
-  },
-];
+  E
+  D
+    - array of langs
+      [
+        {
+          name:
+          description:
+          folded: (boolean)
+          domButton:  (DOM ele reference)
+          domDescription: (DOM ele)
+        }
+      ]
+  A
+    Idea 1:
+    Algo 1:
+      - SummaryDisplay class
+        props:
+          - languages = array of objects
+        methods:
+          - constructor(parentID, languages)
+            - get containing div using parentID
+            - for each language (each obj in this.languages)
+              - create a <section> container div within parent
+              - create <h2> and append to container
+              - create <p> and append to container
+              - create `button` key, append to `buttons` Map?
+                - key = button object
+                - value = <p> to modify
+              - append all to container
+            - attach 'click' listener to PARENT div, and delegate to each button
+              - for each lang in `languages`:
+                - if e.target === lang.button:
+                 - this.toggleFold(lang)
+          - toggleFold(language):
+            - input = language object from `languages` array
+            - return = none
+            - sideeffect = 
+              - if currently folded, then unfold(language)
+              - if currently unfolded, then fold(language)
+          - fold(language):
+            - set <p> text to truncated value
+            - change textContent on button to "Show more"
+            - toggle `languages` -> lang.folded = true
+          - unfold(language):
+            - set <p> text to unabridged value
+            - change textContent on button to "Show less"
+            - set lang.folded = false
+  */
+  FOLD_CHARACTER_LIMIT = 120;
+
+  constructor(parentEle, languages) {
+    this.parent = parentEle
+    this.languages = languages;
+    for (let langEntry of languages) {
+
+      const section = document.createElement("SECTION");
+      this.parent.appendChild(section);
+      
+      // CREATE child ELEMENTS and store in class
+      const name = document.createElement("H2");
+      name.textContent = langEntry.name;
+      
+      const description = document.createElement("P");
+      description.textContent = langEntry.description;
+
+      const button = document.createElement("BUTTON");
+
+      // Update `languages`
+      langEntry.folded = false;
+      langEntry.domDescription = description;
+      langEntry.domButton = button;
+
+      // Attach and update DOM
+      section.append(name, description, button);
+      this.fold(langEntry);
+    }
+    // Attach listener
+    this.parent.addEventListener("click", function f(e) {
+      for (let langEntry of languages) {
+        if (e.target === langEntry.domButton) {
+          this.toggleFold(langEntry);
+        }
+      }
+    }.bind(this))
+  }
+
+  toggleFold(langEntry) {
+    langEntry.folded ? this.unfold(langEntry) : this.fold(langEntry);
+  }
+
+  fold(langEntry) {
+    const abridged = langEntry.description.slice(0, this.FOLD_CHARACTER_LIMIT);
+    langEntry.domDescription.textContent = abridged + "...";
+    langEntry.domButton.textContent = "Show more";
+    langEntry.folded = true;
+  }
+
+  unfold(langEntry) {
+    langEntry.domDescription.textContent = langEntry.description;
+    langEntry.domButton.textContent = "Show less";
+    langEntry.folded = false;
+
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  new SummaryDisplay(document.body.querySelector("main"), languages)
+})
+
