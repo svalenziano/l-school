@@ -92,7 +92,7 @@ class SummaryDisplay {
       this.fold(langEntry);
     }
     // Attach listener
-    this.parent.addEventListener("click", function f(e) {
+    this.parent.addEventListener("click", function handleButtonClick(e) {
       for (let langEntry of languages) {
         if (e.target === langEntry.domButton) {
           this.toggleFold(langEntry);
