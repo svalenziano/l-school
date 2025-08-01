@@ -1,41 +1,48 @@
+// modified by SV
+
 const App = {
-  scheduleToolTip: function(event) {
+  scheduleToolTip(event) {
     this.timer = setTimeout(() => {
       this.showToolTip(event);
-    }, 2000);
+    }, 500);
   },
 
-  showToolTip: function(event) {
+  showToolTip(event) {
     const figcap = event.target.nextElementSibling;
     if (figcap && figcap.tagName === 'FIGCAPTION') {
-      figcap.classList.add('show');
+      figcap.classList.remove('hidden');
     }
   },
 
-  clearToolTip: function() {
+  clearAllToolTips() {
     clearTimeout(this.timer);
     this.timer = null;
 
-    document.querySelectorAll('figcaption.show').forEach(figcap => {
-      figcap.classList.remove('show');
+    document.querySelectorAll('figcaption').forEach(figcap => {
+      figcap.classList.add('hidden');
     });
   },
 
-  init: function() {
-    const container = document.getElementById('exotic_animals');
+  init() {
+    const container = document.querySelector('div.gallery');
 
     container.addEventListener('mouseenter', (event) => {
       if (event.target.tagName === 'IMG') {
+        console.log("mouseenter =>", event)
         this.scheduleToolTip(event);
       }
     }, true);
 
     container.addEventListener('mouseleave', (event) => {
       if (event.target.tagName === 'IMG') {
-        this.clearToolTip();
+        console.log("mouseleave =>", event)
+        this.clearAllToolTips();
       }
     }, true);
   }
 };
 
-App.init();
+document.addEventListener("DOMContentLoaded", () => {
+  App.init();
+  App.clearAllToolTips();
+})
