@@ -1,7 +1,8 @@
 "use strict";
 
 class Game {
-  static words = ['apple', 'banana', 'orange', 'pear'];
+  // static words = ['apple', 'banana', 'orange', 'pear'];
+  static words = ['apple', 'banana'];
   static maxIncorrectGuesses = 6;
 
   constructor() {
@@ -69,6 +70,7 @@ class UI {
     this.game = game;
     this.guessCount = 0;
     this.maxGuessCount = Game.maxGuessCount;
+    this.body = document.querySelector("body");
     
     for (let id of ['tree', 'apples', 'message', 'spaces', 'guesses', 'replay']){
       this[id] = document.getElementById(id);
@@ -81,6 +83,7 @@ class UI {
     this.removeSpans(this.spaces);
     this.removeSpans(this.guesses);
     this.updateTree();
+    this.body.classList.remove("win", "lose");
   }
 
   removeSpans(parentElement) {
@@ -120,10 +123,12 @@ class UI {
 
   messageLoss() {
     this.message.textContent = "Sorry! You're out of guesses ☹️"
+    this.body.classList.add("lose");
   }
 
   messageWin() {
     this.message.textContent = "You win! 😃"
+    this.body.classList.add("win");
   }
 
   showReplayButton() {
@@ -138,6 +143,10 @@ class UI {
     this.message.textContent = "I'm out of words!  \
     You should probably go outside..."
     this.hideReplayButton();
+    this.body.classList.remove("win", "lose")
+    this.spaces.classList.add("fade");
+    this.guesses.classList.add("fade");
+    this.tree.classList.add("fade");
   }
 }
 
@@ -170,12 +179,6 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log(game.showState());
   });
 
-  /*
-    if Play another is clicked:
-     - prevent default
-     - reset `game`
-     - reset `ui`
-  */
   ui.replay.addEventListener("click", (e) => {
     e.preventDefault();
     try {

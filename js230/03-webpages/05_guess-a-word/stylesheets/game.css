@@ -107,3 +107,7 @@ h2 {
   /* display:inline; */
   opacity: 1;
 }
+
+.fade {
+  opacity: 0.2;
+}
