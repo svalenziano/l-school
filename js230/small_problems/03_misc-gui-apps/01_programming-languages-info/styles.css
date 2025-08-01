@@ -1,19 +1,21 @@
 body {
   font-family: 'Courier New', Courier, monospace;
-  width: 98vw;
-  height: 98vh;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+
+  margin: 0;  /* Prevent margins from causing scrollbars */
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
 }
 
 div#container {
   padding: 10px;
-  border: black 1px solid;
+  /* border: black 1px solid; */
+  background-color: rgb(196, 93, 255);
+  max-width: 400px;
 }
 
 section.lang {
   background-color: rgba(207, 207, 207, 1);
 }
+
 

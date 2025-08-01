@@ -1,0 +1,16 @@
+div.gallery.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 30%);
+  grid-template-rows: auto;
+  place-items: center;
+  justify-items: center;
+}
+
+figure {
+  max-width: 100%;
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
