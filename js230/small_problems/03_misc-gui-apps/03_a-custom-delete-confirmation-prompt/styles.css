@@ -25,14 +25,20 @@ span#todo-text {
 }
 
 div#delete-prompt {
+  position: fixed;
+  z-index: 2;
   border: black 1px solid;
   background-color: aliceblue;
   padding: 1rem;
   max-width: 350px;
   border-radius: 8px;
-  position: fixed;
   bottom: 30px;
   left: 30px;
+}
+
+div#delete-prompt * {
+  position: relative;
+  z-index: 5;
 }
 
 .align-right {
@@ -43,6 +49,13 @@ div#delete-prompt {
 
 .hidden {
   display: none;
+}
+
+div#delete-prompt div.overlay {
+  position: fixed;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.562);
+  inset: 0;
 }
 
 button.x-button {
