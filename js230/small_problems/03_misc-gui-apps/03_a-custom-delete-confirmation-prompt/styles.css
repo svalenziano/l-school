@@ -20,6 +20,10 @@ ul#todolist li {
   max-width: var(--todo-width);
 }
 
+span#todo-text {
+  background-color: bisque;
+}
+
 div#delete-prompt {
   border: black 1px solid;
   background-color: aliceblue;

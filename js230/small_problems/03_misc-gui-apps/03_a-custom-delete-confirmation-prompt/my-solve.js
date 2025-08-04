@@ -42,15 +42,37 @@ class TodoUI {
       throw new TypeError("parentElement must be an `<ul>` element")
     }
     this.$list = parentElement;
+
     this.$deletePrompt = document.getElementById(TodoUI.deletePromptID);
-    if (!this.$deletePrompt) throw new Error("$deletePrompt element not found!")
-    this.deletePromptVisible = false;
+    this.$deleteYes = this.$deletePrompt.querySelector(`button[data-id="yes"]`);
+    this.$deleteNo = this.$deletePrompt.querySelector(`button[data-id="no"]`);
+    
+    for (let ele of [
+      this.$list,
+      this.$deletePrompt,
+      this.$deleteYes,
+      this.$deleteNo,
+    ]) {
+      if (!ele) throw new Error("Failed to find DOM element")
+    }
+
     this.todoIDToModify = null;
     this.nextTodoID = 0;  // used to assign a unique ID to each todo
 
-    this.$list.addEventListener("click", (e) => {
+    document.addEventListener("click", (e) => {
       if (this.deletePromptVisible) {
-        console.log("DO DELETE PROMPT STUFF TKTK")
+        if (e.target === this.$deleteYes) {
+          console.log("DELETION CONFIRMED");
+          this.hideDeletePrompt();
+        } else if (
+          e.target === this.$deleteNo || 
+          !(this.$deletePrompt.contains(e.target))
+          ) {
+            console.log("deletion cancelled")
+            this.hideDeletePrompt();
+        } else {
+          console.log("Nothing done.")
+        }
       } else {
         if (e.target.classList.contains("delete")) {
           console.log("DELETE BUTTON CLICKED TKTK")
@@ -58,6 +80,10 @@ class TodoUI {
         }
       }
     });
+  }
+
+  get deletePromptVisible() {
+    return !(this.$deletePrompt.classList.contains("hidden"));
   }
 
   addTodo(text) {
@@ -77,6 +103,10 @@ class TodoUI {
     this.$deletePrompt.querySelector("#todo-text").textContent = todoText;
     
     this.$deletePrompt.classList.remove("hidden");
+  }
+
+  hideDeletePrompt() {
+    this.$deletePrompt.classList.add("hidden");
   }
 }
 
