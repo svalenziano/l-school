@@ -46,12 +46,15 @@ class TodoUI {
     this.$deletePrompt = document.getElementById(TodoUI.deletePromptID);
     this.$deleteYes = this.$deletePrompt.querySelector(`button[data-id="yes"]`);
     this.$deleteNo = this.$deletePrompt.querySelector(`button[data-id="no"]`);
+    this.$contextMenu = document.getElementById("context-menu");
+    this.$overlay = document.querySelector(`div[data-id="overlay"]`);
     
     for (let ele of [
       this.$list,
       this.$deletePrompt,
       this.$deleteYes,
       this.$deleteNo,
+      this.$overlay,
     ]) {
       if (!ele) throw new Error("Failed to find DOM element")
     }
@@ -60,6 +63,7 @@ class TodoUI {
     this.nextTodoID = 0;  // used to assign a unique ID to each todo
 
     document.addEventListener("click", (e) => {
+      console.log(e);
       if (this.deletePromptVisible) {
         if (e.target === this.$deleteYes) {
           console.log("DELETION CONFIRMED");
@@ -77,15 +81,30 @@ class TodoUI {
       } else {
         if (e.target.classList.contains("delete")) {
           console.log("DELETE BUTTON CLICKED TKTK")
-          this.todoIDToModify = e.target.dataset.id
+          this.storeIDToModify(e)
           this.showDeletePrompt();
         }
       }
     });
+
+    this.$list.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      this.showContextMenu();
+      this.$contextMenu.style.top = `${e.y}px`;
+      this.$contextMenu.style.left = `${e.x}px`;
+    });
+  }
+
+  storeIDToModify(event) {
+    this.todoIDToModify = event.target.dataset.id;
   }
 
   get deletePromptVisible() {
     return !(this.$deletePrompt.classList.contains("hidden"));
+  }
+
+  get contextMenuIsVisible() {
+    return !(this.$contextMenu.classList.contains("hidden"));
   }
 
   addTodo(text) {
@@ -113,10 +132,28 @@ class TodoUI {
     this.$deletePrompt.querySelector("#todo-text").textContent = todoText;
     
     this.$deletePrompt.classList.remove("hidden");
+    this.showOverlay();
   }
 
   hideDeletePrompt() {
     this.$deletePrompt.classList.add("hidden");
+    this.hideOverlay();
+  }
+
+  showContextMenu() {
+    this.$contextMenu.classList.remove("hidden");
+  }
+
+  hideContextMenu() {
+    this.$contextMenu.classList.add("hidden");
+  }
+
+  showOverlay() {
+    this.$overlay.classList.remove("hidden");
+  }
+
+  hideOverlay() {
+    this.$overlay.classList.add("hidden");
   }
 }
 
