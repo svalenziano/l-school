@@ -63,6 +63,7 @@ class TodoUI {
       if (this.deletePromptVisible) {
         if (e.target === this.$deleteYes) {
           console.log("DELETION CONFIRMED");
+          this.deleteTodo(this.todoIDToModify);
           this.hideDeletePrompt();
         } else if (
           e.target === this.$deleteNo || 
@@ -76,7 +77,8 @@ class TodoUI {
       } else {
         if (e.target.classList.contains("delete")) {
           console.log("DELETE BUTTON CLICKED TKTK")
-          this.showDeletePrompt(e.target.dataset.id);
+          this.todoIDToModify = e.target.dataset.id
+          this.showDeletePrompt();
         }
       }
     });
@@ -97,8 +99,16 @@ class TodoUI {
     this.nextTodoID += 1;
   }
 
-  showDeletePrompt(todoID) {
-    const todoListItem = this.$list.querySelector(`li[data-id="${todoID}"]`);
+  deleteTodo(todoID) {
+    this.getTodo(todoID).remove();
+  }
+
+  getTodo(todoID) {
+    return this.$list.querySelector(`li[data-id="${todoID}"]`)
+  }
+
+  showDeletePrompt() {
+    const todoListItem = this.getTodo(this.todoIDToModify);
     const todoText = todoListItem.firstChild.textContent;
     this.$deletePrompt.querySelector("#todo-text").textContent = todoText;
     
