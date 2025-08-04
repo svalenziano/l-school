@@ -1,0 +1,79 @@
+:root {
+  --todo-width: 350px;
+}
+
+body {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+ul#todolist {
+  padding-inline-start: 0px;
+}
+
+ul#todolist li {
+  display: flex;
+  justify-content: space-between;
+  background-color: rgb(221, 221, 221);
+  list-style-type: none;
+  margin: 1rem;
+  padding: 0.8rem;
+  max-width: var(--todo-width);
+}
+
+div#delete-prompt {
+  border: black 1px solid;
+  background-color: aliceblue;
+  padding: 1rem;
+  max-width: 350px;
+  border-radius: 8px;
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+}
+
+.align-right {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.hidden {
+  display: none;
+}
+
+button.x-button {
+  display: inline-block;
+  color: rgba(255, 255, 255, 0);
+  background-color: rgba(255, 255, 255, 0);
+  border-width: 0;
+  transform: rotate(45deg);
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+button.x-button::after,
+button.x-button::before {
+  background: red;
+  position: absolute;
+  content: "";
+}
+
+button.x-button:hover {
+  filter: invert(100%);
+}
+
+button.x-button::before {
+  height: 3px;
+  top: 50%;
+  right: 0;
+  left: 0;
+  margin-top: -1px;
+}
+
+button.x-button::after {
+  width: 3px;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  margin-left: -1px;
+}
