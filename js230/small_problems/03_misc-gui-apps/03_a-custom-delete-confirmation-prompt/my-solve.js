@@ -1,8 +1,10 @@
+"use strict";
+
 /*
 See obisidan
 */
 
-const tasks = [
+const placeholderTasks = [
   "Rise and smile",
   "Check on all sheep, goats, horses, and camels grazing nearby",
   "Count animals to ensure none are missing",
@@ -33,6 +35,7 @@ const tasks = [
 
 class TodoUI {
   static deletePromptID = "delete-prompt"
+  static deletePromptTextID = "delete-text-name"
 
   constructor(parentElement) {
     if (!(parentElement instanceof HTMLUListElement)) {
@@ -40,15 +43,40 @@ class TodoUI {
     }
     this.$list = parentElement;
     this.$deletePrompt = document.getElementById(TodoUI.deletePromptID);
+    if (!this.$deletePrompt) throw new Error("$deletePrompt element not found!")
     this.deletePromptVisible = false;
-    this.todoID = null;
+    this.todoIDToModify = null;
+    this.nextTodoID = 0;  // used to assign a unique ID to each todo
 
+    this.$list.addEventListener("click", (e) => {
+      if (this.deletePromptVisible) {
+        console.log("DO DELETE PROMPT STUFF TKTK")
+      } else {
+        if (e.target.classList.contains("delete")) {
+          console.log("DELETE BUTTON CLICKED TKTK")
+          this.showDeletePrompt(e.target.dataset.id);
+        }
+      }
+    });
   }
 
   addTodo(text) {
     const item = document.createElement("LI");
-    item.innerHTML = `${text}<button class="x-button">Delete</button>`
+    item.dataset.id = this.nextTodoID;
+
+    item.innerHTML = `${text}<button class="delete x-button" \
+    data-id="${this.nextTodoID}">Delete</button>`;
+
     this.$list.appendChild(item);
+    this.nextTodoID += 1;
+  }
+
+  showDeletePrompt(todoID) {
+    const todoListItem = this.$list.querySelector(`li[data-id="${todoID}"]`);
+    const todoText = todoListItem.firstChild.textContent;
+    this.$deletePrompt.querySelector("#todo-text").textContent = todoText;
+    
+    this.$deletePrompt.classList.remove("hidden");
   }
 }
 
@@ -58,5 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
   const ui = new TodoUI(document.querySelector("#todolist"));
 
-  tasks.forEach((t) => ui.addTodo(t))
+  placeholderTasks.forEach((t) => ui.addTodo(t))
+
+  
 })
