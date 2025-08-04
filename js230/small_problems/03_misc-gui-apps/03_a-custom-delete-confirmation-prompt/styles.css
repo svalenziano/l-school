@@ -6,15 +6,21 @@ body {
   font-family: 'Courier New', Courier, monospace;
 }
 
-ul#todolist {
+div#context-menu {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+}
+
+ul {
   padding-inline-start: 0px;
+  list-style-type: none;
 }
 
 ul#todolist li {
   display: flex;
   justify-content: space-between;
   background-color: rgb(221, 221, 221);
-  list-style-type: none;
   margin: 1rem;
   padding: 0.8rem;
   max-width: var(--todo-width);
@@ -24,14 +30,17 @@ span#todo-text {
   background-color: bisque;
 }
 
+div.modal {
+  background-color: aliceblue;
+  border: black 1px solid;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
 div#delete-prompt {
   position: fixed;
   z-index: 2;
-  border: black 1px solid;
-  background-color: aliceblue;
-  padding: 1rem;
   max-width: 350px;
-  border-radius: 8px;
   bottom: 30px;
   left: 30px;
 }
