@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+  <meta charset="UTF-8">
+  <script src="./my-solve.js"></script>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+  <main>
+    <h1>Todos</h1>
+    <ul id="todolist">
+    </ul>
+
+    <div id="delete-prompt" class="hidden">
+      <p>Are you sure you want to delete "<span id="todo-text">tktk</span>"</p>
+      <div class="align-right">
+        <button data-id="yes">Yes</button>
+        <button data-id="no">No</button>
+      </div>
+      <div class="overlay"></div>
+    </div>
+
+    <div id="context-menu" class="modal">
+      <ul>
+        <li>Show Details</li>
+        <li>Edit Todo</li>
+        <li>Delete Todo</li>
+      </ul>
+    </div>
+
+  </main>
+</body>
+
+</html>

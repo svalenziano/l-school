@@ -1,0 +1,174 @@
+/* eric meyer reset ************************************************/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote::before, blockquote::after,
+q::before, q::after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* Project CSS Starts here ************************************************/
+
+
+
+:root {
+  --todo-width: 350px;
+  --radius: 8px;
+  --menu-bg: aliceblue;
+}
+
+h1 {
+  font-size: 3rem;
+}
+
+body {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+div#context-menu {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+}
+
+ul {
+  padding-inline-start: 0px;
+  list-style-type: none;
+}
+
+ul#todolist li {
+  display: flex;
+  justify-content: space-between;
+  background-color: rgb(221, 221, 221);
+  margin: 1rem;
+  padding: 0.8rem;
+  max-width: var(--todo-width);
+}
+
+span#todo-text {
+  background-color: bisque;
+}
+
+#context-menu {
+  /* border: black 1px solid; */
+  border-radius: var(--radius);
+  background-clip: padding-box;
+}
+
+#context-menu li {
+  display: block;
+  background-color: var(--menu-bg);
+  padding: 1rem;
+}
+
+#context-menu li:hover {
+  background-color: white;
+  color:red;
+}
+
+div#delete-prompt {
+  background-color: var(--menu-bg);
+  border: black 1px solid;
+  border-radius: var(--radius);
+  padding: 1rem;
+  position: fixed;
+  z-index: 2;
+  max-width: 350px;
+  bottom: 30px;
+  left: 30px;
+}
+
+div#delete-prompt * {
+  position: relative;
+  z-index: 5;
+}
+
+.align-right {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.hidden {
+  display: none;
+}
+
+div#delete-prompt div.overlay {
+  position: fixed;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.562);
+  inset: 0;
+}
+
+button.x-button {
+  display: inline-block;
+  color: rgba(255, 255, 255, 0);
+  background-color: rgba(255, 255, 255, 0);
+  border-width: 0;
+  transform: rotate(45deg);
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+button.x-button::after,
+button.x-button::before {
+  background: red;
+  position: absolute;
+  content: "";
+}
+
+button.x-button:hover {
+  filter: invert(100%);
+}
+
+button.x-button::before {
+  height: 3px;
+  top: 50%;
+  right: 0;
+  left: 0;
+  margin-top: -1px;
+}
+
+button.x-button::after {
+  width: 3px;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  margin-left: -1px;
+}
