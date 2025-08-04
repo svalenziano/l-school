@@ -46,8 +46,12 @@ class TodoUI {
     this.$deletePrompt = document.getElementById(TodoUI.deletePromptID);
     this.$deleteYes = this.$deletePrompt.querySelector(`button[data-id="yes"]`);
     this.$deleteNo = this.$deletePrompt.querySelector(`button[data-id="no"]`);
-    this.$contextMenu = document.getElementById("context-menu");
     this.$overlay = document.querySelector(`div[data-id="overlay"]`);
+    this.$contextMenu = document.getElementById("context-menu");
+    this.$contextDelete = document.querySelector("#context-delete");
+    this.$contextDetails = document.querySelector("#context-details");
+    this.$contextDetails = document.querySelector("#context-details");
+    this.$contextEdit = document.querySelector("#context-edit");
     
     for (let ele of [
       this.$list,
@@ -55,6 +59,10 @@ class TodoUI {
       this.$deleteYes,
       this.$deleteNo,
       this.$overlay,
+      this.$contextMenu,
+      this.$contextDelete,
+      this.$contextDetails,
+      this.$contextEdit,
     ]) {
       if (!ele) throw new Error("Failed to find DOM element")
     }
@@ -64,6 +72,15 @@ class TodoUI {
 
     document.addEventListener("click", (e) => {
       console.log(e);
+      if (this.contextMenuIsVisible) {
+        if (e.target === this.$contextDelete) {
+          this.showDeletePrompt(this.todoIDToModify);
+          this.hideContextMenu();
+          return;
+        }
+
+      }
+
       if (this.deletePromptVisible) {
         if (e.target === this.$deleteYes) {
           console.log("DELETION CONFIRMED");
@@ -82,17 +99,24 @@ class TodoUI {
         if (e.target.classList.contains("delete")) {
           console.log("DELETE BUTTON CLICKED TKTK")
           this.storeIDToModify(e)
-          this.showDeletePrompt();
+          this.showDeletePrompt(this.todoIDToModify);
         }
       }
     });
 
     this.$list.addEventListener("contextmenu", (e) => {
       e.preventDefault();
-      this.showContextMenu();
-      this.$contextMenu.style.top = `${e.y}px`;
-      this.$contextMenu.style.left = `${e.x}px`;
+      if (e.target.dataset.id) {
+        this.storeIDToModify(e)
+        this.showContextMenu();
+        this.$contextMenu.style.top = `${e.y}px`;
+        this.$contextMenu.style.left = `${e.x}px`;
+      }
     });
+  }
+
+  targetIsDeleteButton(event) {
+    return event.target === this.$deleteYes || event.target === this.$contextDelete;
   }
 
   storeIDToModify(event) {
@@ -126,8 +150,8 @@ class TodoUI {
     return this.$list.querySelector(`li[data-id="${todoID}"]`)
   }
 
-  showDeletePrompt() {
-    const todoListItem = this.getTodo(this.todoIDToModify);
+  showDeletePrompt(todoID) {
+    const todoListItem = this.getTodo(todoID);
     const todoText = todoListItem.firstChild.textContent;
     this.$deletePrompt.querySelector("#todo-text").textContent = todoText;
     
