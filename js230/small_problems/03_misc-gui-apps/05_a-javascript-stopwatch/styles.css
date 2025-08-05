@@ -1,3 +1,61 @@
+@import "reset.css";
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
+
+:root {
+  --main-color: rgb(163, 33, 223);
+}
+
 body {
-  background-color: red;
+  background-color: var(--main-color);
+  font-family: "Fira Code", monospace;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+div.stopwatch {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+div.time-display {
+  margin: 2rem;
+  /* min-height: 6rem; */
+  /* outline: 1px red solid; */
+}
+
+div.time-display time {
+  color: white;
+  font-size: 6rem;
+}
+
+div.controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 1rem;
+}
+
+div.controls button {
+  font-size: 1.5rem;
+  min-width: 7rem;
+  font-family: "Fira Code", monospace;
+  border-width: 0px;
+  border-style: solid;
+  border-radius: 0.5rem;
+  border-color:rgba(0, 0, 0, 0.479);
+  background-color: white;
+  color: var(--main-color);
+  transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+div.controls button:hover {
+  box-shadow: 4px 4px rgba(0, 0, 0, 0.329);
+  cursor: pointer;
+}
+
+div.controls button:active {
+  transform: translate(0px, 4px);
+  box-shadow: 0 2px 3px rgba(0,0,0,0.2);
 }
