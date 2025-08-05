@@ -59,3 +59,15 @@ div.controls button:active {
   transform: translate(0px, 4px);
   box-shadow: 0 2px 3px rgba(0,0,0,0.2);
 }
+
+.inactive {
+  opacity: 0.5;
+}
+
+div.controls button.inactive:hover {
+  box-shadow: none;
+}
+
+div.controls button.inactive:active {
+  transform: translate(0px, 0px);
+}
