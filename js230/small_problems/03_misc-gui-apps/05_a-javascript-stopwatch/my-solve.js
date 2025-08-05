@@ -2,6 +2,9 @@
 
 class Stopwatch {
   
+  static updateInterval = 60 // interval in milliseconds.  Above ~25 is meaningless bc the display just flashes a lot
+  static timeMultiplier = 1  // FOR TESTING: set to 1 for 'normal' time
+
   constructor(parentElement) {
     this.lastStartTime = null;
     this.elapsedAtLastPause = 0;
@@ -30,13 +33,17 @@ class Stopwatch {
   }
 
   calcElapsedTime() {
-    return this.elapsedAtLastPause + (new Date() - this.lastStartTime);
+    return (this.elapsedAtLastPause + (new Date() - this.lastStartTime)) * Stopwatch.timeMultiplier;
+  }
+
+  formatTime(milliseconds) {
+    return new Date(milliseconds).toISOString().substr(11, 11).replace(".", ":");
   }
 
   reset() {
     this.pause();
     this.deactivateButton(this.$resetButton);
-    this.lastStartTime = new Date();
+    this.$timeDisplay.textContent = this.formatTime(0);
     this.elapsedAtLastPause = 0;
   }
 
@@ -46,8 +53,8 @@ class Stopwatch {
     this.lastStartTime = new Date();
     this.$startStopButton.textContent = "Pause"
     this.currentInterval = setInterval(() => {
-      this.$timeDisplay.textContent = this.calcElapsedTime();
-    }, 100);
+      this.$timeDisplay.textContent = this.formatTime(this.calcElapsedTime());
+    }, Stopwatch.updateInterval);
   }
 
   pause() {
@@ -59,7 +66,6 @@ class Stopwatch {
   }
 
   handleStartStopClick(e) {
-    console.log(e)
     if (this.running === true) {
       this.pause();
     } else {
