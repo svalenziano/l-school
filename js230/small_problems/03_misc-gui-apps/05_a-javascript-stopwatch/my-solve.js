@@ -88,5 +88,7 @@ class Stopwatch {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  const sw = new Stopwatch(document.querySelector(".stopwatch"))
+  for (let container of document.querySelectorAll("div.stopwatch")) {
+    new Stopwatch(container)
+  }
 })

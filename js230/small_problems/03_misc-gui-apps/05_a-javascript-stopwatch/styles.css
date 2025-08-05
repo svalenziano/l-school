@@ -6,6 +6,9 @@
 }
 
 body {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
   background-color: var(--main-color);
   font-family: "Fira Code", monospace;
   font-optical-sizing: auto;
@@ -14,13 +17,14 @@ body {
 }
 
 div.stopwatch {
-  min-height: 100vh;
+  /* min-height: 100vh; */
   display: grid;
   place-items: center;
+  margin: 2rem 1rem
 }
 
 div.time-display {
-  margin: 2rem;
+  margin: 1rem;
   /* min-height: 6rem; */
   /* outline: 1px red solid; */
 }
