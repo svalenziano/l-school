@@ -71,12 +71,17 @@ class TodoUI {
     this.nextTodoID = 0;  // used to assign a unique ID to each todo
 
     document.addEventListener("click", (e) => {
-      console.log(e);
       if (this.contextMenuIsVisible) {
         if (e.target === this.$contextDelete) {
           this.showDeletePrompt(this.todoIDToModify);
           this.hideContextMenu();
           return;
+        } else if (e.target === this.$contextDetails) {
+          console.log("NOT YET IMPLEMENTED")
+        } else if (e.target === this.$contextEdit) {
+          console.log("NOT YET IMPLEMENTED")
+        } else {
+          this.hideContextMenu();
         }
 
       }
