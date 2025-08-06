@@ -10,40 +10,84 @@ class Shop {
     // this.$filterContainer = $filterContainer;
     // this.$showcaseContainer = $showcaseContainer;
     
-    this.filter = new Filter($filterContainer, ['make', 'model', 'price', 'year']);
+    this.filter = new Filter(
+      $filterContainer, 
+      ['make', 'model', 'price', 'year'], 
+      collection
+      );
     
     this.showcase = new Showcase($showcaseContainer);
     this.showcase.display(this.collection);
+  }
+
+  static convertToCurrency(integer) {
+    return "$" + String(integer)
   }
 }
 
 class Filter {
 
   constructor($container, filterKeys, collection) {
-    
+    this.$container = $container;
+    this.unfilteredCollection = collection;
+    this.fields = [];
 
     filterKeys.forEach((key) => {
-      new Field($container, key, ['tktk', 'tktk'])
+      this.fields.push(new Field($container, key, collection))
     });
-    // initialize fields: use string values
+    
+    this.addFilterButton();
+    this.addMetaFilterListener();
+
+    this.$filterButton.addEventListener("click", (e) => {
+
+    })
+  }
+
+  addFilterButton() {
+    this.$container.innerHTML += `<button class="filter-button">Filter</button>`;
+    this.$filterButton = this.$container.querySelector("button.filter-button")
+  }
+
+  addMetaFilterListener() {
+    /*
+    Allows the Filter to immediately respond to changes to any Field
+    */
+    this.$container.addEventListener("change", (e) => {
+      if (e.target instanceof HTMLSelectElement) {
+        console.log("change!")
+      }
+    });
   }
 }
 
 class Field {
 
-  constructor($container, name, allValues) {
-    this.allValues = ['Any'].concat(allValues);
+  constructor($container, key, collection) {
+    this.allValues = ['Any']
+      .concat(this.getValuesFromCollection(key, collection));
     
     $container.innerHTML += `\
-      <label for="${name}">${name}</label>
-      <select id="${name}">
+      <label for="${key}">${key}</label>
+      <select id="${key}">
       </select>`;
     
-    const $select = $container.querySelector(`#${name}`);
+    const $select = $container.querySelector(`#${key}`);
     
     for (let string of this.allValues) {
       $select.innerHTML += `<option value="${string}">${string}</option>`
     }
+  }
+
+  getValuesFromCollection(key, collection) {
+    /*
+    Collection = array of objects
+    */
+    const values = new Set();
+    for (let obj of collection) {
+      values.add(obj[key])
+    }
+    return Array.from(values);
   }
 }
 
