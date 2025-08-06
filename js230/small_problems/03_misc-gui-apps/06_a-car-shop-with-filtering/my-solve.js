@@ -9,7 +9,7 @@ class Shop {
     this.collection = collection;
     this.$filterContainer = $filterContainer;
     this.$showcaseContainer = $showcaseContainer;
-    this.showcase = new Showcase($filterContainer);
+    this.showcase = new Showcase($showcaseContainer);
     this.showcase.display(this.collection);
   }
 }
@@ -27,6 +27,9 @@ class Showcase {
     for (let item of collection) {
       this.$showcase.innerHTML += `\
       <div class="showcase-item">
+      <figure>
+        <img src="./${item.image}" alt="${item.year} ${item.make} ${item.model}">
+      </figure>
       <p class="bold">${item.make} ${item.model}</p>
       <p>Year: ${item.year}</p>
       <p>Price: $${item.price}</p>

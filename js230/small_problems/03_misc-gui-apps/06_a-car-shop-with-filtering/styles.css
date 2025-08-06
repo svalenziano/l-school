@@ -1,22 +1,47 @@
 @import "./reset.css";
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
 
+:root {
+  --main-color: rgb(163, 33, 223);
+}
+
 body {
   font-family: "Fira Code", monospace;
   box-sizing: border-box;
+}
+
+h1 {
+  font-size: 2rem;
+  color: white;
 }
 
 .bold {
   font-weight: 500;
 }
 
+img {
+  display: block;
+  width: 100%;
+  
+}
+
+header {
+  padding: 2rem;
+  background-color: var(--main-color);
+}
+
 div.showcase {
   display: grid;
+  margin: 2rem;
   width: 100%;
   grid-template-columns: repeat(auto-fit, minmax(100px, 150px));
   gap: 1rem;
   align-content: start;
-  justify-content: center;
+  justify-content: left;
+}
+
+div.showcase p {
+  padding: 0.2rem 0rem;
 }
 
 div.showcase-item {
@@ -24,4 +49,12 @@ div.showcase-item {
   padding: 1rem; */
   width: 100%;
   outline: 1px red solid;
+}
+
+div.showcase-item figure {
+  /* background-color: red; */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  aspect-ratio: 1.3;
 }
