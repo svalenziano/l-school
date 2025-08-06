@@ -1,0 +1,27 @@
+@import "./reset.css";
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
+
+body {
+  font-family: "Fira Code", monospace;
+  box-sizing: border-box;
+}
+
+.bold {
+  font-weight: 500;
+}
+
+div.showcase {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 150px));
+  gap: 1rem;
+  align-content: start;
+  justify-content: center;
+}
+
+div.showcase-item {
+  /* box-sizing: border-box;
+  padding: 1rem; */
+  width: 100%;
+  outline: 1px red solid;
+}

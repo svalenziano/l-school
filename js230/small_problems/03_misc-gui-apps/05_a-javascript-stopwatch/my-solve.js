@@ -17,7 +17,7 @@ class Stopwatch {
 
     parentElement.innerHTML = `\
     <div>
-      <div class="time-display fira-code-medium"><time>00:00:00:00</time></div>
+      <div class="time-display"><time>00:00:00:00</time></div>
       <div class="controls">
         <button class="start-stop">Start</button>
         <button class="reset inactive">Reset</button>
