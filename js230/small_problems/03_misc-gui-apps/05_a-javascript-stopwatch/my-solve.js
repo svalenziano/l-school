@@ -15,8 +15,8 @@ class Stopwatch {
       throw new Error("parentElement should not contain any elements")
     }
 
-    parentElement.innerHTML = `<div>
-    
+    parentElement.innerHTML = `\
+    <div>
       <div class="time-display fira-code-medium"><time>00:00:00:00</time></div>
       <div class="controls">
         <button class="start-stop">Start</button>
@@ -40,6 +40,10 @@ class Stopwatch {
     return new Date(milliseconds).toISOString().substr(11, 11).replace(".", ":");
   }
 
+  displayTime() {
+    this.$timeDisplay.textContent = this.formatTime(this.calcElapsedTime());
+  }
+
   reset() {
     this.pause();
     this.deactivateButton(this.$resetButton);
@@ -52,9 +56,7 @@ class Stopwatch {
     this.running = true;
     this.lastStartTime = new Date();
     this.$startStopButton.textContent = "Pause"
-    this.currentInterval = setInterval(() => {
-      this.$timeDisplay.textContent = this.formatTime(this.calcElapsedTime());
-    }, Stopwatch.updateInterval);
+    this.currentInterval = setInterval(this.displayTime.bind(this), Stopwatch.updateInterval);
   }
 
   pause() {
@@ -65,7 +67,7 @@ class Stopwatch {
     this.currentInterval = null;
   }
 
-  handleStartStopClick(e) {
+  handleStartStopClick() {
     if (this.running === true) {
       this.pause();
     } else {
@@ -73,7 +75,7 @@ class Stopwatch {
     }
   }
 
-  handleResetClick(e) {
+  handleResetClick() {
     this.reset();
   }
 
