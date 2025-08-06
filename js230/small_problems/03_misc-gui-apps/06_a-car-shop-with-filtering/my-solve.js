@@ -7,10 +7,43 @@ class Shop {
     collection = array of objects
     */
     this.collection = collection;
-    this.$filterContainer = $filterContainer;
-    this.$showcaseContainer = $showcaseContainer;
+    // this.$filterContainer = $filterContainer;
+    // this.$showcaseContainer = $showcaseContainer;
+    
+    this.filter = new Filter($filterContainer, ['make', 'model', 'price', 'year']);
+    
     this.showcase = new Showcase($showcaseContainer);
     this.showcase.display(this.collection);
+  }
+}
+
+class Filter {
+
+  constructor($container, filterKeys, collection) {
+    
+
+    filterKeys.forEach((key) => {
+      new Field($container, key, ['tktk', 'tktk'])
+    });
+    // initialize fields: use string values
+  }
+}
+
+class Field {
+
+  constructor($container, name, allValues) {
+    this.allValues = ['Any'].concat(allValues);
+    
+    $container.innerHTML += `\
+      <label for="${name}">${name}</label>
+      <select id="${name}">
+      </select>`;
+    
+    const $select = $container.querySelector(`#${name}`);
+    
+    for (let string of this.allValues) {
+      $select.innerHTML += `<option value="${string}">${string}</option>`
+    }
   }
 }
 
