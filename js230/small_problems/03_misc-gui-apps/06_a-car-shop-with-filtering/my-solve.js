@@ -18,10 +18,22 @@ class Shop {
     
     this.showcase = new Showcase($showcaseContainer);
     this.showcase.display(this.collection);
+
+    this.addFilterButtonListener();
   }
 
   static convertToCurrency(integer) {
     return "$" + String(integer)
+  }
+
+  addFilterButtonListener() {
+    /*
+    Update Showcase when filter button is clicked
+    */
+    this.filter.$filterButton.addEventListener("click", (e) => {
+      const filteredItems = this.filter.getFilteredCollection();
+      this.showcase.display(filteredItems);
+    })
   }
 }
 
@@ -44,6 +56,34 @@ class Filter {
     })
   }
 
+  get fieldKeys() {
+    return Object.keys(this.fields);
+  }
+
+  getFilteredCollection() {
+    /*
+    Returns filtered collection based on current filter values
+    */
+
+    // Use Array.filter` to iterate through each ENTRY `unfilteredCollection`
+
+      // For each field:
+        // If the field is not 'Any' AND the field value doesn't match the entry value:
+        // return false
+      // return true (default return value, if no disqualifiers are found)
+
+    const filtered = this.unfilteredCollection.filter((entry) => {
+      for (let field of this.fields) {
+        if (field.value !== Field.NO_FILTER && String(field.value) !== String(entry[field.key])) {
+          return false;
+        }
+      }
+      return true;
+    });
+
+    return filtered
+  }
+
   addFilterButton() {
     this.$container.innerHTML += `<button class="filter-button">Filter</button>`;
     this.$filterButton = this.$container.querySelector("button.filter-button")
@@ -63,8 +103,11 @@ class Filter {
 
 class Field {
 
+  static NO_FILTER = 'Any'
+
   constructor($container, key, collection) {
-    this.allValues = ['Any']
+    this.key = key;
+    this.allValues = [Field.NO_FILTER]
       .concat(this.getValuesFromCollection(key, collection));
     
     $container.innerHTML += `\
@@ -72,16 +115,21 @@ class Field {
       <select id="${key}">
       </select>`;
     
-    const $select = $container.querySelector(`#${key}`);
+    this.$select = $container.querySelector(`select#${key}`);
     
     for (let string of this.allValues) {
-      $select.innerHTML += `<option value="${string}">${string}</option>`
+      this.$select.innerHTML += `<option value="${string}">${string}</option>`
     }
+  }
+
+  get value() {
+    return this.$select.value;
   }
 
   getValuesFromCollection(key, collection) {
     /*
     Collection = array of objects
+    Return = unique values that match key
     */
     const values = new Set();
     for (let obj of collection) {
