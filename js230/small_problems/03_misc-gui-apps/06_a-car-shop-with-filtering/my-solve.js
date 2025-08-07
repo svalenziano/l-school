@@ -115,19 +115,17 @@ class Field {
 
   constructor($container, key, collection) {
     this.key = key;
+    
     this.allValues = [Field.NO_FILTER]
-      .concat(this.getValuesFromCollection(key, collection));
+      .concat(Field.getValuesFromCollection(key, collection));
     
-    $container.innerHTML += `\
-      <label for="${key}">${key}</label>
-      <select id="${key}">
-      </select>`;
+    this.$select = Field.createSelectWithOptions(key, this.allValues)
     
-    this.$select = $container.querySelector(`select#${key}`);
-    
-    for (let string of this.allValues) {
-      this.$select.innerHTML += `<option value="${string}">${string}</option>`
-    }
+    $container.append(
+      Field.createLabel(key),
+      this.$select
+    );
+
     Utility.checkConnected($container, this.$select)
   }
 
@@ -135,7 +133,7 @@ class Field {
     return this.$select.value;
   }
 
-  getValuesFromCollection(key, collection) {
+  static getValuesFromCollection(key, collection) {
     /*
     Collection = array of objects
     Return = unique values that match key
@@ -145,6 +143,25 @@ class Field {
       values.add(obj[key])
     }
     return Array.from(values);
+  }
+
+  static createLabel(key) {
+    const label = document.createElement("LABEL");
+    label.setAttribute("for", key);
+    label.textContent = key;
+    return label;
+  }
+
+  static createSelectWithOptions(key, options) {
+    const select = document.createElement("SELECT");
+    select.setAttribute("id", key);
+    for (let option of options) {
+      const x = document.createElement("OPTION");
+      x.setAttribute("value", option);
+      x.textContent = option;
+      select.append(x);
+    }
+    return select;
   }
 }
 
