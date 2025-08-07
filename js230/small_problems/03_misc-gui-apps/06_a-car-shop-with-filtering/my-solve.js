@@ -1,8 +1,18 @@
 "use strict";
 
+class Utility {
+  static checkConnected(...elements) {
+    for (let ele of elements) {
+      if (!(ele instanceof HTMLElement)) throw new Error(`${ele} is not an HTMLElement!`)
+      if (!ele.isConnected) throw new Error(`${ele}.isConnected === false`)
+    }
+  }
+}
+
 class Shop {
 
   constructor($filterContainer, $showcaseContainer, collection) {
+    Utility.checkConnected($filterContainer, $showcaseContainer);
     /*
     collection = array of objects
     */
@@ -41,19 +51,17 @@ class Filter {
 
   constructor($container, filterKeys, collection) {
     this.$container = $container;
+    Utility.checkConnected(this.$container);
     this.unfilteredCollection = collection;
     this.fields = [];
 
     filterKeys.forEach((key) => {
-      this.fields.push(new Field($container, key, collection))
+      this.fields.push(new Field(this.$container, key, collection))
     });
     
     this.addFilterButton();
     this.addMetaFilterListener();
 
-    this.$filterButton.addEventListener("click", (e) => {
-
-    })
   }
 
   get fieldKeys() {
@@ -120,6 +128,7 @@ class Field {
     for (let string of this.allValues) {
       this.$select.innerHTML += `<option value="${string}">${string}</option>`
     }
+    Utility.checkConnected($container, this.$select)
   }
 
   get value() {
@@ -149,6 +158,8 @@ class Showcase {
   }
 
   display(collection) {
+    this.$showcase.innerHTML = ""
+
     for (let item of collection) {
       this.$showcase.innerHTML += `\
       <div class="showcase-item">
@@ -183,4 +194,5 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("div.shop-showcase"),
     cars
   )
+
 })
