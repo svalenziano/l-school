@@ -93,7 +93,7 @@ class Filter {
   }
 
   addFilterButton() {
-    this.$container.innerHTML += `<button class="filter-button">Filter</button>`;
+    this.$container.insertAdjacentHTML('beforeend' , `<button class="filter-button">Filter</button>`);
     this.$filterButton = this.$container.querySelector("button.filter-button")
   }
 
@@ -168,17 +168,17 @@ class Field {
 class Showcase {
 
   constructor($container) {
-    $container.innerHTML += `\
-    <div class="showcase"></div>`
+    $container.insertAdjacentHTML('beforeend', `<div class="showcase"></div>`)
     this.$container = $container;
     this.$showcase = $container.querySelector(".showcase");
   }
 
   display(collection) {
-    this.$showcase.innerHTML = ""
+
+    this.$showcase.replaceChildren();  // remove all children
 
     for (let item of collection) {
-      this.$showcase.innerHTML += `\
+      const children = `\
       <div class="showcase-item">
       <figure>
         <img src="./${item.image}" alt="${item.year} ${item.make} ${item.model}">
@@ -188,6 +188,8 @@ class Showcase {
       <p>Price: $${item.price}</p>
       <button>Crush</button>
       </div>`
+      
+      this.$showcase.insertAdjacentHTML("beforeend", children);
     }
   }
 }

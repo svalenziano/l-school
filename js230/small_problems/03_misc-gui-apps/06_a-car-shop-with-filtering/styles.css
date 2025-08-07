@@ -8,13 +8,19 @@
 body {
   font-family: "Fira Code", monospace;
   box-sizing: border-box;
+  font-size: 14px;
+}
+
+header h1,
+header label {
+  color: white;
 }
 
 h1 {
   font-size: 2rem;
-  color: white;
 }
 
+h1, 
 .bold {
   font-weight: 500;
 }
@@ -25,14 +31,19 @@ img {
   
 }
 
+label,
+button {
+  margin: 0.5rem;
+}
+
 header {
-  padding: 2rem;
+  padding: 1rem;
   background-color: var(--main-color);
 }
 
 div.showcase {
   display: grid;
-  margin: 2rem;
+  margin: 1rem;
   width: 100%;
   grid-template-columns: repeat(auto-fit, minmax(100px, 150px));
   gap: 1rem;
@@ -48,7 +59,7 @@ div.showcase-item {
   /* box-sizing: border-box;
   padding: 1rem; */
   width: 100%;
-  outline: 1px red solid;
+  /* outline: 1px red solid; */
 }
 
 div.showcase-item figure {
