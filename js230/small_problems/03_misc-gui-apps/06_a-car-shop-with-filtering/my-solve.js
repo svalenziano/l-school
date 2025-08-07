@@ -68,6 +68,14 @@ class Filter {
     return Object.keys(this.fields);
   }
 
+  getFieldByID(id) {
+    // Input: string
+    // Return: field object
+    const fieldObject = this.fields.filter((f) => f.$select.id === id)[0];
+    if (!fieldObject) throw new Error("field object not found");
+    return fieldObject;
+  }
+
   getFilteredCollection() {
     /*
     Returns filtered collection based on current filter values
@@ -100,10 +108,33 @@ class Filter {
   addMetaFilterListener() {
     /*
     Allows the Filter to immediately respond to changes to any Field
+    If a field is modified by the user, all other fields should update to show only valid values.
+    P
+      Summary: 
+      Inputs: 
+      Output: 
+      Return: 
+      Side Effects: mutate all other dropdowns: remove values that aren't valid for the selected option
+      Requirements: 
+    E
+    D
+    A
+      Idea 1: Given a selected value on a dropdown, for each dropdown of other dropdowns, get 
+        valid subset of values and update the dropdown
+
+      Algo 1:
+
     */
     this.$container.addEventListener("change", (e) => {
-      if (e.target instanceof HTMLSelectElement) {
-        console.log("change!")
+      if (e.target instanceof HTMLSelectElement && e.target.value !== Field.NO_FILTER) {
+        console.log(e.target.id)
+
+        const modifiedField = this.getFieldByID(e.target.id);
+
+        for (let otherField of this.fields) {
+          const newValues = otherField.getFilteredValues(e.target.id, e.target.value, this.unfilteredCollection);
+          console.log(newValues);
+        }
       }
     });
   }
@@ -131,6 +162,35 @@ class Field {
 
   get value() {
     return this.$select.value;
+  }
+
+  replaceSelectValues(values) {
+    const newChildren = values.map((v) => 'tktk')
+
+  }
+
+  getFilteredValues(foreignKey, foreignValue, collection) {
+    /*
+    Input: a collection and a key + value that you wish to filter with.
+      
+    Returns array of strings that represents the valid values 
+      which are a subset of `allValues` and are present only on collection
+      objects that contain the input key + value pair
+
+    ALGO:
+      - filter allValues using this callback:
+        - FOr each object of collection:
+          - if the key value combo is present (this.key & `value`):
+            - return true
+        - return false (you examined the entire collection and the value was not present)
+    */
+    return this.allValues.filter((v) => {
+      for (let obj of collection) {
+        if (String(obj[foreignKey]) === String(foreignValue) && 
+            String(obj[this.key]) === String(v)) return true;
+      }
+      return false;
+    });
   }
 
   static getValuesFromCollection(key, collection) {
