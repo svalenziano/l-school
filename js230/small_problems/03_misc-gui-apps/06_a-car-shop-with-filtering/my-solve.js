@@ -136,7 +136,7 @@ class Filter {
           if (modifiedField === otherField) continue;
           const newValues = otherField.getFilteredValues(e.target.id, e.target.value, this.unfilteredCollection);
           console.log(newValues);
-          otherField.replaceSelectValues(newValues);
+          otherField.replaceSelectValues([Field.NO_FILTER].concat(newValues));
         }
       }
     });
@@ -151,7 +151,7 @@ class Field {
     this.key = key;
     
     this.allValues = [Field.NO_FILTER]
-      .concat(Field.getValuesFromCollection(key, collection));
+      .concat(Field.uniqueValuesFromCollection(key, collection));
     
     this.$select = Field.createSelectWithOptions(key, this.allValues)
     
@@ -172,7 +172,7 @@ class Field {
       Input: array of strings
       Side effect: the options of the $select will be replaced
     */
-    this.$select.replaceChildren(...values)
+    this.$select.replaceChildren(...Field.createMultipleOptionElements(values))
   }
 
   getFilteredValues(foreignKey, foreignValue, collection) {
@@ -190,13 +190,9 @@ class Field {
             - return true
         - return false (you examined the entire collection and the value was not present)
     */
-    return this.allValues.filter((v) => {
-      for (let obj of collection) {
-        if (String(obj[foreignKey]) === String(foreignValue) && 
-            String(obj[this.key]) === String(v)) return true;
-      }
-      return false;
-    });
+    const filtered = collection.filter((obj) => obj[foreignKey] === foreignValue)
+    return Field.uniqueValuesFromCollection(this.key, filtered);
+              
   }
 
   static createOptionElement(text) {
@@ -210,7 +206,7 @@ class Field {
     return arrayOfStrings.map((s) => Field.createOptionElement(s));
   }
 
-  static getValuesFromCollection(key, collection) {
+  static uniqueValuesFromCollection(key, collection) {
     /*
     Collection = array of objects
     Return = unique values that match key
