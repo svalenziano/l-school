@@ -17,8 +17,6 @@ class Shop {
     collection = array of objects
     */
     this.collection = collection;
-    // this.$filterContainer = $filterContainer;
-    // this.$showcaseContainer = $showcaseContainer;
     
     this.filter = new Filter(
       $filterContainer, 
@@ -81,13 +79,6 @@ class Filter {
     Returns filtered collection based on current filter values
     */
 
-    // Use Array.filter` to iterate through each ENTRY `unfilteredCollection`
-
-      // For each field:
-        // If the field is not 'Any' AND the field value doesn't match the entry value:
-        // return false
-      // return true (default return value, if no disqualifiers are found)
-
     const filtered = this.unfilteredCollection.filter((entry) => {
       for (let field of this.fields) {
         if (field.value !== Field.NO_FILTER && String(field.value) !== String(entry[field.key])) {
@@ -109,22 +100,6 @@ class Filter {
     /*
     Allows the Filter to immediately respond to changes to any Field
     If a field is modified by the user, all other fields should update to show only valid values.
-    P
-      Summary: 
-      Inputs: 
-      Output: 
-      Return: 
-      Side Effects: mutate all other dropdowns: remove values that aren't valid for the selected option
-      Requirements: 
-    E
-    D
-    A
-      Idea 1: Given a selected value on a dropdown, 
-        filter the collection for objects whose entry matches the foreignValue, 
-        then map the array of dictionaries to an array of values
-
-      Algo 1:
-
     */
     this.$container.addEventListener("change", (e) => {
       if (e.target instanceof HTMLSelectElement && e.target.value !== Field.NO_FILTER) {
@@ -182,13 +157,6 @@ class Field {
     Returns array of strings that represents the valid values 
       which are a subset of `allValues` and are present only on collection
       objects that contain the input key + value pair
-
-    ALGO:
-      - filter allValues using this callback:
-        - FOr each object of collection:
-          - if the key value combo is present (this.key & `value`):
-            - return true
-        - return false (you examined the entire collection and the value was not present)
     */
     const filtered = collection.filter((obj) => obj[foreignKey] === foreignValue)
     return Field.uniqueValuesFromCollection(this.key, filtered);
