@@ -119,8 +119,9 @@ class Filter {
     E
     D
     A
-      Idea 1: Given a selected value on a dropdown, for each dropdown of other dropdowns, get 
-        valid subset of values and update the dropdown
+      Idea 1: Given a selected value on a dropdown, 
+        filter the collection for objects whose entry matches the foreignValue, 
+        then map the array of dictionaries to an array of values
 
       Algo 1:
 
@@ -132,8 +133,10 @@ class Filter {
         const modifiedField = this.getFieldByID(e.target.id);
 
         for (let otherField of this.fields) {
+          if (modifiedField === otherField) continue;
           const newValues = otherField.getFilteredValues(e.target.id, e.target.value, this.unfilteredCollection);
           console.log(newValues);
+          otherField.replaceSelectValues(newValues);
         }
       }
     });
@@ -165,8 +168,11 @@ class Field {
   }
 
   replaceSelectValues(values) {
-    const newChildren = values.map((v) => 'tktk')
-
+    /*
+      Input: array of strings
+      Side effect: the options of the $select will be replaced
+    */
+    this.$select.replaceChildren(...values)
   }
 
   getFilteredValues(foreignKey, foreignValue, collection) {
