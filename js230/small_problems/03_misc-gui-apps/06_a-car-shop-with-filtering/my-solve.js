@@ -153,7 +153,7 @@ class Field {
     this.$select = Field.createSelectWithOptions(key, this.allValues)
     
     $container.append(
-      Field.createLabel(key),
+      Field.createLabelElement(key),
       this.$select
     );
 
@@ -193,6 +193,17 @@ class Field {
     });
   }
 
+  static createOptionElement(text) {
+    const optionElement = document.createElement("OPTION");
+    optionElement.setAttribute("value", text);
+    optionElement.textContent = text;
+    return optionElement;
+  }
+
+  static createMultipleOptionElements(arrayOfStrings) {
+    return arrayOfStrings.map((s) => Field.createOptionElement(s));
+  }
+
   static getValuesFromCollection(key, collection) {
     /*
     Collection = array of objects
@@ -205,7 +216,7 @@ class Field {
     return Array.from(values);
   }
 
-  static createLabel(key) {
+  static createLabelElement(key) {
     const label = document.createElement("LABEL");
     label.setAttribute("for", key);
     label.textContent = key;
@@ -215,12 +226,7 @@ class Field {
   static createSelectWithOptions(key, options) {
     const select = document.createElement("SELECT");
     select.setAttribute("id", key);
-    for (let option of options) {
-      const x = document.createElement("OPTION");
-      x.setAttribute("value", option);
-      x.textContent = option;
-      select.append(x);
-    }
+    select.append(...Field.createMultipleOptionElements(options));
     return select;
   }
 }
