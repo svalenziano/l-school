@@ -9,16 +9,33 @@
 <body>
   <div class="container"></div>
   <script>
-    class DumpTruck {
-
-      constructor() {
-        this.stuffs = [];
-        
+    
+    // THE TEST
+    generateRandomDOM();
+    checkIDs();
+    
+    // HELPERS
+    function generateRandomDOM() {
+      for (let i = 0; i < 5; i++) {
+        const r = randomID();
+        document.body.insertAdjacentHTML("beforeend", `<p id="${r}">${r}</p>`);
       }
     }
 
-    class Stuff {
+    function checkIDs() {
+      const allIds = [...document.querySelectorAll('[id]')].map(el => el.id);
+      const duplicates = allIds.filter((id, index, arr) => arr.indexOf(id) !== index);
+      const uniqueDuplicates = [...new Set(duplicates)];
 
+      if (uniqueDuplicates.length > 0) {
+        console.warn("Duplicate IDs found:", uniqueDuplicates);
+      } else {
+        console.log("No duplicate IDs found.");
+      }
+    }
+
+    function randomID() {
+      return Math.floor(Math.random() * 5);
     }
   </script>
 </body>
