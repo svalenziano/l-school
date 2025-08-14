@@ -49,7 +49,7 @@ function retryOperation_v1(cb) {
   return "Operation failed"
 }
 
-// v2
+// v2 - recursive solution
 function retryOperation(cb, attempts=0, maxAttempts = 3) {
   if (attempts > maxAttempts) {
     console.log("Operation failed");
@@ -58,10 +58,10 @@ function retryOperation(cb, attempts=0, maxAttempts = 3) {
 
   cb()
     .then(console.log)
-    .catch(() => retryOperation.call(null, cb, attempts + 1))
-
+    .catch(() => retryOperation(cb, attempts + 1))
 }
 
+// This is an LS-written test with the addition of 'setTimeout' by SV
 function functionToTest() {
   return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -73,5 +73,5 @@ function functionToTest() {
 }
 
 // Example usage:
-
 retryOperation(functionToTest);
+

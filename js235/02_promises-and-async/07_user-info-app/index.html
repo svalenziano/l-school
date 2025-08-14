@@ -14,6 +14,9 @@
       font-size: 16px;
       margin: 10px 0;
     }
+    .hidden {
+      display: "none";
+    }
   </style>
 </head>
 <body>
@@ -30,7 +33,7 @@
   </form>
 
   <div id="userInfo"></div>
-  <div id="errorMessage" style="color: red; display: none;"></div>
+  <div id="errorMessage" class="hidden" style="color: red;"></div>
 
   <!-- External server logic -->
   <script src="server.js"></script>
@@ -54,6 +57,24 @@
       attempt();
     }
 
+    function displayFetchMessage(div) {
+      div.textContent = 'Login Successful! Fetching your data...';
+    }
+
+
+    function displayUserProfile(div, userData) {
+      div.textContent = `Hello, ${userData.name}!\nYou are ${userData.age} years old!`;
+    }
+
+    function displayErrorMessage(div, msg) {
+      div.classList.remove("hidden");
+      div.textContent = msg;
+    }
+
+    function hideDiv(element) {
+      element.classList.add("hidden");
+    }
+
     // Handle form submission
     document.getElementById('userForm').addEventListener('submit', function (event) {
       event.preventDefault();
@@ -62,7 +83,7 @@
       const errorMessageDiv = document.getElementById('errorMessage');
 
       userInfoDiv.textContent = '';
-      errorMessageDiv.textContent = '';
+      hideDiv(errorMessageDiv);
 
       const username = document.getElementById('usernameInput').value.trim();
       const password = document.getElementById('passwordInput').value.trim();
@@ -81,11 +102,11 @@
       */
 
       authenticate(username, password)
-        .then(displayFetchMessage)
-          .then(display)
-        .catch(displayErrormessage)
+        .then((id) => fetchUserProfile(id))
+        .then((userData) => displayUserProfile(userInfoDiv, userData))
+        .catch((e) => displayErrorMessage(errorMessageDiv, e))
 
-
+      /*
       retryNTimes(authenticate, 2, (errorMessage, userId) => {
         if (userId) {
           userInfoDiv.textContent = 'Login Successful! Fetching your data...';
@@ -104,6 +125,7 @@
           errorMessageDiv.style.display = 'block';
         }
       }, username, password);
+      */
         
     });
   </script>
