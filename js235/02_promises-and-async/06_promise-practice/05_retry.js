@@ -50,7 +50,7 @@ function retryOperation_v1(cb) {
 }
 
 // v2
-function retryOperation(cb, error="None", attempts=0, maxAttempts = 3) {
+function retryOperation(cb, attempts=0, maxAttempts = 3) {
   if (attempts > maxAttempts) {
     console.log("Operation failed");
     return;
@@ -58,12 +58,8 @@ function retryOperation(cb, error="None", attempts=0, maxAttempts = 3) {
 
   cb()
     .then(console.log)
-    .catch((e) => retryOperation.call(null, cb, e, attempts + 1))
+    .catch(() => retryOperation.call(null, cb, attempts + 1))
 
-}
-
-function bind2ndArg(func, arg2) {
-  return (arg1) => func(arg1, arg2) 
 }
 
 function functionToTest() {
@@ -72,9 +68,10 @@ function functionToTest() {
         Math.random() > 0.8
         ? resolve("Success!")
         : reject(new Error("Fail!"))
-      }, 200);
+      }, 100);
     });
 }
 
 // Example usage:
+
 retryOperation(functionToTest);
