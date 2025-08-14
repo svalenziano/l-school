@@ -67,6 +67,25 @@
       const username = document.getElementById('usernameInput').value.trim();
       const password = document.getElementById('passwordInput').value.trim();
 
+      /*
+      Algo:
+        - authenticate the user ID.  If resolved:
+          - display login message in `userInfoDiv`
+          - fetch user profile.  If resolved:
+            - display login info
+          - else:
+            - display error message
+        - else
+          - display error in `errorMessageDiv`
+
+      */
+
+      authenticate(username, password)
+        .then(displayFetchMessage)
+          .then(display)
+        .catch(displayErrormessage)
+
+
       retryNTimes(authenticate, 2, (errorMessage, userId) => {
         if (userId) {
           userInfoDiv.textContent = 'Login Successful! Fetching your data...';
