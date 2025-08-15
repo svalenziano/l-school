@@ -73,7 +73,7 @@
 
 
 
-      authenticate(username, password)
+      let x = retry(authenticate, [username, password])
         .then((id) => fetchUserProfile(id))
         .then((userData) => displayUserProfile(userInfoDiv, userData))
         .catch((e) => displayErrorMessage(errorMessageDiv, e))

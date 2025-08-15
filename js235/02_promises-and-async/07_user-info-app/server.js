@@ -48,20 +48,23 @@ function fetchUserProfile(id) {
 fn = function to retry.  `fn` must return a promise.
 args = array of arguments to pass to `fn`
 */
-function retryNTimes(fn, args, maxReps, currentRep=0) {
+function retry(fn, args, maxAttempts=3) {
+  let currentAttempt = 1;
 
-  return new Promise((resolve, reject) => {
-    fn(...args)
-      .then((result) => resolve(result))
-      .catch((e) => {
-        if (currentRep === maxReps) {
-          reject(e);
-        } else {
-          resolve(() => retryNTimes(fn, args, maxReps, currentRep + 1));
-        }
-      })
+  function attempt() {
+    console.log("Executing attempt", currentAttempt)
+    return fn(...args).catch((e) => {
+      if (currentAttempt >= maxAttempts) {
+        throw e;  // NOT `return e`
+      } else {
+        currentAttempt += 1;
+        return attempt();
+      }
+    });
+  }
 
-  })
+  // return attempt().catch((e) => e)  DON'T DO THIS
+  return attempt()
 }
 
 // TESTS
