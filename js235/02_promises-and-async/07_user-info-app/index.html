@@ -39,23 +39,6 @@
   <script src="server.js"></script>
 
   <script>
-    function retryNTimes(fn, n, callback, ...args) {
-      let attempts = 0;
-
-      function attempt() {
-        console.log(`Attempt number: ${attempts + 1}`);
-        fn(...args, (error, data) => {
-          if (!error || attempts >= n) {
-            callback(error, data);
-          } else {
-            attempts++;
-            attempt();
-          }
-        });
-      }
-
-      attempt();
-    }
 
     function displayFetchMessage(div) {
       div.textContent = 'Login Successful! Fetching your data...';
@@ -88,18 +71,7 @@
       const username = document.getElementById('usernameInput').value.trim();
       const password = document.getElementById('passwordInput').value.trim();
 
-      /*
-      Algo:
-        - authenticate the user ID.  If resolved:
-          - display login message in `userInfoDiv`
-          - fetch user profile.  If resolved:
-            - display login info
-          - else:
-            - display error message
-        - else
-          - display error in `errorMessageDiv`
 
-      */
 
       authenticate(username, password)
         .then((id) => fetchUserProfile(id))

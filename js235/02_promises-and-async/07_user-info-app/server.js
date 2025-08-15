@@ -44,21 +44,41 @@ function fetchUserProfile(id) {
   })
 }
 
+/*
+fn = function to retry.  `fn` must return a promise.
+args = array of arguments to pass to `fn`
+*/
+function retryNTimes(fn, args, maxReps, currentRep=0) {
+
+  return new Promise((resolve, reject) => {
+    fn(...args)
+      .then((result) => resolve(result))
+      .catch((e) => {
+        if (currentRep === maxReps) {
+          reject(e);
+        } else {
+          resolve(() => retryNTimes(fn, args, maxReps, currentRep + 1));
+        }
+      })
+
+  })
+}
+
 // TESTS
-async function test() {
-  try {
-    // First, authenticate user
-    const userId = await authenticate('Aisha', 'wrong');
-    // const userId = await authenticate('Aisha', 'password123');
-    console.log('Authenticated with user ID:', userId);
+// async function test() {
+//   try {
+//     // First, authenticate user
+//     const userId = await authenticate('Aisha', 'wrong');
+//     // const userId = await authenticate('Aisha', 'password123');
+//     console.log('Authenticated with user ID:', userId);
 
-    // Then, fetch the user profile
-    const userProfile = await fetchUserProfile(userId);
-    console.log('User profile:', userProfile);
+//     // Then, fetch the user profile
+//     const userProfile = await fetchUserProfile(userId);
+//     console.log('User profile:', userProfile);
 
-  } catch (error) {
-    console.error('Error:', error.message);
-  }
-};
+//   } catch (error) {
+//     console.error('Error:', error.message);
+//   }
+// };
 
-test();
+// test();
