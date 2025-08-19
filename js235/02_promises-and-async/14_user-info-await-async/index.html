@@ -36,7 +36,7 @@
   <script src="server.js"></script>
 
   <script>
-    function retryNTimes(fn, n, ...args) {
+    function retryNTimesOLD(fn, n, ...args) {
       let attempts = 0;
 
       function attempt() {
@@ -52,6 +52,28 @@
           });
       }
 
+      return attempt();
+    }
+    /*
+    Input = fn, num times, args
+    Return = return value of the function
+    */
+    async function retryNTimes(fn, n, ...args) {
+      let attempts = 0;
+
+      async function attempt() {
+        try {
+          console.log(`Attempt number: ${attempts + 1}`);
+          return await fn(...args);
+        } catch (e) {
+          if (attempts < n) {
+            attempts += 1;
+            return attempt();
+          }
+          throw e;
+        }
+      }
+      
       return attempt();
     }
 
