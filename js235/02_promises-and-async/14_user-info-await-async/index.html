@@ -14,9 +14,6 @@
       font-size: 16px;
       margin: 10px 0;
     }
-    .hidden {
-      display: "none";
-    }
   </style>
 </head>
 <body>
@@ -33,29 +30,29 @@
   </form>
 
   <div id="userInfo"></div>
-  <div id="errorMessage" class="hidden" style="color: red;"></div>
+  <div id="errorMessage" style="color: red; display: none;"></div>
 
   <!-- External server logic -->
   <script src="server.js"></script>
 
   <script>
+    function retryNTimes(fn, n, ...args) {
+      let attempts = 0;
 
-    function displayFetchMessage(div) {
-      div.textContent = 'Login Successful! Fetching your data...';
-    }
+      function attempt() {
+        console.log(`Attempt number: ${attempts + 1}`);
+        return fn(...args)
+          .then((data) => data) // Resolve if successful
+          .catch((error) => {
+            if (attempts >= n) {
+              return Promise.reject(error); // Reject if max attempts reached
+            }
+            attempts++;
+            return attempt(); // Retry
+          });
+      }
 
-
-    function displayUserProfile(div, userData) {
-      div.textContent = `Hello, ${userData.name}!\nYou are ${userData.age} years old!`;
-    }
-
-    function displayErrorMessage(div, msg) {
-      div.classList.remove("hidden");
-      div.textContent = msg;
-    }
-
-    function hideDiv(element) {
-      element.classList.add("hidden");
+      return attempt();
     }
 
     // Handle form submission
@@ -66,39 +63,23 @@
       const errorMessageDiv = document.getElementById('errorMessage');
 
       userInfoDiv.textContent = '';
-      hideDiv(errorMessageDiv);
+      errorMessageDiv.textContent = '';
 
       const username = document.getElementById('usernameInput').value.trim();
       const password = document.getElementById('passwordInput').value.trim();
 
-
-
-      let x = retry(authenticate, [username, password])
-        .then((id) => retry(fetchUserProfile, [id]))
-        .then((userData) => displayUserProfile(userInfoDiv, userData))
-        .catch((e) => displayErrorMessage(errorMessageDiv, e))
-
-      /*
-      retryNTimes(authenticate, 2, (errorMessage, userId) => {
-        if (userId) {
+      retryNTimes(authenticate, 2, username, password)
+        .then((userId) => {
           userInfoDiv.textContent = 'Login Successful! Fetching your data...';
-
-          retryNTimes(fetchUserProfile, 2, (errorMessage, userData) => {
-            if (errorMessage) {
-              errorMessageDiv.textContent = `Error: ${errorMessage}`;
-              errorMessageDiv.style.display = 'block';
-            } else {
-              userInfoDiv.textContent = `Hello, ${userData.name}!\nYou are ${userData.age} years old!`;
-            }
-          }, userId)
-
-        } else {
-          errorMessageDiv.textContent = errorMessage;
+          return retryNTimes(fetchUserProfile, 2, userId);
+        })
+        .then((userData) => {
+          userInfoDiv.textContent = `Hello, ${userData.name}!\nYou are ${userData.age} years old!`;
+        })
+        .catch((error) => {
+          errorMessageDiv.textContent = `Error: ${error.message}`;
           errorMessageDiv.style.display = 'block';
-        }
-      }, username, password);
-      */
-        
+        });
     });
   </script>
 </body>

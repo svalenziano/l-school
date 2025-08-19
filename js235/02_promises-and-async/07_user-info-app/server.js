@@ -48,23 +48,16 @@ function fetchUserProfile(id) {
 fn = function to retry.  `fn` must return a promise.
 args = array of arguments to pass to `fn`
 */
-function retry(fn, args, maxAttempts=3) {
-  let currentAttempt = 1;
+function retry(fn, args, currentAttempt=1, maxAttempts=3) {
 
-  function attempt() {
-    console.log("Executing attempt", currentAttempt)
-    return fn(...args).catch((e) => {
-      if (currentAttempt >= maxAttempts) {
-        throw e;  // NOT `return e`
-      } else {
-        currentAttempt += 1;
-        return attempt();
-      }
-    });
-  }
-
-  // return attempt().catch((e) => e)  DON'T DO THIS
-  return attempt()
+  console.log("Executing attempt", currentAttempt)
+  return fn(...args).catch((e) => {
+    if (currentAttempt >= maxAttempts) {
+      throw e;  // NOT `return e`
+    } else {
+      return retry(fn, args, currentAttempt + 1, maxAttempts);  // recursive call
+    }
+  });
 }
 
 // TESTS
