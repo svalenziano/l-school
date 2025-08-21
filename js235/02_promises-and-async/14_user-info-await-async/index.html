@@ -36,28 +36,7 @@
   <script src="server.js"></script>
 
   <script>
-    function retryNTimesOLD(fn, n, ...args) {
-      let attempts = 0;
 
-      function attempt() {
-        console.log(`Attempt number: ${attempts + 1}`);
-        return fn(...args)
-          .then((data) => data) // Resolve if successful
-          .catch((error) => {
-            if (attempts >= n) {
-              return Promise.reject(error); // Reject if max attempts reached
-            }
-            attempts++;
-            return attempt(); // Retry
-          });
-      }
-
-      return attempt();
-    }
-    /*
-    Input = fn, num times, args
-    Return = return value of the function
-    */
     async function retryNTimes(fn, n, ...args) {
       let attempts = 0;
 
@@ -77,6 +56,18 @@
       return attempt();
     }
 
+    async function login(username, password, {userInfoDiv, errorMessageDiv}) {
+      try {
+        const userId = await retryNTimes(authenticate, 2, username, password);
+        userInfoDiv.textContent = 'Login Successful! Fetching your data...';
+        const userData = await retryNTimes(fetchUserProfile, 2, userId);
+        userInfoDiv.textContent = `Hello, ${userData.name}!\nYou are ${userData.age} years old!`;
+      } catch (error) {
+        errorMessageDiv.textContent = `Error: ${error.message}`;
+        errorMessageDiv.style.display = 'block';
+      }
+    }
+
     // Handle form submission
     document.getElementById('userForm').addEventListener('submit', function (event) {
       event.preventDefault();
@@ -90,18 +81,7 @@
       const username = document.getElementById('usernameInput').value.trim();
       const password = document.getElementById('passwordInput').value.trim();
 
-      retryNTimes(authenticate, 2, username, password)
-        .then((userId) => {
-          userInfoDiv.textContent = 'Login Successful! Fetching your data...';
-          return retryNTimes(fetchUserProfile, 2, userId);
-        })
-        .then((userData) => {
-          userInfoDiv.textContent = `Hello, ${userData.name}!\nYou are ${userData.age} years old!`;
-        })
-        .catch((error) => {
-          errorMessageDiv.textContent = `Error: ${error.message}`;
-          errorMessageDiv.style.display = 'block';
-        });
+      login(username, password, {userInfoDiv, errorMessageDiv});
     });
   </script>
 </body>

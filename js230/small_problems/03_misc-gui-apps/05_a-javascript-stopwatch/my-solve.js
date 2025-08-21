@@ -2,7 +2,7 @@
 
 class Stopwatch {
   
-  static updateInterval = 60 // interval in milliseconds.  Above ~25 is meaningless bc the display just flashes a lot
+  static updateInterval = 60 // interval in milliseconds.  Below ~25 is meaningless bc the display just flashes a lot
   static timeMultiplier = 1  // FOR TESTING: set to 1 for 'normal' time
 
   constructor(parentElement) {
