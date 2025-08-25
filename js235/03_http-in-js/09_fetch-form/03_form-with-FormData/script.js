@@ -14,24 +14,17 @@ class Form {
       event.preventDefault();
       this.$message.style.display = "none";
 
-      let keysAndValues = this.getFormValues(this.$form);
-      keysAndValues = this.convertValuesToURIString(keysAndValues);
-
-      this.submitForm(keysAndValues);
-      // this.display(keysAndValues)
-      // console.log(keysAndValues);
+      const data = new FormData(this.$form);
+      this.submitForm(data);
     });
   }
 
-  async submitForm(body) {
+  async submitForm(payload) {
     const response = await fetch(
       `https://lsjs230-book-catalog.herokuapp.com/${this.$form.getAttribute('action')}`,
       {
         method: this.$form.method, 
-        headers: {
-          'Content-Type': "application/x-www-form-urlencoded; charset=utf-8",
-        },
-        body,
+        body: payload
       }
     );
 
