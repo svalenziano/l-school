@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Request-origin</title>
+</head>
+<body>
+<p>Hello world! Open DevTools to see what's happening.</p>
+  <script type="text/javascript">
+
+    async function getAreasOfContinents() {
+      console.log("Sending request...")
+      try {
+        const response = await fetch('http://localhost:3000/areas_of_continents');
+      } catch {
+        console.log("fetch promise was rejected") 
+        return
+      }
+      const data = await response.json();
+      console.log('Areas of continents received!');
+      console.log(data);
+    }
+
+    getAreasOfContinents();
+
+  </script>
+</body>
+</html>
