@@ -4,12 +4,16 @@ This flowchart outlines the basics of a cross-origin request.  Some situations m
 
 2. a client-side script requests a resource from a different origin? yes? proceed to 3.  no? proceed to 99.
 
-3. Server responds with a 2xx status and a response payload? Yes? Proceed to 4.  No? Proceed to 99.
+3. Server responds? Yes? Proceed to 4.  No? The fetch promise will be rejected, proceed to 99.
 
-4. Browser processes response.  The response contains an `Access-Control-Allow-Origin` header that matches the request origin? (the origin that the browser made the request from)? Yes? Proceed to 5. No? Proceed to 6.
+4. Browser processes response.  Does the response contain an `Access-Control-Allow-Origin` header that matches the request origin? (the origin that the browser made the request from)? Yes? Proceed to 5. No? Proceed to 6.
 
 5. Success! The browser is satisfied that the response payload can be safely shared with the script (the `fetch` request). You're done!
 
-6. Uh oh! Browser notices that something may be wrong.  An error is logged to the console, but no error is thrown in JS.  The request body is simply withheld from JS without any explanation. You're done!
+6. Uh oh! Browser notices that something may be wrong.  An error is logged to the console, and the promise is rejected (see note 1). You're done!
 
-99. No need for CORS. You're done!  That was easy! 
+99. No need for CORS, the client-side script proceeds as it normally would. That was easy! 
+
+
+Notes:
+1. Interesting!  The server may have responded with a 2xx status and a payload, but the fetch promise is still rejected!  This is a good thing to remember while debugging.
