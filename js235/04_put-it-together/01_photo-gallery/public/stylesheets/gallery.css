@@ -22,7 +22,8 @@ h3 {
 }
 
 main {
-  width: 980px;
+  max-width: 980px;
+  width: 90%;
   padding: 20px;
   margin: 0 auto;
   background: #ffffff;
